@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-04-08 — CI/CD setup, fixed bottom bar, caveman/route config
+
+- **CI/CD**: Updated `.github/workflows/deploy.yml` to target `puddle.obfusco.us` (main branch) and `puddle-dev.obfusco.us` (nmj/* branches). Added `deploy-version` job: pushing a `vN` tag deploys a permanent snapshot to `puddle.obfusco.us/vN/`. Prod distribution ID now uses `secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID` instead of hardcoded ribbon value.
+- **Fixed bottom controls (desktop)**: `controls__shared` changed to `position: fixed; bottom: 0; left: 0; right: 0; z-index: 50` with `backdrop-filter: blur(8px)` for glass effect. Stage grid updated: added `grid-template-rows: auto 1fr; align-content: stretch` so the puddle row (row 2) stretches to fill remaining viewport height. App gets `padding-bottom: 90px` on desktop to prevent content from going under fixed bar.
+- **Caveman skill**: Confirmed global `~/.claude/skills/caveman/` exists; CLAUDE.md already enables it globally — no project-level override needed.
+- **Route**: Already routing general coding tasks to Sonnet directly; minimal /route invocation confirmed as default behavior.
+- **Roadmap**: Added future item: full-bleed puddle version with controls floating over puddle surface.
+
 ## 2026-04-08 — DUMP sweep: domscribe, marble mobile, lights, logo, puddle fill, project cleanup
 
 - **domscribe annotation**: `controls__shared` was overlapping side panels via `margin-top: -50px`. Removed negative margin and the compensating `padding-bottom: 55px` from both side panels. Bottom console now sits below the side panels cleanly.

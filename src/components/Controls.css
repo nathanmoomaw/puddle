@@ -676,10 +676,12 @@
     overflow-y: auto;
   }
 
-  /* Bottom panel — VCF + shared controls (filter, reverb, crunch, delay) */
+  /* Bottom panel — fixed to viewport bottom on desktop */
   .controls__shared {
-    grid-column: 1 / -1;
-    grid-row: 3;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -687,13 +689,11 @@
     align-items: flex-start;
     justify-content: center;
     padding: 0.75rem 1rem 0.5rem;
-    border-top: none;
-    background: rgba(22, 18, 40, 0.65);
-    border: 1px solid rgba(70, 60, 110, 0.3);
-    border-top-color: rgba(80, 160, 255, 0.12);
-    border-radius: 0 0 6px 6px;
-    position: relative;
-    z-index: 2;
+    background: rgba(14, 11, 28, 0.92);
+    border-top: 1px solid rgba(80, 160, 255, 0.14);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 50;
   }
 
   /* VCF sits as a flex item in the bottom bar */

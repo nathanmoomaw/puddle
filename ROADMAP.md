@@ -27,6 +27,7 @@
 
 ## Puddle Fork (post-v3)
 - [x] Fork ribbon into puddle.obfusco.us as a separate project
+- [ ] Full-bleed puddle: future version where puddle extends across entire screen with controls floating over it
 - [ ] Ambient/marble-focused play: tone clips and moods without needing arp or poly
 - [ ] Mutation trail: each project version forks to create new themed variants (Smash, etc.)
 - [ ] Branch unlock easter egg — unlock mode that gives access to a secured branch to design from
@@ -163,3 +164,5 @@
 - [x] Logo no longer overlaps puddle on desktop
 - [x] Puddle fills vertical screen on mobile (flex: 1, no aspect-ratio constraint)
 - [x] Project renamed/cleaned from ribbon: localStorage keys, README, aria-labels
+- [x] CI/CD wired to puddle.obfusco.us + puddle-dev.obfusco.us — main→prod, nmj/*→dev, vN tags→/vN snapshots
+- [x] Bottom controls fixed to viewport bottom on desktop — puddle row now fills remaining height via grid-template-rows: auto 1fr

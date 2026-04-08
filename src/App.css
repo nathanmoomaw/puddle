@@ -93,16 +93,19 @@
   .app__stage {
     display: grid;
     grid-template-columns: minmax(140px, 195px) 1fr minmax(140px, 195px);
+    grid-template-rows: auto 1fr;
     column-gap: 0;
     row-gap: 0;
     align-items: stretch;
-    align-content: start;
+    align-content: stretch;
     max-width: 1200px;
     width: 100%;
+    flex: 1;
+    min-height: 0;
   }
 
   .app {
-    padding: 0.75rem 1.5rem 0.25rem;
+    padding: 0.75rem 1.5rem 90px;
     gap: 0.15rem;
   }
 

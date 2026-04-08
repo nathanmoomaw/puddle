@@ -3,6 +3,8 @@ name: Deploy to S3
 on:
   push:
     branches: [main, 'nmj/**']
+    tags:
+      - 'v[0-9]*'
 
 jobs:
   deploy-prod:
@@ -26,13 +28,10 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3
-        run: aws s3 sync dist/ s3://ribbon.obfusco.us/ --delete --exclude "v*/*"
-
-      - name: Deploy v2 snapshot to /v2
-        run: aws s3 sync dist/ s3://ribbon.obfusco.us/v2/ --delete
+        run: aws s3 sync dist/ s3://puddle.obfusco.us/ --delete --exclude "v*/*"
 
       - name: Invalidate CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id E1JO9PQKZGMYPQ --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
 
   deploy-dev:
     if: startsWith(github.ref, 'refs/heads/nmj/')
@@ -55,7 +54,37 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to dev S3
-        run: aws s3 sync dist/ s3://ribbon-dev.obfusco.us/ --delete
+        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/ --delete
 
       - name: Invalidate dev CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+
+  deploy-version:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Get version tag
+        id: tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Deploy versioned snapshot to /vN/
+        run: aws s3 sync dist/ s3://puddle.obfusco.us/${{ steps.tag.outputs.VERSION }}/ --delete
+
+      - name: Invalidate CloudFront versioned path
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/${{ steps.tag.outputs.VERSION }}/*"

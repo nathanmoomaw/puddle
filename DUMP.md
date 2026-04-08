@@ -12,8 +12,9 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] ok let's make sure the logo doesn't overlap the puddle
 [x] help me optimize this project as distinct from ribbon and cleanup all the mds, etc
 [x] the puddle size should fill as much of the vertical screen as possible while leaving just enough space for the bottom controls
-[] make sure caveman skill running on this project
-[] make sure to optimize and minimize the use of route
-[] setup this project on obfuco.us at http://puddle.obfusco.us/, include http://puddle-dev.obfusco.us/ autodeploying from my dev branch
-[] new git scheme for this project.  will be working towards versions by default with puddle so i'm starting with nmj/v1.  this pattern should be considered the dev branch (autodeployiing to puddle-dev).  final versions will be tagged as v1, v2... and should live in perpetuity at http://puddle.obfusco.us/v1, etc.  http://puddle.obfusco.us/ should be autodeploying from the main branch (serving the last stable version)
-[] 
+[x] make sure caveman skill running on this project
+[x] make sure to optimize and minimize the use of route
+[x] setup this project on obfuco.us at http://puddle.obfusco.us/, include http://puddle-dev.obfusco.us/ autodeploying from my dev branch
+[x] new git scheme for this project.  will be working towards versions by default with puddle so i'm starting with nmj/v1.  this pattern should be considered the dev branch (autodeployiing to puddle-dev).  final versions will be tagged as v1, v2... and should live in perpetuity at http://puddle.obfusco.us/v1, etc.  http://puddle.obfusco.us/ should be autodeploying from the main branch (serving the last stable version)
+[x] roadmap: future puddle version to have one where the puddle extends across entire screen with controls floating over it
+[x] try moving bottom controls on desktop to be fixed on the bottom thus allowing the puddle more vertical space to fill up
