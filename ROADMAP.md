@@ -1,0 +1,159 @@
+# Roadmap
+
+## Up Next
+- [ ] Refine SVG logo (letter spacing, möbius strip polish, crossing depth)
+- [ ] Additional scales: Phrygian dominant, Hirajoshi, Whole tone, Prometheus, Hungarian minor, Enigmatic, Lydian dominant
+- [ ] Production domain setup
+- [ ] Wire first_sound milestone to Puddle touch events
+- [ ] Serialize goop state in QR codes
+- [x] Puddle shape design — draw a less jagged, more natural puddle silhouette (needs user input on desired shape)
+- [x] Focus on marble puddle with splashing and tighter controls — sci-fi controls lining the edge of a nice puddle-shaped center, splashes and movement on touch
+- [x] QR code style: branch to a subtler style where letters don't blow out against the QR grain (less visible text)
+
+## Tokenization / Crypto Roadmap
+- [ ] Define tokenization strategy for v1/v2/... scheme — each version could implement tokenization differently, tied to the abstract /v1 /v2 versioning
+- [x] Tokenize QR codes — the QR preset code represents a unique "state" (working name) that can be minted/owned
+- [ ] QR state mutability: settings can be mutated by the owner, QR auto-regenerates on change, name can only change when settings change. Original creator retains until sold/traded
+- [ ] Marketplace: owners can put their state back on marketplace (for a price or free) after making changes, adding marbles, changing modes, etc.
+- [x] Brainstorm better word than "state" for the saved settings/configuration that gets encoded in QR - puddle
+- [ ] Explore what actions are possible after linking a Base account (currently wallet connects but no downstream actions)
+
+## v3 Polish Plan (priority this week)
+- [ ] Puddle logo — "puddle" wordmark with möbius strip through the dd
+- [ ] Logo toggle — click ribbon logo to switch to puddle logo (and vice versa), both trigger shake
+- [ ] Logo shake flip animation — möbius-strip flip effect, electrons scatter across screen then spring back, all controls scrambled except main volume
+- [x] QR/token shake randomization — shake icon in the shake modal randomizes QR pattern/style; outside clicks remember last shake state
+- [x] QR visual state integration — use current puddle visuals (marbles, ripples) to influence generated QR style options
+
+## Puddle Fork (post-v3)
+- [ ] Fork ribbon into puddle.obfusco.us as a separate project
+- [ ] Ambient/marble-focused play: tone clips and moods without needing arp or poly
+- [ ] Mutation trail: each project version forks to create new themed variants (Smash, etc.)
+- [ ] Branch unlock easter egg — unlock mode that gives access to a secured branch to design from
+- [ ] Design concepts evolution file — an overarching mutation log that is itself a living document
+- [ ] QR token marketplace — make/trade/sell/auction/buy tokens (QR = token outside of visual context)
+
+## Soon
+- [x] Save rec/loop function state in presets for playback from QR/URL (shelved — UI removed for v3, hook preserved)
+- [ ] Goop functionality — needs dedicated attention, not currently working correctly
+
+## Future Features
+- [ ] Ambient autoplay mode (shelved — hook exists, UI removed, mild ambient play)
+- [ ] Interactive 3D spheres — grab/drag oscillator spheres to change settings and/or create sound
+- [ ] Step sequencer functionality
+- [ ] Help wizard — interactive demo with branded cursor, bubble tooltips (partially implemented, shelved)
+- [ ] Camera input mode for ribbon control
+- [ ] Composition saving (record + export)
+- [ ] Multi-ribbon sessions
+- [ ] Future versions: Smash (broken glass theme)
+- [ ] Marble alchemy easter egg — combining specific marble pairs on the puddle triggers hidden sound presets (e.g., Ruby+Sapphire = "Volcano", all 9 marbles = "Solar System" mode)
+
+## Completed
+- [x] Perspective floor plane background grid with puddle-touch parallax (synthwave floor look)
+- [x] Controls chrome stripped — removed backdrop-filter, heavy borders/shadows/animations from panels
+- [x] Controls curve-follow — left/right panels shaped with clip-path to hug the puddle oval
+- [x] Performance: throttled drag ripples, removed backdrop-filter, reduced confetti burst size
+- [x] Vite + React project scaffold
+- [x] Web Audio engine (oscillator, gain, delay, reverb)
+- [x] Ribbon controller with pointer events
+- [x] Pitch mapping with scale support
+- [x] Waveform/volume/octave controls
+- [x] Play and latch activation modes
+- [x] Keyboard shortcuts
+- [x] Dark sci-fi base theme
+- [x] Multi-oscillator engine (2 oscs with detune + mix)
+- [x] Music-reactive canvas visualizer (waveform, bars, particles)
+- [x] Keyboard keys input mode (A-L)
+- [x] Rave/neon styling overhaul
+- [x] Ribbon below controls layout
+- [x] Smooth continuous pitch (setTargetAtTime fix)
+- [x] Ribbon-reactive confetti/firework particle visuals
+- [x] Visualizer performance optimizations (no shadowBlur, pre-computed values)
+- [x] Lo visual mode (distraction-free, no animations, subtle waveform only)
+- [x] Arpeggiate mode with tempo control
+- [x] Always-on keyboard keys (A-L work in all input modes)
+- [x] Touch velocity (ribbon Y-axis)
+- [x] Input-reactive perspective grid (velocity → speed, pitch → drift)
+- [x] Filter controls (cutoff + resonance)
+- [x] Glide/portamento speed control
+- [x] Hold mode (independent toggle, global pitch control, composes with all play modes)
+- [x] Polyphonic support (voice pool, multi-touch, multi-key)
+- [x] 3D grid sphere visualizer (Three.js, 3 spheres, audio-reactive, zoom controls)
+- [x] Third oscillator support
+- [x] Controls layout reorganization (3 oscs across top, vertical stacking)
+- [x] CI/CD auto-deploy to S3/CloudFront on push to main
+- [x] Multi-select scale combination UI
+- [x] Visual mode toggle relocated to upper-left overlay
+- [x] Shake combo system (rapid triggers = bigger shake)
+- [x] Bitcrush effect (AudioWorklet, bit depth + rate reduction + mix)
+- [x] Spacebar stops arpeggiator
+- [x] BPM included in shake randomization
+- [x] Simplified input mode (Keys toggle replaces Touch/Keys selector)
+- [x] Latch+Arp combo mode (multi-note arp sequences via latched taps)
+- [x] Hardware-style toggle switches (Play/Arp, Mono/Poly) with indicator lights
+- [x] Mono/poly voice mode
+- [x] Latch removed; arp+hold(+poly) replaces latch+arp combo
+- [x] Hold button indicator light
+- [x] Shake toggles switches and hold
+- [x] Keys toggle repositioned (subtle, between ribbon and controls)
+- [x] Rocker switch UI (pressed/raised 3D toggle switches)
+- [x] Controls layout polish (BPM beside Play/Arp, Hold beside Mono/Poly)
+- [x] v1 deployed to ribbon.obfusco.us/v1
+- [x] Live multi-key arp cycling (arp+poly holds multiple keys → cycles through them)
+- [x] Activation controls sidebar (Play/Arp, BPM, Mono/Poly, Hold to left of controls panel)
+- [x] Toggles integrated into controls panel (left column with DJ volume fader)
+- [x] Enhanced 3D physical rocker switch styling
+- [x] Shake refinements (no volume change, add octave/scale randomization)
+- [x] Stop button always visible (disabled when inactive)
+- [x] Fixed poly arp keyboard cycling
+- [x] UI stability pattern (disable rather than hide controls)
+- [x] Staff notation visual (scrolling neon notes on wavering staff, replaces waveform)
+- [x] Console restyling (removed CRT scanlines, removed button strip, beveled osc panels)
+- [x] Flag-wave staff animation (notes follow billowing wave path)
+- [x] Osc color scheme: red/gold/green console button palette
+- [x] Prevent accidental text selection on console
+- [x] Arp+poly+hold fix (discrete note taps, no pitch-follow on drag)
+- [x] Staff depth perspective (forward/backward z-axis motion, inactive dimming)
+- [x] Crunch effect boost (more aggressive bitcrush curve, lower bit depth floor)
+- [x] Arp trigger markers on ribbon (visual lines at note positions, click to remove)
+- [x] Mobile switch layout fix (play/arp, hold, stop in row 1; mono/poly + bpm in row 2)
+- [x] Android localhost audio fix (AudioWorklet secure context guard, HTTPS dev server)
+- [x] Mobile floating lightning bolt shake button (replaces circle button, dances by logo)
+- [x] Accelerometer shake (DeviceMotionEvent permission flow for iOS/Android)
+- [x] Logo click triggers shake
+- [x] Ambient play mode (30s inactivity, short taps, auto reverb/delay, evolving controls, möbius toggle)
+- [x] Console shared controls grid layout (2-column CSS grid for Octaves/Scale/Filter/Speed/Delay/Reverb/Crunch)
+- [x] SVG cityscape panel background (replaced gradient-based buildings with inline SVG skyline)
+- [x] Above-the-fold viewport fit (100dvh, internal scroll, reduced spacing)
+- [x] Ambient play shelved (UI removed, hook preserved for future version)
+- [x] Scale selection UI (multi-select combination scales)
+- [x] Bitcrush effect (AudioWorklet)
+- [x] Mobile-optimized layout (zoom default, controls reorder)
+- [x] MIDI controller support (Web MIDI API — notes, CCs, pitch bend, sustain pedal)
+- [x] v2 "Rock & Rumble" tag — tagged and deployed to /v2
+- [x] Shareable preset QR codes — encode/decode all settings via URL hash, multi-colored QR with download
+- [x] Help wizard — interactive demo with branded cursor, bubble tooltips, and written help modal (partially implemented, shelved)
+- [x] v3 "Puddle" — iridescent oil-spill kaos pad surface with Three.js custom shaders
+- [x] Rotary knob components (replace range sliders) with ghost slider overlay
+- [x] VCF control — per-oscillator voltage-controlled filter with routing buttons
+- [x] Capture/looper — event-based recording/playback with 33.3s max, layering
+- [x] Goop/liquid control — per-control goop levels with SVG blob overlay, shake to clean
+- [x] Crypto integration — RainbowKit + wagmi wallet connection, POAP milestone tracking
+- [x] POAP support — localStorage-based milestone tracking with toast notifications
+- [x] Controls surround puddle layout (CSS grid with display:contents)
+- [x] Enhanced oil spill default shader (multi-layer thickness, position-dependent color patches)
+- [x] Wallet address + loop data in QR preset URLs
+- [x] VCF settings serialized in QR presets
+- [x] Spacebar stops looper playback
+- [x] Mobile fullscreen splash screen (tap to enter, once per session)
+- [x] Preset splash screen — entering via preset link shows QR + play button to resume AudioContext
+- [x] VCF knob shake fix — VCF interactions no longer trigger shake detection
+- [x] Marble hold — 9 draggable marbles (Ruby→Moonstone) that persist sound on the puddle, with physics, shader depressions, arp cycling by drop order, and voice-per-marble audio
+- [x] QR CAPTCHA text — more aggressive wave baseline, per-char font mixing, ghost echoes, stronger glow
+- [x] Scale buttons single-letter labels — C/M/m/b/P (Phrygian replaces Pentatonic), "egg" for double harmonic easter egg
+- [x] Marble UV fix — shader ripples/depressions now correctly mapped to screen position (camera FOV + plane scale correction)
+- [x] Arp→play hold fix — switching mode no longer cuts sound when hold is on
+- [x] Double-spacebar clears marbles from puddle
+- [x] Puddle tokenization Phase 1 — ERC-721 `RibbonPuddle.sol` on Base, mint/own QR presets, IPFS metadata, ownership badges, `first_mint` milestone
+- [x] QR shake randomization — ⚡ button in QR modal rerandomizes gradient/spiral/spill style, seed persists across open/close
+- [x] QR visual state integration — marble count + avg position + puddle activity influence QR gradient spiral and glow

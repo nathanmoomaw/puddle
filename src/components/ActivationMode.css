@@ -1,0 +1,582 @@
+.activation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+/* --- Rocker Switch --- */
+
+.rocker {
+  display: flex;
+  align-items: stretch;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top-color: rgba(255, 255, 255, 0.18);
+  border-bottom-color: rgba(0, 0, 0, 0.4);
+  background: linear-gradient(180deg, #161628 0%, #0a0a15 40%, #080812 100%);
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.6),
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 -1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 1px 0 rgba(0, 0, 0, 0.5) inset;
+}
+
+.rocker__side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 18px;
+  min-width: 56px;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+  position: relative;
+}
+
+.rocker__side--active {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(255, 255, 255, 0.04) 100%);
+  box-shadow:
+    inset 0 4px 10px rgba(0, 0, 0, 0.7),
+    inset 0 1px 3px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.03);
+  transform: translateY(1px);
+}
+
+.rocker__side:not(.rocker__side--active) {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  transform: translateY(-1px);
+}
+
+.rocker__side:not(.rocker__side--active):hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+}
+
+.rocker__side:not(.rocker__side--active):active {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
+  transform: translateY(0px);
+}
+
+.rocker__divider {
+  width: 2px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+  flex-shrink: 0;
+  box-shadow: -1px 0 0 rgba(255, 255, 255, 0.04), 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+.rocker__lights {
+  display: flex;
+  gap: 5px;
+  height: 8px;
+  align-items: center;
+}
+
+.rocker__label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.rocker__side--active .rocker__label {
+  color: var(--text-primary);
+}
+
+/* Individual indicator light */
+.switch-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--light-color), color-mix(in srgb, var(--light-color), black 50%));
+  opacity: 0.15;
+  transition: opacity 0.25s, box-shadow 0.25s;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.switch-light--on {
+  opacity: 1;
+  box-shadow: 0 0 10px var(--light-color), 0 0 4px var(--light-color), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* --- Hold split (left = traditional hold, right = marble dispenser) --- */
+
+.activation__hold-split {
+  display: flex;
+  align-items: stretch;
+  min-height: 52px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top-color: rgba(255, 255, 255, 0.18);
+  border-bottom-color: rgba(0, 0, 0, 0.4);
+  background: linear-gradient(180deg, #161628 0%, #0a0a15 40%, #080812 100%);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.6),
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 -1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 1px 0 rgba(0, 0, 0, 0.5) inset;
+  overflow: hidden;
+}
+
+.activation__hold-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.45em 0.8em;
+  border: none;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.activation__hold-left.active {
+  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(255,255,255,0.04) 100%);
+  color: var(--text-primary);
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.7);
+}
+
+.activation__hold-left kbd {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
+.activation__hold-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.6em;
+  min-width: 40px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.activation__hold-right:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Marble spawn button (appears when no tray marble yet) */
+.activation__marble-spawn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.activation__marble-spawn:hover {
+  color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.activation__marble-full {
+  color: rgba(255, 220, 100, 0.4);
+  font-size: 0.9rem;
+}
+
+/* --- Marble size selector (3rd section of hold split) --- */
+
+.activation__marble-size {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 0.5em;
+  min-width: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.15s, background 0.15s;
+  font-family: var(--font-mono);
+}
+
+.activation__marble-size:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+.activation__marble-size:active {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.activation__marble-size-icon {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  line-height: 1;
+}
+
+.activation__marble-size-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+/* --- Marble visual (shared across tray, dragging, puddle) --- */
+
+.marble-visual {
+  width: var(--marble-size);
+  height: var(--marble-size);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 28%,
+    var(--marble-highlight) 0%,
+    var(--marble-color) 50%,
+    var(--marble-shadow) 100%
+  );
+  box-shadow:
+    inset 0 -2px 5px rgba(0, 0, 0, 0.35),
+    inset 0 1px 3px rgba(255, 255, 255, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Specular glint */
+.marble-visual::after {
+  content: '';
+  position: absolute;
+  top: 18%;
+  left: 20%;
+  width: 30%;
+  height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.7) 0%, transparent 100%);
+  transform: rotate(-30deg);
+  pointer-events: none;
+}
+
+.marble-visual--tray {
+  cursor: grab;
+  transition: transform 0.15s, box-shadow 0.15s;
+  animation: marble-appear 0.3s ease-out;
+}
+
+.marble-visual--tray:hover {
+  transform: scale(1.12);
+  box-shadow:
+    inset 0 -2px 5px rgba(0, 0, 0, 0.35),
+    0 3px 12px rgba(0, 0, 0, 0.5),
+    0 0 8px var(--marble-color);
+}
+
+.marble-visual--tray:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+}
+
+.marble-visual--dragging {
+  cursor: grabbing;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.7));
+  transform: scale(1.1);
+}
+
+/* --- Marble patterns --- */
+
+/* Cat-eye: a bright vertical slit through the center */
+.marble-visual--cat-eye::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 38%;
+  width: 24%;
+  height: 70%;
+  border-radius: 50% / 30%;
+  background: radial-gradient(
+    ellipse at center,
+    var(--marble-highlight) 0%,
+    rgba(255,255,255,0.15) 40%,
+    transparent 70%
+  );
+  transform: rotate(0deg);
+  pointer-events: none;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* Swirl: classic marble spiral bands */
+.marble-visual--swirl {
+  background:
+    repeating-conic-gradient(
+      from 30deg,
+      var(--marble-highlight) 0deg 18deg,
+      transparent 18deg 50deg,
+      var(--marble-shadow) 50deg 68deg,
+      transparent 68deg 100deg
+    ),
+    radial-gradient(
+      circle at 32% 28%,
+      var(--marble-highlight) 0%,
+      var(--marble-color) 50%,
+      var(--marble-shadow) 100%
+    ) !important;
+  background-blend-mode: overlay, normal;
+}
+
+/* Galaxy: speckled inner core with multiple radial highlights */
+.marble-visual--galaxy {
+  background:
+    radial-gradient(circle at 60% 35%, rgba(255,255,255,0.25) 0%, transparent 20%),
+    radial-gradient(circle at 30% 65%, rgba(255,255,255,0.15) 0%, transparent 15%),
+    radial-gradient(circle at 70% 70%, rgba(255,255,255,0.2) 0%, transparent 12%),
+    radial-gradient(circle at 45% 50%, var(--marble-highlight) 0%, transparent 30%),
+    radial-gradient(
+      circle at 32% 28%,
+      var(--marble-highlight) 0%,
+      var(--marble-color) 50%,
+      var(--marble-shadow) 100%
+    ) !important;
+}
+
+@keyframes marble-appear {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* --- Hold button (legacy fallback) --- */
+
+.activation__hold {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  align-self: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top-color: rgba(255, 255, 255, 0.18);
+  border-bottom-color: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #161628 0%, #0a0a15 40%, #080812 100%);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.6),
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 -1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 1px 0 rgba(0, 0, 0, 0.5) inset;
+}
+
+.activation__hold.active {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(255, 255, 255, 0.04) 100%);
+  box-shadow:
+    inset 0 4px 10px rgba(0, 0, 0, 0.7),
+    inset 0 1px 3px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.12);
+  animation: none;
+}
+
+.activation__hold kbd {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
+/* --- Stop button --- */
+
+.activation__stop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  align-self: stretch;
+  border-color: var(--magenta);
+  color: var(--magenta);
+}
+
+.activation__stop--inactive {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.activation__stop:hover {
+  border-color: var(--magenta);
+  box-shadow: var(--glow-magenta);
+}
+
+.activation__stop kbd {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
+/* --- BPM tempo --- */
+
+.activation__arp-tempo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  transition: opacity 0.2s;
+  align-self: stretch;
+}
+
+.activation__arp-tempo--inactive {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.activation__tempo-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.activation__tempo-value {
+  color: var(--text-primary);
+}
+
+.activation__arp-tempo input[type="range"] {
+  width: 100%;
+}
+
+/* --- Keys toggle (between controls panel and ribbon) --- */
+
+.keys-toggle {
+  display: flex;
+  justify-content: center;
+  margin: -0.25rem 0 -0.25rem;
+  position: relative;
+  z-index: 2;
+}
+
+.keys-toggle__btn {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.15em 0.8em;
+  border-radius: 3px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  opacity: 0.35;
+  cursor: pointer;
+  transition: opacity 0.15s, border-color 0.15s;
+}
+
+.keys-toggle__btn:hover {
+  opacity: 0.6;
+}
+
+.keys-toggle__btn.active {
+  opacity: 0.75;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+}
+
+.keys-toggle__midi {
+  margin-left: 2rem;
+}
+
+.keys-toggle__midi--err {
+  opacity: 0.5;
+  color: #f66;
+  border-color: rgba(255, 100, 100, 0.15);
+}
+
+.keys-toggle__midi--waiting {
+  opacity: 0.6;
+  color: #fa0;
+  border-color: rgba(255, 170, 0, 0.15);
+}
+
+/* Desktop: vertical layout in left panel (was top-bar row, now left column) */
+@media (min-width: 768px) {
+  .activation {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .activation__hold,
+  .activation__stop,
+  .activation__arp-tempo {
+    align-self: auto;
+  }
+}
+
+/* --- Mobile --- */
+
+@media (max-width: 767px) {
+  .activation {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  /* Row 1: Play/Arp, Hold, Stop */
+  .activation > .rocker:first-child { grid-row: 1; grid-column: 1; }
+  .activation > .activation__hold-split { grid-row: 1; grid-column: 2; }
+  .activation > .activation__hold { grid-row: 1; grid-column: 2; }
+  .activation > .activation__stop { grid-row: 1; grid-column: 3; }
+
+  /* Row 2: Mono/Poly, BPM */
+  .activation > .rocker:nth-child(2) { grid-row: 2; grid-column: 1; }
+  .activation > .activation__arp-tempo { grid-row: 2; grid-column: 2 / 4; }
+
+  .rocker__side {
+    padding: 8px 12px;
+    min-width: 44px;
+  }
+
+  .rocker__label {
+    font-size: 0.6rem;
+  }
+
+  .activation__hold {
+    font-size: 0.75rem;
+    padding: 0.3em 0.6em;
+  }
+
+  .activation__hold kbd,
+  .activation__stop kbd {
+    display: none;
+  }
+
+  .activation__arp-tempo {
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .activation__arp-tempo input[type="range"] {
+    flex: 1;
+    min-width: 0;
+  }
+}

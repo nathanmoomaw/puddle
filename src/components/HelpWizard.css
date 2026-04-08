@@ -1,0 +1,388 @@
+/* Wizard trigger button — subtle ? icon */
+.wizard-trigger {
+  position: fixed;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 10, 18, 0.6);
+  color: rgba(255, 255, 255, 0.3);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 100;
+  transition: opacity 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wizard-trigger:hover {
+  color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: scale(1.1);
+}
+
+.wizard-trigger:active {
+  transform: scale(1.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Wizard overlay — transparent, click to show help modal */
+.wizard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  pointer-events: none;
+}
+
+/* Wizard cursor — SVG pointer with möbius strip tail */
+.wizard-cursor {
+  position: fixed;
+  z-index: 9996;
+  pointer-events: none;
+  /* Offset so the arrow tip sits at the exact position */
+  transform: translate(-4px, -2px);
+}
+
+.wizard-cursor__svg {
+  display: block;
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.4));
+  animation: cursor-pulse 1.5s ease-in-out infinite;
+}
+
+/* Animate the möbius ribbon path with a flowing dash */
+.wizard-cursor__ribbon-path {
+  stroke-dasharray: 8 4;
+  animation: ribbon-flow 1s linear infinite;
+}
+
+@keyframes cursor-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.4)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 10px rgba(255, 0, 170, 0.5)); }
+}
+
+@keyframes ribbon-flow {
+  to { stroke-dashoffset: -24; }
+}
+
+/* Tooltip bubble — soap bubble style: iridescent, spherical, floating */
+.wizard-bubble {
+  position: fixed;
+  z-index: 9995;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  /* Force a circle: fixed size, square aspect ratio */
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+    linear-gradient(
+      135deg,
+      rgba(0, 240, 255, 0.12) 0%,
+      rgba(139, 92, 246, 0.15) 25%,
+      rgba(255, 0, 170, 0.12) 50%,
+      rgba(57, 255, 20, 0.10) 75%,
+      rgba(0, 240, 255, 0.12) 100%
+    );
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(139, 92, 246, 0.12),
+    0 0 40px rgba(0, 240, 255, 0.06),
+    inset 0 -4px 12px rgba(255, 0, 170, 0.06),
+    inset 0 2px 8px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  animation: bubble-shimmer 3s ease-in-out infinite, bubble-float 2.5s ease-in-out infinite;
+}
+
+/* Iridescent highlight — the "shine" spot on the bubble */
+.wizard-bubble::before {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 18%;
+  width: 35%;
+  height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.wizard-bubble__text {
+  font-family: 'Comic Sans MS', 'Comic Sans', 'Chalkboard SE', cursive;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.35;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  /* Inscribe text area inside the circle — ~70% of diameter */
+  max-width: 112px;
+  padding: 0;
+}
+
+@keyframes bubble-shimmer {
+  0%, 100% { border-color: rgba(0, 240, 255, 0.2); }
+  33% { border-color: rgba(255, 0, 170, 0.25); }
+  66% { border-color: rgba(57, 255, 20, 0.2); }
+}
+
+@keyframes bubble-float {
+  0%, 100% { transform: translate(-50%, -100%); }
+  50% { transform: translate(-50%, -106%); }
+}
+
+/* Bubble states */
+.wizard-bubble--rising {
+  opacity: 0;
+  transform: translate(-50%, -70%) scale(0.4);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  animation: none;
+}
+
+.wizard-bubble--visible {
+  opacity: 1;
+  transform: translate(-50%, -100%);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.wizard-bubble--popping {
+  opacity: 0;
+  transform: translate(-50%, -100%) scale(1.5);
+  transition: opacity 0.15s ease-in, transform 0.2s ease-out;
+  animation: none;
+  border-color: transparent;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Soap bubble pop fragments — tiny iridescent drops flying outward */
+.wizard-bubble__pop-fragments {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.wizard-bubble__fragment {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(0, 240, 255, 0.4) 50%, transparent 100%);
+  box-shadow: 0 0 4px rgba(139, 92, 246, 0.5);
+  opacity: 0;
+  animation: fragment-burst 0.4s ease-out forwards;
+}
+
+/* 8 fragments flying in 8 directions (every 45deg) */
+.wizard-bubble__fragment:nth-child(1) { animation-name: frag-0; }
+.wizard-bubble__fragment:nth-child(2) { animation-name: frag-45; }
+.wizard-bubble__fragment:nth-child(3) { animation-name: frag-90; }
+.wizard-bubble__fragment:nth-child(4) { animation-name: frag-135; }
+.wizard-bubble__fragment:nth-child(5) { animation-name: frag-180; }
+.wizard-bubble__fragment:nth-child(6) { animation-name: frag-225; }
+.wizard-bubble__fragment:nth-child(7) { animation-name: frag-270; }
+.wizard-bubble__fragment:nth-child(8) { animation-name: frag-315; }
+
+@keyframes frag-0   { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(30px,-50%) scale(0.2); } }
+@keyframes frag-45  { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(21px,-71px) scale(0.2); } }
+@keyframes frag-90  { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(-50%,-80px) scale(0.2); } }
+@keyframes frag-135 { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(-71px,-71px) scale(0.2); } }
+@keyframes frag-180 { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(-80px,-50%) scale(0.2); } }
+@keyframes frag-225 { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(-71px,21px) scale(0.2); } }
+@keyframes frag-270 { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(-50%,30px) scale(0.2); } }
+@keyframes frag-315 { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(21px,21px) scale(0.2); } }
+
+/* Confetti pieces — colorful rectangles that tumble outward on pop */
+.wizard-bubble__confetti {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  border-radius: 1px;
+  opacity: 0;
+  animation: confetti-burst 1.4s ease-out forwards;
+}
+
+.wizard-bubble__confetti:nth-child(9)  { background: #00f0ff; animation-name: conf-0;   animation-delay: 0.02s; }
+.wizard-bubble__confetti:nth-child(10) { background: #ff00aa; animation-name: conf-30;  animation-delay: 0.04s; }
+.wizard-bubble__confetti:nth-child(11) { background: #39ff14; animation-name: conf-60;  animation-delay: 0.01s; }
+.wizard-bubble__confetti:nth-child(12) { background: #fff01f; animation-name: conf-90;  animation-delay: 0.05s; }
+.wizard-bubble__confetti:nth-child(13) { background: #8b5cf6; animation-name: conf-120; animation-delay: 0.03s; }
+.wizard-bubble__confetti:nth-child(14) { background: #ff6b35; animation-name: conf-150; animation-delay: 0.00s; }
+.wizard-bubble__confetti:nth-child(15) { background: #00f0ff; animation-name: conf-180; animation-delay: 0.06s; }
+.wizard-bubble__confetti:nth-child(16) { background: #ff00aa; animation-name: conf-210; animation-delay: 0.02s; }
+.wizard-bubble__confetti:nth-child(17) { background: #39ff14; animation-name: conf-240; animation-delay: 0.04s; }
+.wizard-bubble__confetti:nth-child(18) { background: #fff01f; animation-name: conf-270; animation-delay: 0.01s; }
+.wizard-bubble__confetti:nth-child(19) { background: #8b5cf6; animation-name: conf-300; animation-delay: 0.05s; }
+.wizard-bubble__confetti:nth-child(20) { background: #ff6b35; animation-name: conf-330; animation-delay: 0.03s; }
+
+/* 12 confetti directions (every 30deg), with tumble rotation — explode far and linger */
+@keyframes conf-0   { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(120px,-25px) rotate(520deg); } }
+@keyframes conf-30  { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(104px,-85px) rotate(480deg); } }
+@keyframes conf-60  { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(60px,-128px) rotate(600deg); } }
+@keyframes conf-90  { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(0px,-145px) rotate(420deg); } }
+@keyframes conf-120 { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(-60px,-128px) rotate(560deg); } }
+@keyframes conf-150 { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(-104px,-85px) rotate(700deg); } }
+@keyframes conf-180 { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(-120px,-25px) rotate(450deg); } }
+@keyframes conf-210 { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(-104px,60px) rotate(580deg); } }
+@keyframes conf-240 { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(-60px,104px) rotate(490deg); } }
+@keyframes conf-270 { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(0px,120px) rotate(640deg); } }
+@keyframes conf-300 { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(60px,104px) rotate(430deg); } }
+@keyframes conf-330 { 0% { opacity:1; transform:translate(-50%,-50%) rotate(0deg); }  60% { opacity:1; } 100% { opacity:0; transform:translate(104px,60px) rotate(570deg); } }
+
+/* Progress bar with label */
+.wizard-progressbar {
+  position: fixed;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 9995;
+  pointer-events: none;
+}
+
+.wizard-progressbar__track {
+  width: 120px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.wizard-progressbar__fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #00f0ff, #8b5cf6, #ff00aa);
+  transition: width 0.4s ease-out;
+}
+
+.wizard-progressbar__label {
+  font-family: 'Comic Sans MS', 'Comic Sans', 'Chalkboard SE', cursive;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.03em;
+}
+
+/* Help modal — written instructions */
+.wizard-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.wizard-modal {
+  background: linear-gradient(160deg, rgba(20, 15, 40, 0.97), rgba(10, 10, 18, 0.97));
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 12px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.1);
+}
+
+.wizard-modal__title {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 1rem;
+  text-align: center;
+  background: linear-gradient(90deg, #00f0ff, #ff00aa, #39ff14);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wizard-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.wizard-modal__section h3 {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(139, 92, 246, 0.8);
+  margin: 0 0 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wizard-modal__section p {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.wizard-modal__close {
+  display: block;
+  margin: 1.25rem auto 0;
+  padding: 0.5rem 2rem;
+  border-radius: 6px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.wizard-modal__close:hover {
+  background: rgba(139, 92, 246, 0.25);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .wizard-trigger {
+    bottom: 0.5rem;
+    left: 0.5rem;
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+  }
+
+  .wizard-bubble {
+    width: 140px;
+    height: 140px;
+  }
+
+  .wizard-bubble__text {
+    font-size: 0.6rem;
+    max-width: 98px;
+  }
+
+  .wizard-modal {
+    padding: 1rem;
+    max-height: 85vh;
+  }
+}
