@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-04-08 — Hosting provisioned, bottom bar gap tightened
+
+- **AWS infrastructure**: Created S3 buckets `puddle.obfusco.us` + `puddle-dev.obfusco.us` with public website hosting + bucket policies. Created CloudFront distributions `E59WWF3SBP7H8` (prod) and `EAUDGXO81PPFQ` (dev) using `*.obfusco.us` wildcard ACM cert. Route53 CNAME records added for both subdomains. GitHub secrets set: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `PROD_CLOUDFRONT_DISTRIBUTION_ID`, `DEV_CLOUDFRONT_DISTRIBUTION_ID`.
+- **Bottom bar gap**: Reduced app `padding-bottom` from 90px → 70px to close the dead space between puddle bottom and fixed bar top (actual bar height ~68px). Also tightened bar internal gap to `0.4rem 0.6rem`, `flex-wrap: nowrap`, `align-items: center`, reduced padding to `0.5rem 1.25rem`.
+
 ## 2026-04-08 — CI/CD setup, fixed bottom bar, caveman/route config
 
 - **CI/CD**: Updated `.github/workflows/deploy.yml` to target `puddle.obfusco.us` (main branch) and `puddle-dev.obfusco.us` (nmj/* branches). Added `deploy-version` job: pushing a `vN` tag deploys a permanent snapshot to `puddle.obfusco.us/vN/`. Prod distribution ID now uses `secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID` instead of hardcoded ribbon value.

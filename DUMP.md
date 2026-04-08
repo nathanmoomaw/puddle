@@ -18,3 +18,4 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] new git scheme for this project.  will be working towards versions by default with puddle so i'm starting with nmj/v1.  this pattern should be considered the dev branch (autodeployiing to puddle-dev).  final versions will be tagged as v1, v2... and should live in perpetuity at http://puddle.obfusco.us/v1, etc.  http://puddle.obfusco.us/ should be autodeploying from the main branch (serving the last stable version)
 [x] roadmap: future puddle version to have one where the puddle extends across entire screen with controls floating over it
 [x] try moving bottom controls on desktop to be fixed on the bottom thus allowing the puddle more vertical space to fill up
+[x] close some of this gap between the bottom of the puddle and the top of the bottom controls.  puddle should fill as much of the empty space as possible. ![alt text](<Screenshot 2026-04-08 at 16.36.52.png>)
