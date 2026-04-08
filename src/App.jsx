@@ -26,7 +26,7 @@ import { useMarbles } from './hooks/useMarbles'
 import { useAccount } from 'wagmi'
 import './App.css'
 
-const WALLET_FLAG_KEY = 'ribbon_wallet_ever_connected'
+const WALLET_FLAG_KEY = 'puddle_wallet_ever_connected'
 
 const WAVEFORMS = ['sine', 'square', 'sawtooth', 'triangle']
 

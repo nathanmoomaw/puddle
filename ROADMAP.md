@@ -26,7 +26,7 @@
 - [x] QR visual state integration — use current puddle visuals (marbles, ripples) to influence generated QR style options
 
 ## Puddle Fork (post-v3)
-- [ ] Fork ribbon into puddle.obfusco.us as a separate project
+- [x] Fork ribbon into puddle.obfusco.us as a separate project
 - [ ] Ambient/marble-focused play: tone clips and moods without needing arp or poly
 - [ ] Mutation trail: each project version forks to create new themed variants (Smash, etc.)
 - [ ] Branch unlock easter egg — unlock mode that gives access to a secured branch to design from
@@ -157,3 +157,9 @@
 - [x] Puddle tokenization Phase 1 — ERC-721 `RibbonPuddle.sol` on Base, mint/own QR presets, IPFS metadata, ownership badges, `first_mint` milestone
 - [x] QR shake randomization — ⚡ button in QR modal rerandomizes gradient/spiral/spill style, seed persists across open/close
 - [x] QR visual state integration — marble count + avg position + puddle activity influence QR gradient spiral and glow
+- [x] Console overlap fix — controls__shared bottom panel no longer overlaps side panels
+- [x] Marble drag mobile fix — touch-action: none on tray/puddle marbles and puddle surface
+- [x] Rocker switch lights restored — poly side 3 lights (eggplant/sky/lime), arp side 3 lights (grapefruit/clementine/lemon)
+- [x] Logo no longer overlaps puddle on desktop
+- [x] Puddle fills vertical screen on mobile (flex: 1, no aspect-ratio constraint)
+- [x] Project renamed/cleaned from ribbon: localStorage keys, README, aria-labels

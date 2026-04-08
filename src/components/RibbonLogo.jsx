@@ -21,7 +21,7 @@ export function RibbonLogo() {
       overflow="visible"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Ribbon"
+      aria-label="Puddle"
     >
       <defs>
         {/* Hardcoded colors for Safari SMIL compatibility */}

@@ -1,5 +1,15 @@
 # Devlog
 
+## 2026-04-08 — DUMP sweep: domscribe, marble mobile, lights, logo, puddle fill, project cleanup
+
+- **domscribe annotation**: `controls__shared` was overlapping side panels via `margin-top: -50px`. Removed negative margin and the compensating `padding-bottom: 55px` from both side panels. Bottom console now sits below the side panels cleanly.
+- **marble mobile drag**: Added `touch-action: none` to `.marble-visual--tray`, `.marble-visual--dragging`, `.puddle__marble`, and the base `.puddle` surface to prevent browser scroll from eating pointer events during drag.
+- **roadmap sync**: Marked `Fork ribbon into puddle.obfusco.us` as `[x]` in ROADMAP — already done.
+- **poly/arp lights**: Restored 3 lights on Poly side (`eggplant`, `sky`, `lime`) and Arp side (`grapefruit`, `clementine`, `lemon`).
+- **logo overlap**: Removed `margin-top: -42px` on desktop `.app__stage` so logo no longer overlaps puddle. Logo pointer-events restored.
+- **project distinctness**: Updated `WALLET_FLAG_KEY` and milestone `STORAGE_KEY` from `ribbon_` to `puddle_` prefix. Updated RibbonLogo aria-label to "Puddle". Rewrote README.md for puddle-specific content.
+- **puddle fills screen**: On mobile, `.puddle` now has `flex: 1; aspect-ratio: unset; width: 100%` to fill available vertical space. Controls have `flex-shrink: 0`. Stage uses `align-items: stretch`.
+
 ## 2026-04-07 — Controls cleanup: console corner, nook fix, bolt removed, panel overflow (items 502-506)
 
 - **502**: Unchecked empty item 501 (was wrongly marked done).

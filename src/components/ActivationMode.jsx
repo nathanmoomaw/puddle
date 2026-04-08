@@ -115,7 +115,7 @@ export function ActivationMode({
         leftLabel="Play"
         rightLabel="Arp"
         leftLights={[COLORS.clementine]}
-        rightLights={[COLORS.grapefruit]}
+        rightLights={[COLORS.grapefruit, COLORS.clementine, COLORS.lemon]}
         isRight={mode === 'arp'}
         onToggle={() => setMode(m => m === 'play' ? 'arp' : 'play')}
       />
@@ -123,7 +123,7 @@ export function ActivationMode({
         leftLabel="Mono"
         rightLabel="Poly"
         leftLights={[COLORS.sky]}
-        rightLights={[COLORS.eggplant]}
+        rightLights={[COLORS.eggplant, COLORS.sky, COLORS.lime]}
         isRight={poly}
         onToggle={() => setPoly(p => !p)}
       />

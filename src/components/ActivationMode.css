@@ -271,6 +271,7 @@
 
 .marble-visual--tray {
   cursor: grab;
+  touch-action: none;
   transition: transform 0.15s, box-shadow 0.15s;
   animation: marble-appear 0.3s ease-out;
 }
@@ -290,6 +291,7 @@
 
 .marble-visual--dragging {
   cursor: grabbing;
+  touch-action: none;
   filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.7));
   transform: scale(1.1);
 }

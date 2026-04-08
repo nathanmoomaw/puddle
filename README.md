@@ -1,34 +1,37 @@
-# Ribbon
+# Puddle
 
-A web-based analog ribbon synthesizer inspired by the Korg Monotribe. Play continuous pitch with touch, mouse, or keyboard — layered with music-reactive 3D visuals.
+A web-based iridescent oil-spill synthesizer. The 2D kaos pad — the "puddle" — is the primary instrument surface: X=pitch, Y=velocity.
 
-**Live:** [ribbon.obfusco.us](https://ribbon.obfusco.us)
+**Live:** [puddle.obfusco.us](https://puddle.obfusco.us)
 
 ## Features
 
 ### Sound Engine
 - Triple oscillator synthesis (sine, square, sawtooth, triangle) with per-oscillator detune and mix
-- Continuous ribbon controller — slide to sweep pitch across multiple octaves
+- 2D kaos pad controller — X=pitch, Y=velocity across multiple octaves
 - Multi-select scale modes (chromatic, major, minor, blues, pentatonic — combine scales for hybrid note sets)
-- Effects chain: delay (time, feedback, mix), reverb, and bitcrush/crunch with slapback
-- Filter with cutoff and resonance controls
+- Effects chain: delay (time, feedback, mix), reverb, and bitcrush/crunch
+- VCF (voltage-controlled filter) with cutoff, resonance, and per-oscillator routing
 - Glide/portamento speed control
 
 ### Play Modes
 - **Play / Arp** — toggle between single-note play and arpeggiator with adjustable BPM
 - **Mono / Poly** — single voice or polyphonic (up to 8 voices)
 - **Hold** — sustains notes after release; in arp+poly+hold, tap notes to build arp sequences
+- **Marbles** — 9 draggable marbles (Ruby→Moonstone) that persist sound on the puddle
 - **Shake** — randomizes synth parameters for happy accidents (click logo, lightning bolt, or shake device)
 
 ### Input
-- **Touch/Mouse** — drag along the ribbon strip for continuous pitch control
-- **Keyboard** — A through L keys mapped across the ribbon range
+- **Touch/Mouse** — play the puddle surface for continuous pitch+velocity control
+- **Keyboard** — A through L keys mapped across the range
 - **Accelerometer** — shake your mobile device to trigger parameter randomization
+- **MIDI** — hardware controller support via Web MIDI API
 
 ### Visuals
-- **Party mode** (default) — 3D wireframe spheres (one per oscillator) that pulse with audio energy, scrolling staff notation with neon notes, confetti and fireworks
-- **Lo mode** — stripped-down visuals for focused playing
-- Zoom in/out with +/- keys to shift perspective on 3D spheres
+- Iridescent oil-spill Three.js shader surface (thin-film interference, multi-layer rainbow swirls)
+- Ripple physics: vertex displacement from touch in a ring buffer with exponential decay
+- Confetti: asteroids-style unfilled stroke geometry with firework bursts
+- Perspective floor grid with parallax driven by touch
 
 ### Keyboard Shortcuts
 | Key | Action |
@@ -38,9 +41,8 @@ A web-based analog ribbon synthesizer inspired by the Korg Monotribe. Play conti
 | `3` | Mono/Poly toggle |
 | `4` | Hold toggle |
 | `V` | Toggle Party/Lo visuals |
-| `Space` | Stop / kill sound (double-tap kills tails) |
+| `Space` | Stop / kill sound (double-tap kills tails + clears marbles) |
 | `A`-`L` | Play notes |
-| `+`/`-` | Zoom 3D spheres |
 
 ## Getting Started
 
@@ -54,12 +56,11 @@ Open [localhost:5173](http://localhost:5173) to play.
 ## Stack
 
 - [Vite](https://vitejs.dev/) + [React](https://react.dev/)
-- [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) (OscillatorNode, GainNode, DelayNode, ConvolverNode, AudioWorklet)
-- [Three.js](https://threejs.org/) for 3D sphere visualizer
-- Canvas 2D for staff notation and particle effects
+- [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+- [Three.js](https://threejs.org/) for the oil-spill kaos pad shader
+- [RainbowKit](https://www.rainbowkit.com/) + [wagmi](https://wagmi.sh/) + [viem](https://viem.sh/) for Base L2 wallet connection
 - Zero external audio/UI libraries
 
-## Versions
+## Forked From
 
-- **v1** — [ribbon.obfusco.us/v1](https://ribbon.obfusco.us/v1) — Original dual-oscillator build with latch mode and 2D visuals
-- **v2 "Rock & Rumble"** — Current — Triple oscillator, poly/arp/hold modes, 3D spheres, staff notation, bitcrush, hardware-style rocker switches, per-section shake, retro industrial panel design
+Puddle is forked from [Ribbon](https://ribbon.obfusco.us) v3.

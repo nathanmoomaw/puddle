@@ -99,7 +99,6 @@
     align-content: start;
     max-width: 1200px;
     width: 100%;
-    margin-top: -42px;
   }
 
   .app {
@@ -113,10 +112,8 @@
     z-index: 15;
   }
 
-  /* Desktop: puddle extends behind the logo — make logo click-through so puddle is playable */
   .app-header__logo {
-    pointer-events: none;
-    cursor: default;
+    cursor: pointer;
   }
 
   /* Shake nook — lower-right corner of puddle cell (grid-column 2, grid-row 2) */
@@ -417,6 +414,8 @@
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
+    align-items: stretch;
+    gap: 0.4rem;
   }
 
   /* Mobile: nook button hidden — shake bolt in header handles it */

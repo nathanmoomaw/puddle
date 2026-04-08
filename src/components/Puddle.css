@@ -5,6 +5,7 @@
   max-width: min(82vw, 700px);
   margin: 0 auto;
   cursor: crosshair;
+  touch-action: none;
 
   /* Organic puddle blob — wide/flat asymmetric silhouette via SVG bezier clipPath */
   clip-path: url(#puddle-shape-clip);
@@ -90,6 +91,7 @@
   width: var(--marble-size);
   height: var(--marble-size);
   border-radius: 50%;
+  touch-action: none;
   background: radial-gradient(
     circle at 32% 28%,
     var(--marble-highlight) 0%,
@@ -307,9 +309,13 @@
   }
 }
 
-/* Mobile */
+/* Mobile — fill available vertical space */
 @media (max-width: 767px) {
   .puddle {
-    max-width: 92vw;
+    flex: 1;
+    min-height: 200px;
+    aspect-ratio: unset;
+    max-width: 100%;
+    width: 100%;
   }
 }

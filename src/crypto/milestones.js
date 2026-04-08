@@ -3,7 +3,7 @@
  * Each milestone triggers a toast notification when first achieved.
  */
 
-const STORAGE_KEY = 'ribbon_milestones'
+const STORAGE_KEY = 'puddle_milestones'
 
 export const MILESTONES = {
   first_sound: {
