@@ -29,3 +29,10 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] make play/arp and mono/poly rockers evenly sized so each side of each one fill 50%.  presently there's about 50px of unused space to the right of the arp and poly sides
 [x] puddle logo is "ok" but seems to spell "pubble".  move the vertical bars to the right side of each of the loops
 [x] rework the way the marble size button looks.  make it 1/2 the width it is currently.  get rid of the number or fraction and instead make this a button with 3 different sized silver lights, aligned vertically and starting with one representing the first size (1) at the top and the one for the second size (1/2) in the middle and the final one (1/3) size on the bottom.  each time the user clicks this button cycle the presently lit light to the current size of the marble and thusly change the marble size.   
+[x] the marble slot itself shouldn't change size when smaller marbles are selected.  it should be fixed and not move around just like all the other controls should be behaving.
+[x] controls that shift around are anti-pattern for this synth project and probably others.  note this for this project and as a general strategy to employ globally when specified
+[x] align marble size button to the right of its container and give it 10px padding both sides
+[x] align marble slot to the right as well, butting up to the left of the marble size button
+[] note failure to achieve line item 22.  need to undo the change that happened there cuz it's worse now.  let's work on this again perhaps interactively
+[x] desktop, instead of side control panels adding scroll when view is short, if there's enough screen space flex controls out to the sides
+[x] desktop, using asdf... keys to play the puddle not showing notes triggered on the puddle itself

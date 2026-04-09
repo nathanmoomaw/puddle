@@ -775,6 +775,7 @@ function App() {
           onMarblePuddlePickUp={handleMarblePuddlePickUp}
           onMarbleImpulse={applyMarbleImpulse}
           marbleDepressions={marbleDepressionsRef}
+          keyboardPositions={keyboardPositions}
         />
 
         {/* Shake nook — bottom-right corner of puddle on desktop */}

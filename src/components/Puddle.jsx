@@ -16,6 +16,7 @@ export const Puddle = forwardRef(function Puddle({
   shaking, undulating, onArpNoteToggle, arpNotes,
   recordEvent, onDragEscape, onPuddleActivity,
   puddleMarbles, onMarbleRemove, onMarblePuddlePickUp, onMarbleImpulse, marbleDepressions,
+  keyboardPositions,
 }, ref) {
   const [positions, setPositions] = useState(new Map())
   const [activePointers, setActivePointers] = useState(new Set())
@@ -266,7 +267,13 @@ export const Puddle = forwardRef(function Puddle({
     return () => cancelAnimationFrame(confettiFrame.current)
   }, [])
 
-  const allPositions = [...positions.entries()]
+  // Merge touch positions with keyboard positions (keyboard only has x, use y=0.5 midpoint)
+  const allPositions = [
+    ...positions.entries(),
+    ...(keyboardPositions
+      ? [...keyboardPositions.entries()].map(([id, x]) => [id, { x, y: 0.5 }])
+      : []),
+  ]
 
   return (
     <>
@@ -325,11 +332,11 @@ export const Puddle = forwardRef(function Puddle({
         />
       ))}
 
-      {/* Touch cursors */}
+      {/* Touch + keyboard cursors */}
       {allPositions.map(([id, { x, y }]) => (
         <div
           key={id}
-          className="puddle__cursor"
+          className={`puddle__cursor${id.startsWith('key_') ? ' puddle__cursor--keyboard' : ''}`}
           style={{ left: `${x * 100}%`, top: `${(1 - y) * 100}%` }}
         />
       ))}

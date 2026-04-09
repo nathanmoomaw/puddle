@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-04-08 — Marble layout, keyboard puddle cursors, side panel scroll, anti-pattern memory
+
+- **Marble layout fixes**: Hold-left now has `flex: 1` so marble slot + size button align to the right. Hold-right is fixed `width: 52px; flex-shrink: 0` — doesn't shift when smaller marble sizes are selected. Marble size button: `padding: 0 10px`, no max-width cap.
+- **No-shifting controls anti-pattern**: Noted in project memory (`memory/feedback_no_shifting_controls.md`) and global memory (`~/.claude/memory/feedback_synth_fixed_controls.md`). Synth controls must have fixed dimensions; containers must not resize based on internal state.
+- **Side panel scroll removed**: Removed `max-height: calc(100dvh - 250px); overflow-y: auto` from both left (`.controls__toggles`) and right (`.controls__oscillators`) desktop panels. Content now flows naturally; page scrolls instead of inner panel.
+- **Keyboard cursors on puddle**: `keyboardPositions` now passed from App → Puddle. Keyboard-triggered notes show a vertical lime-green bar on the puddle at the corresponding pitch position (X axis), distinct from touch cursors (cyan rings).
+
 ## 2026-04-08 — Logo, mobile layout, rocker fix, marble size button, gap/perspective fix
 
 - **Logo fix**: RibbonLogo.jsx redrawn as "puddle" wordmark. D-stems now on RIGHT of möbius loops (x=76 and x=98) so letters read as "d" not "b". Möbius stays at same x=44-98. ViewBox updated to 0 0 140 72.

@@ -135,6 +135,7 @@
   justify-content: center;
   gap: 0.4em;
   padding: 0.45em 0.8em;
+  flex: 1;
   border: none;
   background: transparent;
   font-family: var(--font-mono);
@@ -165,8 +166,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 0.6em;
-  min-width: 40px;
+  padding: 0;
+  width: 52px;
+  flex-shrink: 0;
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -204,13 +206,12 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 0 0.25em;
-  min-width: 16px;
-  max-width: 20px;
+  padding: 0 10px;
   border: none;
   background: transparent;
   cursor: pointer;
   transition: background 0.15s;
+  flex-shrink: 0;
 }
 
 .activation__marble-size:hover {
