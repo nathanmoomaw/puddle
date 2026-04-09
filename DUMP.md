@@ -38,3 +38,5 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] desktop, using asdf... keys to play the puddle not showing notes triggered on the puddle itself
 [x] logo: flip the moebius horizontally, make sure vertical bars still align
 [x] logo roadmap soon: smooth those mufuhs
+[[]] on desktop and even mobile alway maximize space of the puddle:
+[] move both side control panels out as far as possible, like they're absolutely positioned to their respective sides, but always retain shape of the puddle and don't allow for overlaps
