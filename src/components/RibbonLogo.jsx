@@ -1,20 +1,21 @@
 import './RibbonLogo.css'
 
 export function RibbonLogo() {
-  // Möbius passes through the loops of the two d's
-  // Control points are exact mirror-reflections through all 4 junctions → fully smooth
+  // Möbius passes through the loops of the two d's.
+  // Crossing CPs use ±(14,14) offset → 45° tangents, 90° crossing angle → smooth ribbon X.
+  // All 4 junctions are exact mirror-reflections → fully smooth throughout.
   const infinityPath = [
     "M 44,44",
-    "C 44,24 64,22 76,44",
-    "C 88,66 98,64 98,44",
-    "C 98,24 88,22 76,44",
-    "C 64,66 44,64 44,44",
+    "C 44,24 62,30 76,44",
+    "C 90,58 98,64 98,44",
+    "C 98,24 90,30 76,44",
+    "C 62,58 44,64 44,44",
     "Z"
   ].join(" ")
 
   // Flipped: right-to-left arc is now the bright over-strand
-  const strandOver = "M 98,44 C 98,24 88,22 76,44 C 64,66 44,64 44,44"
-  const strandUnder = "M 44,44 C 44,24 64,22 76,44 C 88,66 98,64 98,44"
+  const strandOver = "M 98,44 C 98,24 90,30 76,44 C 62,58 44,64 44,44"
+  const strandUnder = "M 44,44 C 44,24 62,30 76,44 C 90,58 98,64 98,44"
 
   return (
     <svg

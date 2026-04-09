@@ -58,3 +58,4 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 
 [x] let's attempt this from roadmap: Smooth möbius paths in logo (bezier refinement, tighter curves)
 [x] continue with POAP integration and and NFT minting
+[x] follow up to li 59: ![alt text](<Screenshot 2026-04-09 at 12.38.25.png>) I still want to see more smoothing along the vertical center of this part of the moebius

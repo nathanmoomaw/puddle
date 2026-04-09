@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-04-09 — Möbius crossing smoothed to 90° ribbon X
+
+- **Crossing angle fix**: Changed crossing CPs from ±(12,22) to ±(14,14). This shifts the tangent at the center crossing from 61° (steep/pinched) to 45° (diagonal), giving the two strands a clean 90° crossing angle — looks like a ribbon twisting rather than two arcs poking together.
+
 ## 2026-04-09 — Smooth möbius logo + NFT deploy tooling
 
 - **Möbius bezier fix**: Fixed asymmetric control points at the crossing junction (76,44). All 4 curve junctions are now exact mirror reflections through their endpoints → fully smooth tangents throughout the figure-8. Changed CP2/CP1 pairs at crossing from ±(16/13,22) offset to symmetric ±(12,22) offset.
