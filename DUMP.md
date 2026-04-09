@@ -44,4 +44,4 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] make return do shake again (at least until rec/loop func brought back)
 [x] the bottom controls also shouldn't disappear at reasonable desktop heights. they should squeeze the puddle shorter
 [x] the space under the blue outline should be filled in by the puddle without bottom controls overlap![alt text](<Screenshot 2026-04-08 at 22.17.56.png>)
-[] how can we maximize the size of the puddle vertically to the area shown in this screen cap ?![alt text](<Screenshot 2026-04-08 at 22.32.23.png>)
+[x] how can we maximize the size of the puddle vertically to the area shown in this screen cap ?![alt text](<Screenshot 2026-04-08 at 22.32.23.png>)

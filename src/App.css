@@ -105,9 +105,13 @@
   }
 
   .app {
-    gap: 0.15rem;
+    gap: 0;
     height: 100dvh;
     overflow: hidden;
+  }
+
+  .app-header .ribbon-logo {
+    width: 160px;
   }
 
   /* Header must paint above the stage panels (which use negative margin-top to overlap) */

@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-04-09 — Maximize puddle vertical space
+
+- **Logo shrink (item 47)**: Desktop logo reduced 280px → 160px (`160 × 72/140 ≈ 82px` tall vs `144px` before — saves ~62px for puddle). Gap between header and stage zeroed (`gap: 0`). Bottom bar padding tightened `0.5rem → 0.25rem` top/bottom.
+
 ## 2026-04-09 — Puddle fills cell, bottom bar always visible
 
 - **App height constrained (item 45)**: Changed desktop `.app` to `height: 100dvh; overflow: hidden` (was `min-height: 100dvh`). Grid now has a defined height so `1fr` row properly shrinks with the viewport — bottom bar always visible, puddle squeezes shorter at short heights.
