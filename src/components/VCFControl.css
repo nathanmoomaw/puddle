@@ -32,8 +32,14 @@
 
 .vcf-control__routing {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 4px;
+}
+
+@media (min-width: 768px) {
+  .vcf-control__routing {
+    flex-direction: column;
+  }
 }
 
 .vcf-control__route-btn {
