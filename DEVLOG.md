@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-04-09 — Wire remaining POAP milestones + milestone badge UI
+
+- **first_sound milestone**: Added `onNoteOn` callback prop to `Puddle` component, fires `checkMilestone('first_sound')` on first puddle touch via App.jsx handler.
+- **loop_creator milestone**: Added effect in App.jsx that watches `hasLoop` transition from false to true, triggers `checkMilestone('loop_creator')`.
+- **vcf_explorer milestone**: Added check inside `handleVcfRoutingToggle` — when all 3 oscillators are routed through VCF, fires `checkMilestone('vcf_explorer')`.
+- **MilestoneBadge component**: New `MilestoneBadge.jsx` + `.css` — small counter badge (shows earned count + star icon) in the utility slot next to the wallet button. Click to expand a panel showing all 7 milestones (earned with icons/descriptions, locked with "???" placeholders). Only appears after first milestone is earned. Outside click and Escape to close.
+- All 7 milestones now wired: first_sound, shared_preset, shake_master, loop_creator, goop_artist, vcf_explorer, first_mint.
+
 ## 2026-04-09 — OSC 3 border fade, VCF shake, left panel bolt
 
 - **OSC 3 border fade (item 55)**: Added `::after` pseudo-element on the last `.controls__osc-goopable` on desktop. Covers the bottom 60% of the left border with a gradient from transparent to the app background, creating a smooth fade instead of an abrupt end.

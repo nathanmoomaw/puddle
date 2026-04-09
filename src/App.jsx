@@ -20,6 +20,7 @@ import { positionToFrequency } from './utils/pitchMap'
 import { HIDDEN_SCALES } from './utils/scales'
 import { readPresetFromUrl } from './utils/presets'
 import { WalletButton } from './components/WalletButton'
+import { MilestoneBadge } from './components/MilestoneBadge'
 import { MobileSplash } from './components/MobileSplash'
 import { PresetSplash } from './components/PresetSplash'
 import { useMarbles } from './hooks/useMarbles'
@@ -354,6 +355,22 @@ function App() {
 
   // --- Milestone tracking ---
   const { current: currentMilestone, show: showMilestone, dismiss: dismissMilestone } = useMilestoneToast()
+
+  // First sound milestone — triggers on first puddle touch
+  const handleNoteOn = useCallback(() => {
+    const m = checkMilestone('first_sound')
+    if (m) showMilestone(m)
+  }, [showMilestone])
+
+  // Loop creator milestone — triggers when first loop is recorded
+  const prevHasLoopRef = useRef(hasLoop)
+  useEffect(() => {
+    if (hasLoop && !prevHasLoopRef.current) {
+      const m = checkMilestone('loop_creator')
+      if (m) showMilestone(m)
+    }
+    prevHasLoopRef.current = hasLoop
+  }, [hasLoop, showMilestone])
 
   // Goop artist milestone — 5+ controls gooped
   const prevGoopCountRef = useRef(0)
@@ -709,9 +726,14 @@ function App() {
     setVcfRouting(prev => {
       const next = [...prev]
       next[oscIndex] = enabled
+      // VCF explorer milestone — all 3 oscillators routed through VCF
+      if (next.every(Boolean)) {
+        const m = checkMilestone('vcf_explorer')
+        if (m) showMilestone(m)
+      }
       return next
     })
-  }, [])
+  }, [showMilestone])
 
   const handleQRCreate = useCallback(() => {
     setQrSettings({
@@ -789,6 +811,7 @@ function App() {
           recordEvent={recordEvent}
           onDragEscape={handleDragEscape}
           onPuddleActivity={handlePuddleActivity}
+          onNoteOn={handleNoteOn}
           puddleMarbles={puddleMarbles}
           onMarbleRemove={removeMarbleFromPuddle}
           onMarblePuddlePickUp={handleMarblePuddlePickUp}
@@ -856,7 +879,7 @@ function App() {
           onVcfRoutingToggle={handleVcfRoutingToggle}
           midiDevice={midiDevice}
           onConnectMIDI={connectMIDI}
-          utilitySlot={<WalletButton flagSet={walletFlagSet && !isConnected} onForget={handleForgetWallet} />}
+          utilitySlot={<><MilestoneBadge /><WalletButton flagSet={walletFlagSet && !isConnected} onForget={handleForgetWallet} /></>}
         />
       </div>
 

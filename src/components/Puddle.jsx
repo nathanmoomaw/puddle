@@ -14,7 +14,7 @@ export const Puddle = forwardRef(function Puddle({
   getEngine, mode, octaves, stepped, scale,
   ribbonInteraction, arpStart, arpStop, hold, poly,
   shaking, undulating, onArpNoteToggle, arpNotes,
-  recordEvent, onDragEscape, onPuddleActivity,
+  recordEvent, onDragEscape, onPuddleActivity, onNoteOn,
   puddleMarbles, onMarbleRemove, onMarblePuddlePickUp, onMarbleImpulse, marbleDepressions,
   keyboardPositions,
 }, ref) {
@@ -86,6 +86,9 @@ export const Puddle = forwardRef(function Puddle({
     // Record for looper
     if (recordEvent) recordEvent('voice_on', { hz, velocity: y })
 
+    // Notify parent (used for first_sound milestone)
+    onNoteOn?.()
+
     if (mode === 'play') {
       if (hold && !poly && engine.getActiveVoiceCount() > 0) {
         engine.setAllActiveFrequencies(hz)
@@ -106,7 +109,7 @@ export const Puddle = forwardRef(function Puddle({
     if (hold && mode !== 'arp' && engine.getActiveVoiceCount() === 0) {
       engine.voiceOn(voiceId, hz, y)
     }
-  }, [getEngine, mode, hold, poly, octaves, stepped, scale, ribbonInteraction, arpStart, onArpNoteToggle, recordEvent])
+  }, [getEngine, mode, hold, poly, octaves, stepped, scale, ribbonInteraction, arpStart, onArpNoteToggle, recordEvent, onNoteOn])
 
   const onUp = useCallback((pointerId) => {
     const voiceId = `touch_${pointerId}`

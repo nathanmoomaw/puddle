@@ -5,7 +5,9 @@
 - [ ] Refine SVG logo (letter spacing, möbius strip polish, crossing depth)
 - [ ] Additional scales: Phrygian dominant, Hirajoshi, Whole tone, Prometheus, Hungarian minor, Enigmatic, Lydian dominant
 - [ ] Production domain setup
-- [ ] Wire first_sound milestone to Puddle touch events
+- [x] Wire first_sound milestone to Puddle touch events
+- [x] Wire all remaining milestones (loop_creator, vcf_explorer)
+- [x] Milestone badge UI — earned count + expandable panel in utility slot
 - [ ] Serialize goop state in QR codes
 - [x] Puddle shape design — draw a less jagged, more natural puddle silhouette (needs user input on desired shape)
 - [x] Focus on marble puddle with splashing and tighter controls — sci-fi controls lining the edge of a nice puddle-shaped center, splashes and movement on touch
