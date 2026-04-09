@@ -45,3 +45,7 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] the bottom controls also shouldn't disappear at reasonable desktop heights. they should squeeze the puddle shorter
 [x] the space under the blue outline should be filled in by the puddle without bottom controls overlap![alt text](<Screenshot 2026-04-08 at 22.17.56.png>)
 [x] how can we maximize the size of the puddle vertically to the area shown in this screen cap ?![alt text](<Screenshot 2026-04-08 at 22.32.23.png>)
+- oh my, finally, yes! looks good
+[x] mobile: line scale and octaves in a row with speed until until they don't fit
+[x] make the backgrounds of the osc panels 75% less opaque
+[x] reduce the borders of the controls by 50%

@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-09 — Mobile layout, osc opacity, border reduction
+
+- **Mobile octaves/scale/speed row (item 49)**: Changed `controls__toggles` mobile grid from `1fr auto` (2-col, speed spanning rows) to `1fr 1fr auto` (3-col). Octaves col 1, Scale col 2, Speed col 3 — all on the same row. Scale's `grid-column` override changed from 1 to 2.
+- **OSC backgrounds (item 50)**: Reduced `.controls__osc` linear-gradient alphas by 75%: `0.5 → 0.125`, `0.4 → 0.1`.
+- **Borders halved (item 51)**: Halved all border rgba alphas on `.controls` (main panel), `.controls__osc` (osc cards), and both desktop side panels (`.controls__toggles`, `.controls__oscillators`).
+
 ## 2026-04-09 — Maximize puddle vertical space
 
 - **Logo reverted**: Desktop logo back to 280px (user preference).
