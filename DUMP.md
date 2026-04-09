@@ -42,4 +42,5 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] move both side control panels out as far as possible, like they're absolutely positioned to their respective sides, but always retain shape of the puddle and don't allow for overlaps - i did this
 [x] the bottom panel should also never overlap the puddle.  the sides are now flexing with it properly, not really overlapping.  the bottom panel controls need to do the same thing, just containing/restraining the puddle, maintaining something relative to its shape
 [x] make return do shake again (at least until rec/loop func brought back)
-[x]
+[x] the bottom controls also shouldn't disappear at reasonable desktop heights. they should squeeze the puddle shorter
+[x] the space under the blue outline should be filled in by the puddle without bottom controls overlap![alt text](<Screenshot 2026-04-08 at 22.17.56.png>)

@@ -598,6 +598,7 @@
     margin-right: -23px;
     position: relative;
     z-index: 1;
+    overflow-y: auto;
   }
 
   .controls__toggles .controls__fader {
@@ -670,6 +671,7 @@
     margin-left: -23px;
     position: relative;
     z-index: 1;
+    overflow-y: auto;
   }
 
   /* Bottom panel — grid row 3, spans all columns, never overlaps puddle */

@@ -106,6 +106,8 @@
 
   .app {
     gap: 0.15rem;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   /* Header must paint above the stage panels (which use negative margin-top to overlap) */

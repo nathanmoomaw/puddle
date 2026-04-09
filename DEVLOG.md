@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-09 — Puddle fills cell, bottom bar always visible
+
+- **App height constrained (item 45)**: Changed desktop `.app` to `height: 100dvh; overflow: hidden` (was `min-height: 100dvh`). Grid now has a defined height so `1fr` row properly shrinks with the viewport — bottom bar always visible, puddle squeezes shorter at short heights.
+- **Dead space removed (item 46)**: Removed `margin-top: -70px` from desktop `.puddle` — this was a stale kludge from when the bottom bar was `position: fixed`. Puddle now fills its grid cell cleanly down to the bottom bar with no gap.
+- **Side panel scroll**: Restored `overflow-y: auto` on `.controls__toggles` and `.controls__oscillators` — at short screen heights, side panel content scrolls within its cell instead of overflowing.
+
 ## 2026-04-09 — Bottom panel layout, Enter=shake
 
 - **Bottom panel in-flow (items 36/43)**: Removed `position: fixed; bottom: 0; left: 0; right: 0; z-index: 50` from `.controls__shared`. Now `grid-column: 1 / -1; grid-row: 3` in the stage grid. Stage `grid-template-rows` changed from `auto 1fr` to `auto 1fr auto`. Bottom panel can never overlap the puddle — it's always below it in flow. Removed `min-height: 950px` from `.app` desktop (was a band-aid for the overlap issue).
