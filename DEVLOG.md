@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-09 — CI fix, logo möbius flip
+
+- **CI Node 22→25**: Lock file generated with npm 11 (lockfileVersion 3) was incompatible with npm 10 shipped by Node 22. Changed CI to Node 25 which includes npm 11.
+- **Logo möbius flip**: Swapped strandOver/strandUnder in RibbonLogo.jsx — ribbon now twists in the opposite direction. D-stems at x=76/x=98 unchanged (still align).
+- **Roadmap**: Added smooth-möbius-paths to Up Next.
+
 ## 2026-04-08 — Marble layout, keyboard puddle cursors, side panel scroll, anti-pattern memory
 
 - **Marble layout fixes**: Hold-left now has `flex: 1` so marble slot + size button align to the right. Hold-right is fixed `width: 52px; flex-shrink: 0` — doesn't shift when smaller marble sizes are selected. Marble size button: `padding: 0 10px`, no max-width cap.

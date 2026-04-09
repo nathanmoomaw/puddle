@@ -36,3 +36,5 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [] note failure to achieve line item 22.  need to undo the change that happened there cuz it's worse now.  let's work on this again perhaps interactively
 [x] desktop, instead of side control panels adding scroll when view is short, if there's enough screen space flex controls out to the sides
 [x] desktop, using asdf... keys to play the puddle not showing notes triggered on the puddle itself
+[x] logo: flip the moebius horizontally, make sure vertical bars still align
+[x] logo roadmap soon: smooth those mufuhs

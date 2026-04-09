@@ -11,8 +11,9 @@ export function RibbonLogo() {
     "Z"
   ].join(" ")
 
-  const strandOver = "M 44,44 C 44,24 60,22 76,44 C 87,66 98,64 98,44"
-  const strandUnder = "M 98,44 C 98,24 87,22 76,44 C 60,66 44,64 44,44"
+  // Flipped: right-to-left arc is now the bright over-strand
+  const strandOver = "M 98,44 C 98,24 87,22 76,44 C 60,66 44,64 44,44"
+  const strandUnder = "M 44,44 C 44,24 60,22 76,44 C 87,66 98,64 98,44"
 
   return (
     <svg

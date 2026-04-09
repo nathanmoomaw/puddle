@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Up Next
+- [ ] Smooth möbius paths in logo (bezier refinement, tighter curves)
 - [ ] Refine SVG logo (letter spacing, möbius strip polish, crossing depth)
 - [ ] Additional scales: Phrygian dominant, Hirajoshi, Whole tone, Prometheus, Hungarian minor, Enigmatic, Lydian dominant
 - [ ] Production domain setup
