@@ -2,7 +2,9 @@
 
 ## 2026-04-09 — Maximize puddle vertical space
 
-- **Logo shrink (item 47)**: Desktop logo reduced 280px → 160px (`160 × 72/140 ≈ 82px` tall vs `144px` before — saves ~62px for puddle). Gap between header and stage zeroed (`gap: 0`). Bottom bar padding tightened `0.5rem → 0.25rem` top/bottom.
+- **Logo reverted**: Desktop logo back to 280px (user preference).
+- **App gap zeroed**: `gap: 0.15rem → 0` on desktop; bottom bar padding `0.5rem → 0.25rem`.
+- **Clip-path filled (item 47)**: Puddle oval clip-path y-range extended from ~0.09–0.91 (82% fill) to ~0.02–0.98 (96% fill). Visible puddle now fills its grid cell nearly edge-to-edge vertically.
 
 ## 2026-04-09 — Puddle fills cell, bottom bar always visible
 

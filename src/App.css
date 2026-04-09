@@ -110,10 +110,6 @@
     overflow: hidden;
   }
 
-  .app-header .ribbon-logo {
-    width: 160px;
-  }
-
   /* Header must paint above the stage panels (which use negative margin-top to overlap) */
   .app-header {
     position: relative;
