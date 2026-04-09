@@ -452,7 +452,7 @@ export const Controls = forwardRef(function Controls({
             </div>
           </div>
 
-          <div className="controls__section">
+          <div className="controls__section controls__section--speed">
             <label className="controls__label">Speed <span className="controls__value">{glideSpeed < 0.01 ? 'fast' : glideSpeed > 0.15 ? 'slow' : 'med'}</span></label>
             <RotaryKnob value={glideSpeed} min={0.001} max={0.3} step={0.001} onChange={handleGlideSpeed} color="#39ff14" size={40} />
           </div>
@@ -520,7 +520,7 @@ export const Controls = forwardRef(function Controls({
               setCrunch(newCrunch)
               engine.setCrunch(newCrunch)
             }} title="Randomize general controls" />
-            <div className="controls__section">
+            <div className="controls__section controls__section--filter">
               <label className="controls__label">Filter</label>
               <div className="controls__rotary-row">
                 <RotaryKnob value={filterParams.cutoff} min={20} max={20000} step={1} onChange={handleCutoff} color="#ff8c42" label="Cutoff" size={40} />

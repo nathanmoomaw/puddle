@@ -19,3 +19,13 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] roadmap: future puddle version to have one where the puddle extends across entire screen with controls floating over it
 [x] try moving bottom controls on desktop to be fixed on the bottom thus allowing the puddle more vertical space to fill up
 [x] close some of this gap between the bottom of the puddle and the top of the bottom controls.  puddle should fill as much of the empty space as possible. ![alt text](<Screenshot 2026-04-08 at 16.36.52.png>)
+[x] there's still about 50px of blank space between the puddle and the bottom controls.  see last screenshot
+[x] let's implement the new logo, "puddle" to replace "ribbon" using the same font styles and placing the moebius strip through the loops on the dd's versus the bb's.
+[x] on mobile the speed knob and its labels should align to the right of the octaves/scale
+[x] on mobile move the reverb knob and label to the right of delay on the same row
+[x] on mobile place crunch under the filter, also to the right of vcf
+[x] mobile: increase height of the puddle by 50%
+[x] desktop: height of 950px or more the puddle looks good, but any shorter than that the puddle starts to get overlapped by the bottom controls.  if need to add some space (but less than the 50px you just tried to fix) to accommodate for this that's fine.  primarily there should be no overlapping the puddle. secondarily the space between the puddle and the bottom controls should be no more than 25px at an size
+[x] make play/arp and mono/poly rockers evenly sized so each side of each one fill 50%.  presently there's about 50px of unused space to the right of the arp and poly sides
+[x] puddle logo is "ok" but seems to spell "pubble".  move the vertical bars to the right side of each of the loops
+[x] rework the way the marble size button looks.  make it 1/2 the width it is currently.  get rid of the number or fraction and instead make this a button with 3 different sized silver lights, aligned vertically and starting with one representing the first size (1) at the top and the one for the second size (1/2) in the middle and the final one (1/3) size on the bottom.  each time the user clicks this button cycle the presently lit light to the current size of the marble and thusly change the marble size.   

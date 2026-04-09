@@ -165,8 +165,9 @@ export function ActivationMode({
           onClick={() => setMarbleSizeIdx(i => (i + 1) % MARBLE_SIZES.length)}
           title={`Marble size: ${MARBLE_SIZE_LABELS[marbleSizeIdx]} — click to change`}
         >
-          <span className="activation__marble-size-icon">◉</span>
-          <span className="activation__marble-size-label">{MARBLE_SIZE_LABELS[marbleSizeIdx]}</span>
+          <span className={`activation__marble-size-dot activation__marble-size-dot--lg${marbleSizeIdx === 0 ? ' active' : ''}`} />
+          <span className={`activation__marble-size-dot activation__marble-size-dot--md${marbleSizeIdx === 1 ? ' active' : ''}`} />
+          <span className={`activation__marble-size-dot activation__marble-size-dot--sm${marbleSizeIdx === 2 ? ' active' : ''}`} />
         </button>
       </div>
 

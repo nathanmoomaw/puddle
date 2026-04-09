@@ -1,7 +1,7 @@
 import './RibbonLogo.css'
 
 export function RibbonLogo() {
-  // Full continuous figure-8 — wider loops to match spread b stems
+  // Möbius passes through the loops of the two d's
   const infinityPath = [
     "M 44,44",
     "C 44,24 60,22 76,44",
@@ -17,7 +17,7 @@ export function RibbonLogo() {
   return (
     <svg
       className="ribbon-logo"
-      viewBox="0 0 162 72"
+      viewBox="0 0 140 72"
       overflow="visible"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
@@ -90,26 +90,25 @@ export function RibbonLogo() {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        {/* r */}
-        <path d="M 10,30 L 10,58" />
-        <path d="M 10,37 C 10,28 22,26 28,32" />
+        {/* p — descender stem + upper-right bowl */}
+        <path d="M 10,28 L 10,62" />
+        <path d="M 10,28 C 10,20 24,20 24,30 C 24,44 10,46 10,38" />
 
-        {/* i */}
-        <circle cx="38" cy="20" r="2.5" fill="url(#logo-grad)" stroke="none" />
-        <path d="M 38,30 L 38,58" />
+        {/* u */}
+        <path d="M 30,28 L 30,50 C 30,58 42,58 42,50 L 42,28" />
 
-        {/* first b stem */}
-        <path d="M 44,10 L 44,46" />
+        {/* first d stem — RIGHT side of left möbius loop (d = bowl left, stem right) */}
+        <path d="M 76,10 L 76,58" />
 
-        {/* second b stem */}
-        <path d="M 76,10 L 76,46" />
+        {/* second d stem — RIGHT side of right möbius loop */}
+        <path d="M 98,10 L 98,58" />
 
-        {/* o */}
-        <ellipse cx="112" cy="44" rx="12" ry="14" />
+        {/* l */}
+        <path d="M 108,10 L 108,58" />
 
-        {/* n */}
-        <path d="M 132,30 L 132,58" />
-        <path d="M 132,37 C 132,26 154,26 154,37 L 154,58" />
+        {/* e — open arc with crossbar */}
+        <path d="M 126,44 C 126,30 114,30 114,44 C 114,58 126,58 126,50" />
+        <path d="M 114,44 L 124,44" />
       </g>
 
       {/* ── Möbius infinity ribbon ── */}

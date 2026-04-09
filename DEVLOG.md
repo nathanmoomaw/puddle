@@ -1,5 +1,14 @@
 # Devlog
 
+## 2026-04-08 — Logo, mobile layout, rocker fix, marble size button, gap/perspective fix
+
+- **Logo fix**: RibbonLogo.jsx redrawn as "puddle" wordmark. D-stems now on RIGHT of möbius loops (x=76 and x=98) so letters read as "d" not "b". Möbius stays at same x=44-98. ViewBox updated to 0 0 140 72.
+- **perspective fix**: Removed `perspective: 1200px` from `.app` — was capturing `position:fixed` children so the bottom bar was not viewport-fixed. Moved `perspective()` inline into `moebius-drift` keyframes. Desktop `padding-bottom: 90px` + `min-height: 950px` on app.
+- **Mobile controls layout**: `controls__toggles` → CSS grid with Speed knob (col 2, spanning octaves+scale rows). `controls__shared` → Delay|Reverb row, Filter|Crunch row. Added `controls__section--filter` and `controls__section--speed` classes to Controls.jsx.
+- **Mobile puddle**: `min-height: 200px → 300px`.
+- **Rocker sides equal**: Added `flex: 1; min-width: 0` to `.rocker__side` so both sides split 50/50.
+- **Marble size button**: Replaced icon+text with 3 vertically stacked silver dot indicators (10/7/4px). Active dot glows, others dim. Button width halved to 16-20px max.
+
 ## 2026-04-08 — Hosting provisioned, bottom bar gap tightened
 
 - **AWS infrastructure**: Created S3 buckets `puddle.obfusco.us` + `puddle-dev.obfusco.us` with public website hosting + bucket policies. Created CloudFront distributions `E59WWF3SBP7H8` (prod) and `EAUDGXO81PPFQ` (dev) using `*.obfusco.us` wildcard ACM cert. Route53 CNAME records added for both subdomains. GitHub secrets set: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `PROD_CLOUDFRONT_DISTRIBUTION_ID`, `DEV_CLOUDFRONT_DISTRIBUTION_ID`.

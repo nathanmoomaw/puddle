@@ -313,7 +313,7 @@
 @media (max-width: 767px) {
   .puddle {
     flex: 1;
-    min-height: 200px;
+    min-height: 300px;
     aspect-ratio: unset;
     max-width: 100%;
     width: 100%;
