@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-04-09 — Header button layout: MIDI/POAP/wallet upper-right, QR upper-left
+
+- **MIDI + POAP badge + wallet moved to header**: Removed from `controls__console-corner`, now rendered directly in `app-header__right` as a flex-column stack (top-to-bottom: MIDI → badge → wallet). Applies at all screen sizes.
+- **QR button always-visible in header**: Replaced `app-header__qr-mobile` (mobile-only) with `app-header__qr-btn` (always shown). Old `preset-qr-trigger` in the bottom panel hidden via CSS.
+- **Controls cleanup**: Removed `utilitySlot`, `onConnectMIDI`, `onQRCreate` props from Controls — `console-corner` no longer renders.
+- **Roadmap**: Added logo rethink item — current möbius approach not satisfying, needs fresh start.
+
 ## 2026-04-09 — Lemniscate logo redesign, Safari perf, milestone badge layout
 
 - **Möbius lemniscate redesign**: Completely rethought path geometry. Outer points now have pure-vertical tangents (both CPs at same y as apex). Crossing CPs are exact reflections through (76,44). Result: naturally round loops + smooth S at crossing. `infinityPath` now starts at crossing (76,44) and traces both lobes via upper/lower arcs. `strandUnder` goes L→R dipping lower-left then rising upper-right; `strandOver` is the mirror. Bridge ellipse now `rx=6 ry=8` to match the taller crossing geometry.

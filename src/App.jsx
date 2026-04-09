@@ -772,10 +772,10 @@ function App() {
       <div className="app__grid-floor" ref={gridFloorRef} />
 
       <header className="app-header">
-        {/* Left: QR on mobile only */}
+        {/* Left: QR — always visible */}
         <div className="app-header__left">
           <button
-            className="app-header__qr-mobile"
+            className="app-header__qr-btn"
             onClick={handleQRCreate}
             title="Create preset QR code"
             aria-label="Create preset QR code"
@@ -787,8 +787,28 @@ function App() {
         <div className="app-header__logo" onClick={() => { requestMotionPermission(); handleShake(0.5) }} role="button" tabIndex={0} aria-label="Shake / Randomize">
           <RibbonLogo />
         </div>
-        {/* Right: spacer for grid balance */}
-        <div className="app-header__right" />
+        {/* Right: MIDI → POAP badge → wallet, stacked top-to-bottom */}
+        <div className="app-header__right">
+          <button
+              className={`keys-toggle__btn keys-toggle__midi ${midiDevice && midiDevice !== 'no-device' && midiDevice !== 'unsupported' && midiDevice !== 'denied' ? 'active' : ''} ${midiDevice === 'unsupported' || midiDevice === 'denied' ? 'keys-toggle__midi--err' : ''} ${midiDevice === 'no-device' ? 'keys-toggle__midi--waiting' : ''}`}
+              onClick={connectMIDI}
+              title={
+                midiDevice === 'unsupported' ? 'MIDI not supported in this browser'
+                : midiDevice === 'denied' ? 'MIDI access denied'
+                : midiDevice === 'no-device' ? 'MIDI enabled — plug in a controller'
+                : midiDevice ? `MIDI: ${midiDevice}`
+                : 'Connect MIDI controller'
+              }
+            >
+              {midiDevice === 'unsupported' ? 'MIDI ✗'
+               : midiDevice === 'denied' ? 'MIDI ✗'
+               : midiDevice === 'no-device' ? 'MIDI …'
+               : midiDevice ? 'MIDI ✓'
+               : 'MIDI'}
+            </button>
+          <MilestoneBadge />
+          <WalletButton flagSet={walletFlagSet && !isConnected} onForget={handleForgetWallet} />
+        </div>
       </header>
 
       <div className="app__stage" style={{ position: 'relative' }}>
@@ -864,7 +884,7 @@ function App() {
           setHold={setHold}
           onStop={handleStop}
           onKillAll={handleKillAll}
-          onQRCreate={handleQRCreate}
+
           goopLevels={goopLevels}
           puddleActivity={puddleActivity}
           registerControl={registerControl}
@@ -879,8 +899,6 @@ function App() {
           onVcfResonanceChange={setVcfResonance}
           onVcfRoutingToggle={handleVcfRoutingToggle}
           midiDevice={midiDevice}
-          onConnectMIDI={connectMIDI}
-          utilitySlot={<div style={{display:'flex',flexDirection:'row',alignItems:'center',gap:'0.3rem'}}><MilestoneBadge /><WalletButton flagSet={walletFlagSet && !isConnected} onForget={handleForgetWallet} /></div>}
         />
       </div>
 

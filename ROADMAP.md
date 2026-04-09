@@ -2,7 +2,7 @@
 
 ## Up Next
 - [x] Smooth möbius paths in logo (bezier refinement, tighter curves)
-- [ ] Refine SVG logo (letter spacing, möbius strip polish, crossing depth)
+- [ ] Logo rethink: new approach needed — möbius shape still not satisfying; consider redrawing from scratch with a proper bezier editor or using a reference lemniscate
 - [ ] Slim down .controls__osc panels — feedback they read as too wide
 - [ ] Additional scales: Phrygian dominant, Hirajoshi, Whole tone, Prometheus, Hungarian minor, Enigmatic, Lydian dominant
 - [ ] Production domain setup

@@ -64,4 +64,7 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] Matt says .controls__osc too wide, could slim down some - add to roadmap
 [x] Safari performance needs work.  it's crawling right now
 [x] placement of the milestone badge could be side by side with wallet and nicely aligned with the other buttons there
+[x] move all these buttons to the upper right of screen at all sizes in this order from top to bottom: midi, poap, wallet
+[x] move lower right qr to the upper left like the mobile qr is currently so they both have this in the same place
+[x] roadmap: logo still needs work.  need to approach in a new way
 
