@@ -540,6 +540,15 @@
   line-height: 1;
 }
 
+.controls__toggles .controls__mini-shake {
+  bottom: 6px;
+  top: auto;
+}
+
+.controls__shared .controls__mini-shake {
+  left: 6px;
+}
+
 .controls__mini-shake:hover {
   color: rgba(255, 230, 100, 0.95);
   border-color: rgba(255, 220, 60, 0.4);
@@ -720,7 +729,7 @@
     bottom: 0.4rem;
     right: 0.4rem;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     gap: 0.3rem;
     z-index: 10;

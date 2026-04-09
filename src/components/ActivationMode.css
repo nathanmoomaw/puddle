@@ -503,7 +503,7 @@
 }
 
 .keys-toggle__midi {
-  margin-left: 2rem;
+  /* margin-left: 2rem; */
 }
 
 .keys-toggle__midi--err {

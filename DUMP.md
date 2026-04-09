@@ -55,3 +55,4 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] smooth out left border of osc 3 at bottom, make it continue down in its section like a smoothly transparenting line
 [x] shake controls need to also change the vcf settings, at a bit more frequency in fact, but still somewhat smooth adjustments
 [x] add shake icon to left controls too.  - why not?
+

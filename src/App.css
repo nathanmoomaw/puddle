@@ -99,6 +99,7 @@
     align-items: stretch;
     align-content: stretch;
     /* max-width: 1200px; */
+    margin-top: -30px;
     width: 100%;
     flex: 1;
     min-height: 0;
@@ -169,6 +170,7 @@
   align-items: center;
   gap: 0.25rem;
   justify-content: flex-start;
+  height: 100%;
 }
 
 /* Right cluster — shake bolt */
@@ -215,6 +217,9 @@
   transition: opacity 0.15s, transform 0.15s;
   line-height: 1;
   animation: qr-glow-cycle 8s ease-in-out infinite;
+
+  position: absolute;
+  top: 0;
 }
 
 .app-header__qr-mobile:hover {
