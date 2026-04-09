@@ -67,4 +67,5 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] move all these buttons to the upper right of screen at all sizes in this order from top to bottom: midi, poap, wallet
 [x] move lower right qr to the upper left like the mobile qr is currently so they both have this in the same place
 [x] roadmap: logo still needs work.  need to approach in a new way
+[] ios safari not making sound
 
