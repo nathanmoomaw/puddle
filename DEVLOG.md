@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-04-09 — Smooth möbius logo + NFT deploy tooling
+
+- **Möbius bezier fix**: Fixed asymmetric control points at the crossing junction (76,44). All 4 curve junctions are now exact mirror reflections through their endpoints → fully smooth tangents throughout the figure-8. Changed CP2/CP1 pairs at crossing from ±(16/13,22) offset to symmetric ±(12,22) offset.
+- **NFT deploy tooling**: Added `hardhat.config.js`, `scripts/deploy.js`, and `.env.example`. Contract compiles cleanly (solidity 0.8.28, cancun EVM). Deploy to Base testnet via `npm run deploy:testnet`, mainnet via `npm run deploy:base`.
+- **IPFS metadata URL fix**: Corrected `ribbon.obfusco.us` → `puddle.obfusco.us` in `src/crypto/ipfs.js` NFT metadata description.
+- **Dependencies**: Added `hardhat@^2`, `@nomicfoundation/hardhat-toolbox@hh2`, `@openzeppelin/contracts`, `dotenv` as devDependencies.
+
 ## 2026-04-09 — Wire remaining POAP milestones + milestone badge UI
 
 - **first_sound milestone**: Added `onNoteOn` callback prop to `Puddle` component, fires `checkMilestone('first_sound')` on first puddle touch via App.jsx handler.

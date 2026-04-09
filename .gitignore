@@ -1,6 +1,11 @@
 node_modules
 dist
 .DS_Store
+.env
+
+# Hardhat compilation output
+artifacts/
+cache/
 
 # Domscribe artifacts
 .domscribe

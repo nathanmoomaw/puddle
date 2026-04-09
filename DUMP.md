@@ -56,5 +56,5 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] shake controls need to also change the vcf settings, at a bit more frequency in fact, but still somewhat smooth adjustments
 [x] add shake icon to left controls too.  - why not?
 
-[] let's attempt this from roadmap: Smooth möbius paths in logo (bezier refinement, tighter curves)
+[x] let's attempt this from roadmap: Smooth möbius paths in logo (bezier refinement, tighter curves)
 [x] continue with POAP integration and and NFT minting

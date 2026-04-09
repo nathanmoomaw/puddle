@@ -94,7 +94,7 @@ export async function pinPuddleMetadata({ settings, name, contentHash, presetUrl
   const displayName = name || 'Unnamed Puddle'
   const metadata = {
     name:        displayName,
-    description: `A unique Ribbon Puddle synth preset. Scan the QR code to load this sound configuration at ribbon.obfusco.us`,
+    description: `A unique Puddle synth preset. Scan the QR code to load this sound at puddle.obfusco.us`,
     image:       imageCid ? `${IPFS_GATEWAY}/${imageCid}` : '',
     external_url: presetUrl,
     attributes: [
