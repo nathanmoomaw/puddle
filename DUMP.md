@@ -49,3 +49,9 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] mobile: line scale and octaves in a row with speed until until they don't fit
 [x] make the backgrounds of the osc panels 75% less opaque
 [x] reduce the borders of the controls by 50%
+
+# Thursday April 9
+
+[x] smooth out left border of osc 3 at bottom, make it continue down in its section like a smoothly transparenting line
+[x] shake controls need to also change the vcf settings, at a bit more frequency in fact, but still somewhat smooth adjustments
+[x] add shake icon to left controls too.  - why not?

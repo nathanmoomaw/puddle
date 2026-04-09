@@ -655,6 +655,19 @@
     border-top: none;
   }
 
+  /* Osc 3 — left border fades out smoothly at the bottom */
+  .controls__oscillators .controls__osc-goopable:last-child .controls__osc::after {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 40%;
+    bottom: -1px;
+    width: 3px;
+    background: linear-gradient(to bottom, transparent, rgba(14, 11, 28, 0.97));
+    pointer-events: none;
+    z-index: 4;
+  }
+
   /* Right panel — oscillators */
   .controls__oscillators {
     grid-column: 3;

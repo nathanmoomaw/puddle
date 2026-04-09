@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-09 — OSC 3 border fade, VCF shake, left panel bolt
+
+- **OSC 3 border fade (item 55)**: Added `::after` pseudo-element on the last `.controls__osc-goopable` on desktop. Covers the bottom 60% of the left border with a gradient from transparent to the app background, creating a smooth fade instead of an abrupt end.
+- **VCF shake (item 56)**: Added `vcfCutoffRef` + `vcfResonanceRef` to the shake refs in App.jsx. `handleShake` now nudges vcfCutoff (100–20000) and vcfResonance (0–20) at 1.5× the standard nudge chance, with `engine.setVcfCutoff` / `engine.setVcfResonance` called to apply immediately.
+- **Left panel shake bolt (item 57)**: Added `MiniShakeBolt` to the top of `controls__toggles`. Randomizes octaves, scale, glide speed, and (at 30% chance each) mode and poly. Updated `closest()` selector in `MiniShakeBolt` to include `.controls__toggles`.
+
 ## 2026-04-09 — Mobile layout, osc opacity, border reduction
 
 - **Mobile octaves/scale/speed row (item 49)**: Changed `controls__toggles` mobile grid from `1fr auto` (2-col, speed spanning rows) to `1fr 1fr auto` (3-col). Octaves col 1, Scale col 2, Speed col 3 — all on the same row. Scale's `grid-column` override changed from 1 to 2.

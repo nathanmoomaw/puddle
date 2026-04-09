@@ -173,6 +173,10 @@ function App() {
   modeRef.current = mode
   polyRef.current = poly
   holdRef2.current = hold
+  const vcfCutoffRef = useRef(vcfCutoff)
+  const vcfResonanceRef = useRef(vcfResonance)
+  vcfCutoffRef.current = vcfCutoff
+  vcfResonanceRef.current = vcfResonance
 
   // Apply URL preset to audio engine on first mount
   useEffect(() => {
@@ -447,6 +451,19 @@ function App() {
       const newCrunch = nudge(crunchRef.current, 0, 1, intensity)
       setCrunch(newCrunch)
       engine.setCrunch(newCrunch)
+    }
+
+    // VCF — slightly higher frequency per design intent
+    const vcfChance = nudgeChance * 1.5
+    if (Math.random() < vcfChance) {
+      const newVcfCutoff = nudge(vcfCutoffRef.current, 100, 20000, intensity)
+      setVcfCutoff(newVcfCutoff)
+      engine.setVcfCutoff(newVcfCutoff)
+    }
+    if (Math.random() < vcfChance) {
+      const newVcfRes = nudge(vcfResonanceRef.current, 0, 20, intensity)
+      setVcfResonance(newVcfRes)
+      engine.setVcfResonance(newVcfRes)
     }
 
     if (shouldNudge()) {

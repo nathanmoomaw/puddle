@@ -179,7 +179,7 @@ function MiniShakeBolt({ onClick, title }) {
   const btnRef = useRefHook(null)
   const handleClick = useCallback(() => {
     // Shake the parent panel
-    const panel = btnRef.current?.closest('.controls__osc, .controls__shared')
+    const panel = btnRef.current?.closest('.controls__osc, .controls__shared, .controls__toggles')
     if (panel) {
       panel.classList.remove('controls__section-shake')
       void panel.offsetWidth // force reflow to restart animation
@@ -385,6 +385,19 @@ export const Controls = forwardRef(function Controls({
     <div ref={ref} className={`controls ${shaking ? 'controls--shaking' : ''}`}>
       <div className="controls__layout">
         <div className="controls__toggles">
+          <MiniShakeBolt onClick={() => {
+            const newOctaves = OCTAVE_OPTIONS[Math.floor(Math.random() * OCTAVE_OPTIONS.length)]
+            setOctaves(newOctaves)
+            const randomScale = SCALE_NAMES[Math.floor(Math.random() * SCALE_NAMES.length)]
+            setScale([randomScale])
+            if (randomScale !== 'chromatic') setStepped(true)
+            else setStepped(false)
+            const newSpeed = 0.001 + Math.random() * 0.299
+            setGlideSpeed(newSpeed)
+            getEngine().setGlideSpeed(newSpeed)
+            if (Math.random() < 0.3) setMode(m => m === 'play' ? 'arp' : 'play')
+            if (Math.random() < 0.3) setPoly(p => !p)
+          }} title="Randomize left controls" />
           <ActivationMode
             mode={mode}
             setMode={setMode}
