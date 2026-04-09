@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-04-09 — Lemniscate logo redesign, Safari perf, milestone badge layout
+
+- **Möbius lemniscate redesign**: Completely rethought path geometry. Outer points now have pure-vertical tangents (both CPs at same y as apex). Crossing CPs are exact reflections through (76,44). Result: naturally round loops + smooth S at crossing. `infinityPath` now starts at crossing (76,44) and traces both lobes via upper/lower arcs. `strandUnder` goes L→R dipping lower-left then rising upper-right; `strandOver` is the mirror. Bridge ellipse now `rx=6 ry=8` to match the taller crossing geometry.
+- **Safari performance** (Opus agent): Removed all 5 SMIL `<animate>` elements from logo (compositor thrashing). Removed SVG `feGaussianBlur` filters (recomputed every frame). Capped 3D visualizer pixelRatio to 1.5, disabled antialiasing, added 30fps throttle + `document.hidden` pause. Added 30/20fps throttle to 2D visualizer. Confetti rAF loop now exits entirely when no particles. Grid parallax pauses when tab hidden.
+- **Milestone badge layout**: Wrapped MilestoneBadge + WalletButton in flex row so they appear side-by-side in the corner, aligned horizontally.
+- **Roadmap**: Added `.controls__osc` width reduction item per Matt's feedback.
+
 ## 2026-04-09 — Möbius crossing: wider S-curve sweep, larger bridge
 
 - **Crossing CPs widened**: ±(14,14) → ±(18,18). CPs now 4px further from the crossing in both axes → noticeably larger, more sweeping S-curve at center. Eliminates the "nubby" pinched look.

@@ -63,8 +63,8 @@ export function use3DVisualizer(mountRef, getEngine, ribbonInteraction, visualMo
     const camera = new THREE.PerspectiveCamera(60, mount.clientWidth / mount.clientHeight, 0.1, 100)
     camera.position.z = zoomRef.current
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    renderer.setPixelRatio(window.devicePixelRatio)
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true })
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
     renderer.setSize(mount.clientWidth, mount.clientHeight)
     renderer.setClearColor(0x000000, 0)
     mount.appendChild(renderer.domElement)
@@ -209,8 +209,17 @@ export function use3DVisualizer(mountRef, getEngine, ribbonInteraction, visualMo
       new THREE.Vector3(-0.3, -0.5, 0.7).normalize(),
     ]
 
+    let lastRenderTime = 0
+
     function animate(time) {
       frameId = requestAnimationFrame(animate)
+
+      // Pause when tab is hidden
+      if (document.hidden) return
+
+      // Throttle to ~30fps — 3D visualizer is background eye candy, not primary interaction
+      if (time - lastRenderTime < 30) return
+      lastRenderTime = time
 
       const dt = lastTime ? (time - lastTime) / 1000 : 0.016
       lastTime = time

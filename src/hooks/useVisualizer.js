@@ -826,7 +826,23 @@ export function useVisualizer(canvasRef, getEngine, ribbonInteraction, visualMod
       frameRef.current = requestAnimationFrame(render)
     }
 
+    let lastVisRenderTime = 0
+
     function render(time) {
+      // Pause when tab hidden
+      if (document.hidden) {
+        frameRef.current = requestAnimationFrame(render)
+        return
+      }
+
+      // Throttle: lo mode at ~20fps, party at ~30fps — visualizer is background, not primary surface
+      const targetInterval = visualModeRef.current === 'lo' ? 50 : 33
+      if (time - lastVisRenderTime < targetInterval) {
+        frameRef.current = requestAnimationFrame(render)
+        return
+      }
+      lastVisRenderTime = time
+
       const mode = visualModeRef.current
       if (mode !== lastMode) {
         ambientGradient = null // invalidate on mode switch

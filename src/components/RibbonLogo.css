@@ -2,6 +2,8 @@
   width: 280px;
   height: auto;
   display: block;
+  /* CSS drop-shadow replaces SVG feGaussianBlur filter — much cheaper in Safari */
+  filter: drop-shadow(0 0 3px rgba(0, 240, 255, 0.4));
 }
 
 /* ── Möbius fold: front side subtly pulses ── */

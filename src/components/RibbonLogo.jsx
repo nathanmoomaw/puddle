@@ -1,21 +1,31 @@
 import './RibbonLogo.css'
 
 export function RibbonLogo() {
-  // Möbius passes through the loops of the two d's.
-  // Crossing CPs use ±(18,18) offset → 45° tangents, wide sweeping S at center.
-  // All 4 junctions are exact mirror-reflections → fully smooth throughout.
+  // Möbius lemniscate — completely redesigned for smooth loops + crossing.
+  //
+  // Key insight: outer points (44,44) and (98,44) get pure-vertical tangents by
+  // placing both CPs for each outer arc at the same y (apex). Crossing CPs are
+  // exact reflections through (76,44) → all 4 junctions fully smooth.
+  //
+  // Left lobe:  (76,44) → upper arc via (60,26)+(44,26) → (44,44)
+  //                      → lower arc via (44,62)+(60,62) → (76,44)
+  // Right lobe: (76,44) → upper arc via (92,26)+(98,26) → (98,44)
+  //                      → lower arc via (98,62)+(92,62) → (76,44)
+  //
+  // All smoothness checks: ✓ at (44,44), ✓ at (76,44)×2, ✓ at (98,44)
   const infinityPath = [
-    "M 44,44",
-    "C 44,24 58,26 76,44",
-    "C 94,62 98,64 98,44",
-    "C 98,24 94,26 76,44",
-    "C 58,62 44,64 44,44",
+    "M 76,44",
+    "C 60,26 44,26 44,44",
+    "C 44,62 60,62 76,44",
+    "C 92,26 98,26 98,44",
+    "C 98,62 92,62 76,44",
     "Z"
   ].join(" ")
 
-  // Flipped: right-to-left arc is now the bright over-strand
-  const strandOver = "M 98,44 C 98,24 94,26 76,44 C 58,62 44,64 44,44"
-  const strandUnder = "M 44,44 C 44,24 58,26 76,44 C 94,62 98,64 98,44"
+  // strandUnder: L→R, dips through lower-left then rises upper-right → S at crossing
+  const strandUnder = "M 44,44 C 44,62 60,62 76,44 C 92,26 98,26 98,44"
+  // strandOver:  R→L, dips through lower-right then rises upper-left → front of fold
+  const strandOver  = "M 98,44 C 98,62 92,62 76,44 C 60,26 44,26 44,44"
 
   return (
     <svg
@@ -37,51 +47,27 @@ export function RibbonLogo() {
           <stop offset="100%" stopColor="#00f0ff" />
         </linearGradient>
 
-        {/* Animated gradient that flows along the ribbon */}
+        {/*
+          Animated gradient — CSS keyframes shift the gradient x1/x2 positions.
+          SMIL <animate> removed: Safari's SMIL implementation causes compositor
+          thrashing and high CPU. The shimmer dash animations + CSS gradient shift
+          provide equivalent visual motion with far better perf.
+        */}
         <linearGradient id="tape-grad-anim" x1="0%" y1="0%" x2="100%" y2="0%"
           gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#00f0ff">
-            <animate attributeName="stop-color"
-              values="#00f0ff;#39ff14;#ff00aa;#fff01f;#00f0ff"
-              dur="4s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="25%" stopColor="#39ff14">
-            <animate attributeName="stop-color"
-              values="#39ff14;#ff00aa;#fff01f;#00f0ff;#39ff14"
-              dur="4s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="50%" stopColor="#ff00aa">
-            <animate attributeName="stop-color"
-              values="#ff00aa;#fff01f;#00f0ff;#39ff14;#ff00aa"
-              dur="4s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="75%" stopColor="#fff01f">
-            <animate attributeName="stop-color"
-              values="#fff01f;#00f0ff;#39ff14;#ff00aa;#fff01f"
-              dur="4s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="100%" stopColor="#00f0ff">
-            <animate attributeName="stop-color"
-              values="#00f0ff;#39ff14;#ff00aa;#fff01f;#00f0ff"
-              dur="4s" repeatCount="indefinite" />
-          </stop>
+          <stop offset="0%" stopColor="#00f0ff" />
+          <stop offset="20%" stopColor="#39ff14" />
+          <stop offset="40%" stopColor="#ff00aa" />
+          <stop offset="60%" stopColor="#fff01f" />
+          <stop offset="80%" stopColor="#00f0ff" />
+          <stop offset="100%" stopColor="#39ff14" />
         </linearGradient>
 
-        <filter id="tape-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-
-        <filter id="sparkle-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="1.5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
+        {/*
+          SVG feGaussianBlur filters removed — Safari recomputes these every frame
+          for any animated child, causing severe compositor overhead.
+          Glow effect moved to CSS drop-shadow on the SVG element instead.
+        */}
       </defs>
 
       {/* ── Letter strokes ── */}
@@ -124,7 +110,7 @@ export function RibbonLogo() {
         strokeWidth="10"
         strokeLinecap="round"
         opacity="0.12"
-        filter="url(#tape-glow)"
+        className="tape-glow-path"
       />
 
       {/* UNDER strand — the back side of the fold (dimmer, thinner) */}
@@ -139,7 +125,7 @@ export function RibbonLogo() {
       />
 
       {/* Crossing bridge — covers the under strand at the fold point */}
-      <ellipse cx="76" cy="44" rx="7" ry="6" fill="#0a0a12" />
+      <ellipse cx="76" cy="44" rx="6" ry="8" fill="#0a0a12" />
 
       {/* OVER strand — the front side of the fold (bright, thicker) */}
       <path
@@ -172,7 +158,7 @@ export function RibbonLogo() {
       />
 
       {/* Sparkle particles along the ribbon */}
-      <g className="sparkles" filter="url(#sparkle-glow)">
+      <g className="sparkles">
         <circle className="sparkle s1" cx="50" cy="34" r="1" fill="white" />
         <circle className="sparkle s2" cx="88" cy="54" r="0.8" fill="#00f0ff" />
         <circle className="sparkle s3" cx="96" cy="38" r="1" fill="#ff00aa" />

@@ -541,12 +541,26 @@
 }
 
 .controls__toggles .controls__mini-shake {
-  bottom: 6px;
-  top: auto;
+  /* bottom: 6px; */
+  top: unset;
 }
 
-.controls__shared .controls__mini-shake {
-  left: 6px;
+@media (min-width: 768px) {
+  .controls__toggles .controls__mini-shake {
+    bottom: 6px;
+    /* top: unset; */
+  }
+}
+
+.controls__share .controls__mini-shake {
+  right: 6px;
+  left: auto;
+}
+
+@media (min-width: 768px) {
+  .controls__shared .controls__mini-shake {
+    left: 6px;
+  }
 }
 
 .controls__mini-shake:hover {

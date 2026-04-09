@@ -60,8 +60,8 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] continue with POAP integration and and NFT minting
 [x] follow up to li 59: ![alt text](<Screenshot 2026-04-09 at 12.38.25.png>) I still want to see more smoothing along the vertical center of this part of the moebius
 [x] still following up li 59: not really seeing much changes from what you've done so far.  want these  to be less nubby ![alt text](<Screenshot 2026-04-09 at 12.47.53.png>)
-[] logo refinement still not done.  need to put attention to it
-[] Matt says .controls__osc too wide, could slim down some - add to roadmap
-[] Safari performance needs work.  it's crawling right now
-[] 
+[x] logo refinement still not done.  need to put attention to it
+[x] Matt says .controls__osc too wide, could slim down some - add to roadmap
+[x] Safari performance needs work.  it's crawling right now
+[x] placement of the milestone badge could be side by side with wallet and nicely aligned with the other buttons there
 

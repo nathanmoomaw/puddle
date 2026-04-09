@@ -1,8 +1,9 @@
 # Roadmap
 
 ## Up Next
-- [] Smooth möbius paths in logo (bezier refinement, tighter curves)
+- [x] Smooth möbius paths in logo (bezier refinement, tighter curves)
 - [ ] Refine SVG logo (letter spacing, möbius strip polish, crossing depth)
+- [ ] Slim down .controls__osc panels — feedback they read as too wide
 - [ ] Additional scales: Phrygian dominant, Hirajoshi, Whole tone, Prometheus, Hungarian minor, Enigmatic, Lydian dominant
 - [ ] Production domain setup
 - [x] Wire first_sound milestone to Puddle touch events

@@ -562,6 +562,7 @@ function App() {
 
     function tick() {
       rafId = requestAnimationFrame(tick)
+      if (document.hidden) return
       const floor = gridFloorRef.current
       if (!floor) return
       const interact = ribbonInteraction.current
@@ -879,7 +880,7 @@ function App() {
           onVcfRoutingToggle={handleVcfRoutingToggle}
           midiDevice={midiDevice}
           onConnectMIDI={connectMIDI}
-          utilitySlot={<><MilestoneBadge /><WalletButton flagSet={walletFlagSet && !isConnected} onForget={handleForgetWallet} /></>}
+          utilitySlot={<div style={{display:'flex',flexDirection:'row',alignItems:'center',gap:'0.3rem'}}><MilestoneBadge /><WalletButton flagSet={walletFlagSet && !isConnected} onForget={handleForgetWallet} /></div>}
         />
       </div>
 

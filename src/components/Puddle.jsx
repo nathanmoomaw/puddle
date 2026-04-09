@@ -189,13 +189,21 @@ export const Puddle = forwardRef(function Puddle({
         decay: 0.008 + Math.random() * 0.012,
       })
     }
+    // Kick-start the render loop if it's idle
+    startConfettiLoop()
   }
 
-  // Confetti render loop
-  useEffect(() => {
+  // Confetti render loop — only runs when particles exist (stops scheduling rAF when idle)
+  const confettiRunning = useRef(false)
+  const confettiCtxRef = useRef(null)
+
+  function startConfettiLoop() {
+    if (confettiRunning.current) return
+    confettiRunning.current = true
     const canvas = confettiCanvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
+    if (!confettiCtxRef.current) confettiCtxRef.current = canvas.getContext('2d')
+    const ctx = confettiCtxRef.current
 
     function drawShape(ctx, shape, size) {
       ctx.beginPath()
@@ -225,6 +233,15 @@ export const Puddle = forwardRef(function Puddle({
     }
 
     function animate() {
+      const particles = confettiParticles.current
+      if (particles.length === 0) {
+        // No particles — stop the loop entirely, clear canvas
+        confettiRunning.current = false
+        const w = canvas.width, h = canvas.height
+        if (w && h) ctx.clearRect(0, 0, w, h)
+        return
+      }
+
       confettiFrame.current = requestAnimationFrame(animate)
 
       const w = canvas.clientWidth
@@ -235,9 +252,6 @@ export const Puddle = forwardRef(function Puddle({
       }
 
       ctx.clearRect(0, 0, w, h)
-
-      const particles = confettiParticles.current
-      if (particles.length === 0) return  // skip draw work when empty
 
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i]
@@ -266,7 +280,9 @@ export const Puddle = forwardRef(function Puddle({
       }
     }
     animate()
+  }
 
+  useEffect(() => {
     return () => cancelAnimationFrame(confettiFrame.current)
   }, [])
 
