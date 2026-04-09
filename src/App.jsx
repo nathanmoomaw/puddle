@@ -145,6 +145,7 @@ function App() {
   const undulateTimerRef = useRef(null)
   const easterEggTimerRef = useRef(null)
   const arpStopRef = useRef(null)
+  const handleShakeRef = useRef(null)
   const lastSpaceRef = useRef(0)
 
   // Refs for handleShake — avoids recreating callback on every state change
@@ -232,7 +233,7 @@ function App() {
     Digit3: () => setPoly(p => !p),
     Digit4: () => setHold((h) => !h),
     KeyV: () => setVisualMode((m) => m === 'party' ? 'lo' : 'party'),
-    // Enter key (looper record) shelved for v3 — hook preserved for future version
+    Enter: () => handleShakeRef.current?.(0.5),
   }), [mode, hold, getEngine, clearAllMarbles])
 
   useKeyboard(keyHandlers)
@@ -515,6 +516,7 @@ function App() {
     }
   }, [getEngine, handleArpNoteToggle, shakeClean, showMilestone])
 
+  handleShakeRef.current = handleShake
   useShake(handleShake, controlsRef, ribbonRef)
 
   // Grid floor parallax — shifts background-position with puddle touch (perspective floor)

@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-04-09 — Bottom panel layout, Enter=shake
+
+- **Bottom panel in-flow (items 36/43)**: Removed `position: fixed; bottom: 0; left: 0; right: 0; z-index: 50` from `.controls__shared`. Now `grid-column: 1 / -1; grid-row: 3` in the stage grid. Stage `grid-template-rows` changed from `auto 1fr` to `auto 1fr auto`. Bottom panel can never overlap the puddle — it's always below it in flow. Removed `min-height: 950px` from `.app` desktop (was a band-aid for the overlap issue).
+- **Enter key = shake (item 44)**: Added `handleShakeRef` pattern (same as `arpStopRef`) so `handleShake` is accessible in `keyHandlers` before it's defined. `Enter: () => handleShakeRef.current?.(0.5)` added to keyHandlers.
+
 ## 2026-04-09 — CI fix, logo möbius flip
 
 - **CI Node 22→25**: Lock file generated with npm 11 (lockfileVersion 3) was incompatible with npm 10 shipped by Node 22. Changed CI to Node 25 which includes npm 11.

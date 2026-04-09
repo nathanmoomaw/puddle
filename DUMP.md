@@ -33,10 +33,13 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] controls that shift around are anti-pattern for this synth project and probably others.  note this for this project and as a general strategy to employ globally when specified
 [x] align marble size button to the right of its container and give it 10px padding both sides
 [x] align marble slot to the right as well, butting up to the left of the marble size button
-[] note failure to achieve line item 22.  need to undo the change that happened there cuz it's worse now.  let's work on this again perhaps interactively
+[x] note failure to achieve line item 22.  need to undo the change that happened there cuz it's worse now.  let's work on this again perhaps interactively
 [x] desktop, instead of side control panels adding scroll when view is short, if there's enough screen space flex controls out to the sides
 [x] desktop, using asdf... keys to play the puddle not showing notes triggered on the puddle itself
 [x] logo: flip the moebius horizontally, make sure vertical bars still align
 [x] logo roadmap soon: smooth those mufuhs
 [[]] on desktop and even mobile alway maximize space of the puddle:
-[] move both side control panels out as far as possible, like they're absolutely positioned to their respective sides, but always retain shape of the puddle and don't allow for overlaps
+[x] move both side control panels out as far as possible, like they're absolutely positioned to their respective sides, but always retain shape of the puddle and don't allow for overlaps - i did this
+[x] the bottom panel should also never overlap the puddle.  the sides are now flexing with it properly, not really overlapping.  the bottom panel controls need to do the same thing, just containing/restraining the puddle, maintaining something relative to its shape
+[x] make return do shake again (at least until rec/loop func brought back)
+[x]
