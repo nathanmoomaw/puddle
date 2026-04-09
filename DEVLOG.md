@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-04-09 — iOS silent mode audio fix
+
+- **iOS silent mode bypass**: Added `unlockIOSAudio()` in `AudioEngine.js`. On first user gesture on iOS, a 1-sample silent WAV is played through an HTML `<audio>` element (`playsinline`, volume 0.001). This forces iOS to upgrade the AVAudioSession category from "ambient" (muted by hardware silent switch) to "playback" (bypasses silent mode). Web Audio API alone cannot trigger this category change.
+
 ## 2026-04-09 — Header button layout: MIDI/POAP/wallet upper-right, QR upper-left
 
 - **MIDI + POAP badge + wallet moved to header**: Removed from `controls__console-corner`, now rendered directly in `app-header__right` as a flex-column stack (top-to-bottom: MIDI → badge → wallet). Applies at all screen sizes.

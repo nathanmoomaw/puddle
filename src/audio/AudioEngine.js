@@ -113,12 +113,32 @@ function ensureResumed() {
   ctx.resume()
 }
 
+// iOS silent mode fix: playing an HTML Audio element forces iOS to upgrade the
+// AVAudioSession category from "ambient" (muted by silent mode) to "playback"
+// (bypasses silent mode). Web Audio API alone can't do this.
+let iosUnlocked = false
+function unlockIOSAudio() {
+  if (iosUnlocked) return
+  const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent)
+  if (!isIOS) return
+  iosUnlocked = true
+  const el = document.createElement('audio')
+  el.setAttribute('playsinline', 'true')
+  el.setAttribute('preload', 'auto')
+  // Minimal valid 1-sample silent WAV
+  el.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='
+  el.loop = true
+  el.volume = 0.001
+  el.play().catch(() => {})
+}
+
 let gestureListenerAdded = false
 function addGestureListener() {
   if (gestureListenerAdded) return
   gestureListenerAdded = true
   const events = ['touchstart', 'touchend', 'mousedown', 'pointerdown', 'click', 'keydown']
   const handler = () => {
+    unlockIOSAudio()
     ensureResumed()
     // Keep listening until context is actually running (Android can be stubborn)
     if (ctx && ctx.state === 'running') {
