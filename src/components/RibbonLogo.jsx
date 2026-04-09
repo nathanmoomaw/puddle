@@ -2,20 +2,20 @@ import './RibbonLogo.css'
 
 export function RibbonLogo() {
   // Möbius passes through the loops of the two d's.
-  // Crossing CPs use ±(14,14) offset → 45° tangents, 90° crossing angle → smooth ribbon X.
+  // Crossing CPs use ±(18,18) offset → 45° tangents, wide sweeping S at center.
   // All 4 junctions are exact mirror-reflections → fully smooth throughout.
   const infinityPath = [
     "M 44,44",
-    "C 44,24 62,30 76,44",
-    "C 90,58 98,64 98,44",
-    "C 98,24 90,30 76,44",
-    "C 62,58 44,64 44,44",
+    "C 44,24 58,26 76,44",
+    "C 94,62 98,64 98,44",
+    "C 98,24 94,26 76,44",
+    "C 58,62 44,64 44,44",
     "Z"
   ].join(" ")
 
   // Flipped: right-to-left arc is now the bright over-strand
-  const strandOver = "M 98,44 C 98,24 90,30 76,44 C 62,58 44,64 44,44"
-  const strandUnder = "M 44,44 C 44,24 62,30 76,44 C 90,58 98,64 98,44"
+  const strandOver = "M 98,44 C 98,24 94,26 76,44 C 58,62 44,64 44,44"
+  const strandUnder = "M 44,44 C 44,24 58,26 76,44 C 94,62 98,64 98,44"
 
   return (
     <svg
@@ -139,7 +139,7 @@ export function RibbonLogo() {
       />
 
       {/* Crossing bridge — covers the under strand at the fold point */}
-      <ellipse cx="76" cy="44" rx="5" ry="4" fill="#0a0a12" />
+      <ellipse cx="76" cy="44" rx="7" ry="6" fill="#0a0a12" />
 
       {/* OVER strand — the front side of the fold (bright, thicker) */}
       <path

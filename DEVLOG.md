@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-04-09 — Möbius crossing: wider S-curve sweep, larger bridge
+
+- **Crossing CPs widened**: ±(14,14) → ±(18,18). CPs now 4px further from the crossing in both axes → noticeably larger, more sweeping S-curve at center. Eliminates the "nubby" pinched look.
+- **Crossing bridge enlarged**: ellipse rx/ry from 5×4 → 7×6 to cleanly cover the wider under-strand region.
+
 ## 2026-04-09 — Möbius crossing smoothed to 90° ribbon X
 
 - **Crossing angle fix**: Changed crossing CPs from ±(12,22) to ±(14,14). This shifts the tangent at the center crossing from 61° (steep/pinched) to 45° (diagonal), giving the two strands a clean 90° crossing angle — looks like a ribbon twisting rather than two arcs poking together.
