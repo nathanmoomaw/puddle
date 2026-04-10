@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-04-09 — v1 docs: CHANGELOG, README, CLAUDE.md updates
+
+- **CHANGELOG.md created**: Full v1 feature summary grouped by category (instrument, visuals, input, sharing/crypto, layout, bugs fixed, deployment).
+- **README.md updated**: Added double-space marble clear shortcut, Return=shake, dev preview URL, deployment table, CHANGELOG link, HTTPS dev server note.
+- **CLAUDE.md updated**: Replaced TBD hosting with actual deployment URLs + versioning scheme. Added marbles, logo geometry, iOS audio quirk, AudioWorklet HTTPS requirement, looper current state. Removed stale "ribbon" composition note. Fixed design principles section.
+- **Global memory**: Added `ios_web_audio_silent_mode.md` — pattern for any future Web Audio project on iOS.
+- **Project memory**: Added `project_v1_git_scheme.md` — nmj/vX dev branch → vX tag → permanent /vX snapshot.
+
 ## 2026-04-09 — iOS silent mode audio fix
 
 - **iOS silent mode bypass**: Added `unlockIOSAudio()` in `AudioEngine.js`. On first user gesture on iOS, a 1-sample silent WAV is played through an HTML `<audio>` element (`playsinline`, volume 0.001). This forces iOS to upgrade the AVAudioSession category from "ambient" (muted by hardware silent switch) to "playback" (bypasses silent mode). Web Audio API alone cannot trigger this category change.
