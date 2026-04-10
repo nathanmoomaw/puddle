@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-04-10 — Info modal toggle fix
+
+- **Info button toggle**: Clicking `ⓘ` while modal was open would close then immediately reopen it. Root cause: modal's `pointerdown` outside-click handler fired first (closing modal), then button `onClick` toggled it back open. Fix: `onPointerDown={e => e.stopPropagation()}` on the button — outside-click handler never sees the button press; `onClick` alone handles the toggle.
+
 ## 2026-04-10 — iOS audio unlock: two bugs fixed
 
 Two bugs in the iOS silent mode bypass, explaining why users still reported no sound:

@@ -787,6 +787,7 @@ function App() {
           <button
             className={`app-header__info-btn ${showInfo ? 'app-header__info-btn--active' : ''}`}
             onClick={() => setShowInfo(v => !v)}
+            onPointerDown={e => e.stopPropagation()}
             title="About Puddle"
             aria-label="About Puddle"
           >

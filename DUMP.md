@@ -100,5 +100,4 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
   - Fixed two bugs: (1) createMediaElementSource was routing unlock audio through suspended Web Audio graph — iOS never saw output → session stayed "ambient". Removed that bridge; HTML audio now plays independently. (2) unlockIOSAudio() was deferred to 2nd gesture (init() sets up listener, listener fires on next gesture). Fixed by calling unlockIOSAudio() + ctx.resume() directly inside init(), which is always called from a gesture handler.
 [x] lead me through how to setup an account with poap for use with this app
   - See walkthrough in chat. Short: POAP.xyz account → create event → get mint links/QR → distribute. Puddle's POAP integration uses milestone tracking in localStorage to detect when users earn badges; actual POAP minting happens through poap.xyz or your own distributor contract. The RibbonPuddle.sol contract is a separate ERC-721 for QR preset ownership, not POAP protocol.
-
-
+[x] when info modal is open, if the user clicks the i icon again it should close the modal
