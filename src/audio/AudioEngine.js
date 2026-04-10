@@ -116,20 +116,33 @@ function ensureResumed() {
 // iOS silent mode fix: playing an HTML Audio element forces iOS to upgrade the
 // AVAudioSession category from "ambient" (muted by silent mode) to "playback"
 // (bypasses silent mode). Web Audio API alone can't do this.
-let iosUnlocked = false
+// iosAudioEl is set only after play() resolves — null means not yet unlocked
+let iosAudioEl = null
 function unlockIOSAudio() {
-  if (iosUnlocked) return
+  if (iosAudioEl) return
   const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent)
   if (!isIOS) return
-  iosUnlocked = true
+
   const el = document.createElement('audio')
   el.setAttribute('playsinline', 'true')
   el.setAttribute('preload', 'auto')
   // Minimal valid 1-sample silent WAV
   el.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='
   el.loop = true
-  el.volume = 0.001
-  el.play().catch(() => {})
+
+  // Bridge HTML audio into the Web Audio graph — this forces iOS to upgrade
+  // AVAudioSession from "ambient" (silenced by ring switch) to "playback"
+  // (bypasses silent mode). Connecting to the graph ties both unlocks together.
+  try {
+    const source = ctx.createMediaElementSource(el)
+    source.connect(ctx.destination)
+  } catch (_) {}
+
+  el.play().then(() => {
+    iosAudioEl = el // only mark unlocked after confirmed playing
+  }).catch(() => {
+    // play() rejected (no gesture context) — will retry on next gesture
+  })
 }
 
 let gestureListenerAdded = false
@@ -140,8 +153,9 @@ function addGestureListener() {
   const handler = () => {
     unlockIOSAudio()
     ensureResumed()
-    // Keep listening until context is actually running (Android can be stubborn)
-    if (ctx && ctx.state === 'running') {
+    // Remove only after BOTH AudioContext is running AND iOS audio is unlocked
+    const iosOk = !/iP(ad|hone|od)/i.test(navigator.userAgent) || iosAudioEl
+    if (ctx && ctx.state === 'running' && iosOk) {
       events.forEach(e => document.removeEventListener(e, handler, true))
     }
   }
