@@ -344,7 +344,7 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     }
 
     const link = document.createElement('a')
-    link.download = `ribbon${name ? '-' + name.trim().replace(/\s+/g, '-').toLowerCase() : '-preset'}.png`
+    link.download = `puddle${name ? '-' + name.trim().replace(/\s+/g, '-').toLowerCase() : '-preset'}.png`
     link.href = dlCanvas.toDataURL('image/png')
     link.click()
   }, [name])

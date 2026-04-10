@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-09 — Rename remaining "ribbon" → "puddle" in user-facing strings
+
+- **MobileSplash**: logo text `"ribbon"` → `"puddle"`, sessionStorage key `ribbon_splashed` → `puddle_splashed`
+- **AudioEngine**: mediaSession title `"Ribbon Synth"` → `"Puddle"`
+- **PresetQR**: QR image download filename `ribbon-preset.png` → `puddle-preset.png`
+
 ## 2026-04-09 — v1 docs: CHANGELOG, README, CLAUDE.md updates
 
 - **CHANGELOG.md created**: Full v1 feature summary grouped by category (instrument, visuals, input, sharing/crypto, layout, bugs fixed, deployment).

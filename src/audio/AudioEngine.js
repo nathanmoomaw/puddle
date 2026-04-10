@@ -288,7 +288,7 @@ export function voiceOn(id, hz, velocity = 1) {
 
   if ('mediaSession' in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: 'Ribbon Synth',
+      title: 'Puddle',
       artist: 'Live Session',
     })
     navigator.mediaSession.playbackState = 'playing'

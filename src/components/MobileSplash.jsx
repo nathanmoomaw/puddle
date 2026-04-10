@@ -18,13 +18,13 @@ export function MobileSplash({ onEnter }) {
 
   useEffect(() => {
     // Only show on mobile, and only once per session
-    if (isMobile() && !sessionStorage.getItem('ribbon_splashed')) {
+    if (isMobile() && !sessionStorage.getItem('puddle_splashed')) {
       setVisible(true)
     }
   }, [])
 
   const handleEnter = useCallback(() => {
-    sessionStorage.setItem('ribbon_splashed', '1')
+    sessionStorage.setItem('puddle_splashed', '1')
     requestFullscreen()
     setVisible(false)
     onEnter?.()
@@ -35,7 +35,7 @@ export function MobileSplash({ onEnter }) {
   return (
     <div className="mobile-splash" onClick={handleEnter}>
       <div className="mobile-splash__content">
-        <div className="mobile-splash__logo">ribbon</div>
+        <div className="mobile-splash__logo">puddle</div>
         <div className="mobile-splash__hint">tap to enter</div>
       </div>
     </div>

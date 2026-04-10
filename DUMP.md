@@ -67,8 +67,10 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] move all these buttons to the upper right of screen at all sizes in this order from top to bottom: midi, poap, wallet
 [x] move lower right qr to the upper left like the mobile qr is currently so they both have this in the same place
 [x] roadmap: logo still needs work.  need to approach in a new way
+[x] ios safari not making sound sometimes (gets confused with system volume?).  seems to get fixed if people turn off silent mode on their phones, but that shouldn't be necessary, should it?
+[x] the splash screen still says ribbon, it should say puddle
 
 --- V1 reached, tagged, deployed ---
 
-[x] ios safari not making sound sometimes (gets confused with system volume?).  seems to get fixed if people turn off silent mode on their phones, but that shouldn't be necessary, should it?
 
+[x] ok, note that we've reached v1 at this point.  let's update all the docs, make a v1 changelog and review DUMP for memory improvement and anything that should be memorized globally, update CLAUDE and README, too
