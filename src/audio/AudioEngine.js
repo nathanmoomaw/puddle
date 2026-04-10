@@ -145,10 +145,10 @@ function unlockIOSAudio() {
   })
 }
 
-let gestureListenerAdded = false
+let gestureListenerActive = false
 function addGestureListener() {
-  if (gestureListenerAdded) return
-  gestureListenerAdded = true
+  if (gestureListenerActive) return
+  gestureListenerActive = true
   const events = ['touchstart', 'touchend', 'mousedown', 'pointerdown', 'click', 'keydown']
   const handler = () => {
     unlockIOSAudio()
@@ -157,6 +157,7 @@ function addGestureListener() {
     const iosOk = !/iP(ad|hone|od)/i.test(navigator.userAgent) || iosAudioEl
     if (ctx && ctx.state === 'running' && iosOk) {
       events.forEach(e => document.removeEventListener(e, handler, true))
+      gestureListenerActive = false // allow re-add if ctx suspends again
     }
   }
   events.forEach(e => document.addEventListener(e, handler, true))
@@ -165,7 +166,21 @@ function addGestureListener() {
 export function init() {
   if (ctx) return getEngine()
 
-  ctx = new (window.AudioContext || window.webkitAudioContext)()
+  ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' })
+
+  // Re-add gesture listener any time AudioContext unexpectedly suspends (phone
+  // call, Siri, tab switch) so the next touch can resume it
+  ctx.addEventListener('statechange', () => {
+    if (ctx.state === 'suspended') addGestureListener()
+  })
+
+  // When page regains visibility, try resuming immediately — works on Android
+  // and some iOS cases without needing a fresh gesture
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(() => {})
+    }
+  })
 
   // Set up gesture-based resume for mobile browsers
   addGestureListener()
