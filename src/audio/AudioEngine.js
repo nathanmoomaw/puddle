@@ -116,6 +116,11 @@ function ensureResumed() {
 // iOS silent mode fix: playing an HTML Audio element forces iOS to upgrade the
 // AVAudioSession category from "ambient" (muted by silent mode) to "playback"
 // (bypasses silent mode). Web Audio API alone can't do this.
+//
+// IMPORTANT: Do NOT route this element through Web Audio via createMediaElementSource.
+// If routed through a suspended AudioContext, no audio reaches the speakers and iOS
+// never sees the audio output → AVAudioSession stays "ambient" → muted by silent switch.
+// Playing the element independently lets iOS detect audio output and upgrade the session.
 // iosAudioEl is set only after play() resolves — null means not yet unlocked
 let iosAudioEl = null
 function unlockIOSAudio() {
@@ -126,20 +131,15 @@ function unlockIOSAudio() {
   const el = document.createElement('audio')
   el.setAttribute('playsinline', 'true')
   el.setAttribute('preload', 'auto')
+  el.volume = 0.001
   // Minimal valid 1-sample silent WAV
   el.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='
   el.loop = true
 
-  // Bridge HTML audio into the Web Audio graph — this forces iOS to upgrade
-  // AVAudioSession from "ambient" (silenced by ring switch) to "playback"
-  // (bypasses silent mode). Connecting to the graph ties both unlocks together.
-  try {
-    const source = ctx.createMediaElementSource(el)
-    source.connect(ctx.destination)
-  } catch (_) {}
-
   el.play().then(() => {
     iosAudioEl = el // only mark unlocked after confirmed playing
+    // Session is now "playback" — resume AudioContext immediately
+    ctx.resume().catch(() => {})
   }).catch(() => {
     // play() rejected (no gesture context) — will retry on next gesture
   })
@@ -182,7 +182,13 @@ export function init() {
     }
   })
 
-  // Set up gesture-based resume for mobile browsers
+  // init() is always called from a user-gesture handler (see useAudioEngine.js).
+  // Attempt iOS audio unlock immediately — don't wait for a second gesture.
+  unlockIOSAudio()
+  ctx.resume().catch(() => {})
+
+  // Set up gesture-based resume for mobile browsers (handles subsequent gestures
+  // and recovery after interruptions like phone calls / Siri)
   addGestureListener()
 
   masterGain = ctx.createGain()

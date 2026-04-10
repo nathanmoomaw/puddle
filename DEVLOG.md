@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-04-10 — iOS audio unlock: two bugs fixed
+
+Two bugs in the iOS silent mode bypass, explaining why users still reported no sound:
+
+1. **`createMediaElementSource` catch-22**: The unlock HTML audio element was connected to the Web Audio graph via `createMediaElementSource`. When the AudioContext is suspended (always true on iOS before first gesture), no audio can pass through the graph — so no audio reaches the speakers, iOS never detects output, and AVAudioSession stays in "ambient" (muted by silent switch). Fix: removed `createMediaElementSource`; HTML audio now plays independently. iOS detects the audio output and upgrades the session to "playback", which then applies to Web Audio too.
+
+2. **Unlock deferred to 2nd gesture**: `init()` calls `addGestureListener()` which sets up a listener for the NEXT gesture. But `init()` itself is called from inside the `useAudioEngine` gesture handler (gesture 1 = splash tap). So the iOS unlock was firing on gesture 2 (first puddle touch), not gesture 1. Fix: call `unlockIOSAudio()` and `ctx.resume()` directly inside `init()`, which runs in the splash-tap gesture context.
+
 ## 2026-04-10 — Info modal close button, CI versioning, v1 branch deploy strategy
 
 - **Info modal close button**: Added `×` button inside modal (top-right) as explicit close in addition to outside-click / Escape.

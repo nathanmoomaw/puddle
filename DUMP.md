@@ -96,5 +96,9 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
   - Added to ROADMAP.md
 [x] is there a way to test this as if it's being run from an iphone that has silent mode on? when i check this on other people's phones they get no sound until they turn silent mode off.  this is not ideal
   - See answer below. Short: no perfect simulator, but Chrome DevTools mobile emulation + manually muting Mac system audio is closest. Real device testing is best — use TestFlight or just share puddle-dev URL.
+[x] need to make sure audio is getting turned on as soon as we enter the app.  ios users still reporting the audio not working when they first visit the app
+  - Fixed two bugs: (1) createMediaElementSource was routing unlock audio through suspended Web Audio graph — iOS never saw output → session stayed "ambient". Removed that bridge; HTML audio now plays independently. (2) unlockIOSAudio() was deferred to 2nd gesture (init() sets up listener, listener fires on next gesture). Fixed by calling unlockIOSAudio() + ctx.resume() directly inside init(), which is always called from a gesture handler.
+[x] lead me through how to setup an account with poap for use with this app
+  - See walkthrough in chat. Short: POAP.xyz account → create event → get mint links/QR → distribute. Puddle's POAP integration uses milestone tracking in localStorage to detect when users earn badges; actual POAP minting happens through poap.xyz or your own distributor contract. The RibbonPuddle.sol contract is a separate ERC-721 for QR preset ownership, not POAP protocol.
 
 
