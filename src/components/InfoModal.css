@@ -1,0 +1,58 @@
+.info-modal {
+  position: fixed;
+  top: 48px;
+  left: 8px;
+  width: 200px;
+  max-width: calc(100vw - 16px);
+  background: linear-gradient(135deg, rgba(18, 14, 38, 0.97), rgba(30, 24, 55, 0.99));
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 12px rgba(139, 92, 246, 0.08);
+  padding: 0.7rem 0.75rem;
+  z-index: 9997;
+  backdrop-filter: blur(12px);
+}
+
+.info-modal__synopsis {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(200, 180, 255, 0.8);
+  line-height: 1.5;
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+.info-modal__version {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: rgba(139, 92, 246, 0.5);
+  letter-spacing: 0.12em;
+  text-align: right;
+}
+
+/* Info trigger button — below the QR icon, upper-left */
+.app-header__info-btn {
+  position: absolute;
+  top: 38px;
+  left: 6px;
+  background: none;
+  border: none;
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  opacity: 0.4;
+  transition: opacity 0.15s;
+  line-height: 1;
+  color: rgba(139, 92, 246, 0.9);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.app-header__info-btn:hover {
+  opacity: 0.85;
+}
+
+.app-header__info-btn--active {
+  opacity: 0.85;
+}

@@ -909,6 +909,15 @@
   /* Override --full spanning for delay on mobile */
   .controls__shared .controls__section--delay { grid-column: 1; }
 
+  /* VCF spans full width below filter/crunch row on mobile */
+  .controls__shared .vcf-control {
+    grid-column: 1 / -1;
+    order: -1;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+
   .controls__section {
     min-width: 0;
   }

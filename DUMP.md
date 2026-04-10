@@ -72,5 +72,17 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 
 --- V1 reached, tagged, deployed ---
 
-
 [x] ok, note that we've reached v1 at this point.  let's update all the docs, make a v1 changelog and review DUMP for memory improvement and anything that should be memorized globally, update CLAUDE and README, too
+
+# Friday April 10
+
+[x] according to all my ios friends who test this the bug where if an iphone is on silent mode they don't hear sound still exists
+[] todo: work on figuring out what the hell POAP do and test some mints
+[x] todo: adjust mobile vcf position
+[x] poap button only showing sometimes?
+[x] poap modal thing presently goes off screen
+[x] note: liking the static placement of the qr icon on the top  left and the midi, poap, wallet at the top right corner.  this should be default for synth apps born of this lineage in the future
+[x] new feature for this project and likely it's successors: simple subtle info button just below the qr icon. try using a nice i icon of some sort that matches the app vibe.  it should invoke a modal with a one sentence synopsis, likely derived from mythos and it should have the app version number in there, too
+[x] help me determine a good way to number these versions.  basically we're working towards v1, v2, etc, but each commit should sorta be thought of as a minor version number.  want way to automatically increment and keep track of which version has been deployed
+  - Strategy: use `npm version patch` (bumps 1.0.x) for each commit batch, `npm version minor` for notable features (1.x.0), `npm version major` for tagged versions (v2.0.0 = v2). package.json version is read at build time by InfoModal. CI can tag the deploy with the version. Currently at 1.0.0 = v1.
+

@@ -79,6 +79,7 @@ export function checkMilestone(milestoneId) {
 
   state[milestoneId] = { achieved: true, date: new Date().toISOString() }
   saveState(state)
+  window.dispatchEvent(new CustomEvent('puddle:milestone-earned'))
 
   return MILESTONES[milestoneId] || null
 }
@@ -98,6 +99,7 @@ export function incrementMilestone(milestoneId, threshold) {
     state[milestoneId].achieved = true
     state[milestoneId].date = new Date().toISOString()
     saveState(state)
+    window.dispatchEvent(new CustomEvent('puddle:milestone-earned'))
     return MILESTONES[milestoneId] || null
   }
 

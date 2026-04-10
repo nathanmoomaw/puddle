@@ -11,10 +11,13 @@ export function MilestoneBadge() {
   const [open, setOpen] = useState(false)
   const panelRef = useRef(null)
 
-  // Refresh achieved list on mount and whenever panel opens
+  // Refresh achieved list on mount, when panel opens, and when any milestone is earned
+  const refresh = useCallback(() => setAchieved(getAchievedMilestones()), [])
+  useEffect(() => { refresh() }, [open, refresh])
   useEffect(() => {
-    setAchieved(getAchievedMilestones())
-  }, [open])
+    window.addEventListener('puddle:milestone-earned', refresh)
+    return () => window.removeEventListener('puddle:milestone-earned', refresh)
+  }, [refresh])
 
   // Close on outside click
   useEffect(() => {

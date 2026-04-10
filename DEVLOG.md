@@ -1,5 +1,16 @@
 # Devlog
 
+## 2026-04-10 — POAP badge fix, VCF mobile layout, info button, version 1.0.0
+
+- **POAP badge visibility fix**: `MilestoneBadge` only refreshed on open/mount — missed milestones earned mid-session. Fixed by dispatching `puddle:milestone-earned` custom event from `milestones.js` and listening for it in the badge component.
+- **POAP modal off-screen fix**: Panel was `position: absolute; bottom: 100%; right: 0` — could clip off viewport on small screens. Switched to `position: fixed; top: 48px; right: 8px; max-width: calc(100vw - 16px)`.
+- **Mobile VCF position**: Added explicit mobile grid placement — `grid-column: 1 / -1; order: -1` puts VCF in its own full-width row between filter/crunch and delay, with horizontal flex layout.
+- **Info button**: Added subtle `ⓘ` button below QR icon (upper-left). Toggles a small modal with one-line synopsis derived from MYTHOS + version number. Reads version from `package.json` at build time.
+- **Version 1.0.0**: Bumped `package.json` from `0.0.0` → `1.0.0`. Version strategy: `npm version patch` per commit batch, `minor` for notable features, `major` for v2/v3 milestones.
+- **Global memory**: Added `pattern_synth_ui_layout.md` — canonical synth header layout (QR upper-left, MIDI/POAP/wallet upper-right) for future projects in this lineage.
+
+## 2026-04-10 — iOS audio robustness improvements
+
 ## 2026-04-09 — Rename remaining "ribbon" → "puddle" in user-facing strings
 
 - **MobileSplash**: logo text `"ribbon"` → `"puddle"`, sessionStorage key `ribbon_splashed` → `puddle_splashed`

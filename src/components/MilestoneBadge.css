@@ -35,10 +35,12 @@
 }
 
 .milestone-badge__panel {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  right: 0;
+  position: fixed;
+  bottom: auto;
+  top: 48px;
+  right: 8px;
   width: 220px;
+  max-width: calc(100vw - 16px);
   background: linear-gradient(135deg, rgba(30, 24, 55, 0.97), rgba(18, 14, 38, 0.99));
   border: 1px solid rgba(224, 64, 251, 0.2);
   border-radius: 10px;

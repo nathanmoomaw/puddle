@@ -21,6 +21,7 @@ import { HIDDEN_SCALES } from './utils/scales'
 import { readPresetFromUrl } from './utils/presets'
 import { WalletButton } from './components/WalletButton'
 import { MilestoneBadge } from './components/MilestoneBadge'
+import { InfoModal } from './components/InfoModal'
 import { MobileSplash } from './components/MobileSplash'
 import { PresetSplash } from './components/PresetSplash'
 import { useMarbles } from './hooks/useMarbles'
@@ -104,6 +105,7 @@ function App() {
   const [easterEgg, setEasterEgg] = useState(false)
   const [qrSettings, setQrSettings] = useState(null)
   const [wizardActive, setWizardActive] = useState(false)
+  const [showInfo, setShowInfo] = useState(false)
   const [presetSplashDone, setPresetSplashDone] = useState(!_urlPreset)
   const ribbonInteraction = useRef({ position: null, velocity: 0, active: false })
   const controlsRef = useRef(null)
@@ -772,7 +774,7 @@ function App() {
       <div className="app__grid-floor" ref={gridFloorRef} />
 
       <header className="app-header">
-        {/* Left: QR — always visible */}
+        {/* Left: QR + info — always visible, upper-left */}
         <div className="app-header__left">
           <button
             className="app-header__qr-btn"
@@ -782,6 +784,15 @@ function App() {
           >
             &#x25A3;
           </button>
+          <button
+            className={`app-header__info-btn ${showInfo ? 'app-header__info-btn--active' : ''}`}
+            onClick={() => setShowInfo(v => !v)}
+            title="About Puddle"
+            aria-label="About Puddle"
+          >
+            ⓘ
+          </button>
+          {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
         </div>
         {/* Center: logo — always dead center via CSS grid */}
         <div className="app-header__logo" onClick={() => { requestMotionPermission(); handleShake(0.5) }} role="button" tabIndex={0} aria-label="Shake / Randomize">
