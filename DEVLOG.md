@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-04-10 — Info modal close button, CI versioning, v1 branch deploy strategy
+
+- **Info modal close button**: Added `×` button inside modal (top-right) as explicit close in addition to outside-click / Escape.
+- **Git SHA in build**: All CI jobs now inject `VITE_GIT_SHA` env var at build time. InfoModal shows `v1.0.0 · abc1234` — version + short commit SHA so each deploy is identifiable.
+- **Branch-based versioned deploys**: Added `deploy-stable-branch` CI job — push to any `v[0-9]*` branch (e.g. `v1`) autodeploys to `/v1/` on prod S3. Flow: dev work on `nmj/v1` → merge to `v1` branch when stable → autodeploys to `/v1/`. Tags remain for point-in-time snapshots. `main` still serves latest stable at root.
+- **Confirmed**: `nmj/**` → puddle-dev already working as expected.
+- **Roadmap**: Added "try Pretext as puddle surface" entry.
+
 ## 2026-04-10 — POAP badge fix, VCF mobile layout, info button, version 1.0.0
 
 - **POAP badge visibility fix**: `MilestoneBadge` only refreshed on open/mount — missed milestones earned mid-session. Fixed by dispatching `puddle:milestone-earned` custom event from `milestones.js` and listening for it in the badge component.

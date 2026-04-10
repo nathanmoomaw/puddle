@@ -13,6 +13,24 @@
   backdrop-filter: blur(12px);
 }
 
+.info-modal__close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: none;
+  border: none;
+  color: rgba(139, 92, 246, 0.5);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.info-modal__close:hover {
+  color: rgba(139, 92, 246, 0.9);
+}
+
 .info-modal__synopsis {
   font-family: var(--font-mono);
   font-size: 0.6rem;

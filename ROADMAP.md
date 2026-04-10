@@ -31,6 +31,7 @@
 
 ## Puddle Fork (post-v3)
 - [x] Fork ribbon into puddle.obfusco.us as a separate project
+- [ ] Try a version of puddle using Pretext as the puddle surface
 - [ ] Full-bleed puddle: future version where puddle extends across entire screen with controls floating over it
 - [ ] Ambient/marble-focused play: tone clips and moods without needing arp or poly
 - [ ] Mutation trail: each project version forks to create new themed variants (Smash, etc.)

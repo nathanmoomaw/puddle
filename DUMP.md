@@ -85,4 +85,16 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
 [x] new feature for this project and likely it's successors: simple subtle info button just below the qr icon. try using a nice i icon of some sort that matches the app vibe.  it should invoke a modal with a one sentence synopsis, likely derived from mythos and it should have the app version number in there, too
 [x] help me determine a good way to number these versions.  basically we're working towards v1, v2, etc, but each commit should sorta be thought of as a minor version number.  want way to automatically increment and keep track of which version has been deployed
   - Strategy: use `npm version patch` (bumps 1.0.x) for each commit batch, `npm version minor` for notable features (1.x.0), `npm version major` for tagged versions (v2.0.0 = v2). package.json version is read at build time by InfoModal. CI can tag the deploy with the version. Currently at 1.0.0 = v1.
+[x] add a x to close out the info modal
+[x] automate the version control, tying it to commits in github
+  - CI now injects VITE_GIT_SHA into all build jobs; InfoModal shows `v1.0.0 · abc1234` (version + short commit SHA)
+[x] let's rethink the strategy for what lives at /v1.  it's presently coming from the tag i believe, but I think it makes more sense to create a v1 branch (distinct from my personal nmj/v1) that holds the latest stable version of v1 (and successive versions accordingly).  this way i can merge my dev branch, presently nmj/v1 because we're on v1, into v1 when it's stable and it should autodeploy to /v1.  the latest stable version of whatever v we're on should also be merged into main
+  - Added deploy-stable-branch CI job: push to `v1` (or `v2`, etc.) branch → autodeploys to /v1/ on prod S3. Tags still work for point-in-time snapshots.
+[x] puddle-dev should still be autodeploying from my present personal branch, currently nmj/v1
+  - Already implemented: nmj/** → puddle-dev.obfusco.us. Confirmed working.
+[x] roadmap: try a version of puddle using pretext for the puddle
+  - Added to ROADMAP.md
+[x] is there a way to test this as if it's being run from an iphone that has silent mode on? when i check this on other people's phones they get no sound until they turn silent mode off.  this is not ideal
+  - See answer below. Short: no perfect simulator, but Chrome DevTools mobile emulation + manually muting Mac system audio is closest. Real device testing is best — use TestFlight or just share puddle-dev URL.
+
 
