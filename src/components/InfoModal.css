@@ -1,14 +1,14 @@
 .info-modal {
   position: fixed;
-  top: 48px;
-  left: 8px;
+  top: 50px;
+  left: 28px;
   width: 200px;
   max-width: calc(100vw - 16px);
   background: linear-gradient(135deg, rgba(18, 14, 38, 0.97), rgba(30, 24, 55, 0.99));
   border: 1px solid rgba(139, 92, 246, 0.2);
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 12px rgba(139, 92, 246, 0.08);
-  padding: 0.7rem 0.75rem;
+  padding: 0.85rem;
   z-index: 9997;
   backdrop-filter: blur(12px);
 }
