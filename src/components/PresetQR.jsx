@@ -296,6 +296,8 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
   const { mint, status: mintStatus, tokenId: freshTokenId, error: mintError } = useMintPuddle()
   // Store confirmed token ID in state so it survives re-renders after refetch
   const [confirmedTokenId, setConfirmedTokenId] = useState(null)
+  // Track the name at mint time so we can show it after mint
+  const [mintedName, setMintedName] = useState(null)
 
   // Build URL with current name
   const url = useMemo(
@@ -366,6 +368,7 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     // pinPuddleMetadata calls puddleDisplayName() internally → "Puddle {base}"
     // contract tokenURI prepends "Puddle " to s.name → "Puddle {base}"
     const rawBase = name.trim() || autoName(contentHash)
+    setMintedName(rawBase)
 
     // Pin QR image + metadata to IPFS (no-ops if VITE_PINATA_JWT unset)
     // The returned URI is stored on-chain so OpenSea can show the QR image
@@ -411,6 +414,7 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
   const isOwnedByOther = isMinted && !isOwnedByMe
 
   // Mint button label
+  const resolvedName = mintedName || (name.trim() || null)
   let mintLabel = 'Mint as Puddle'
   if (!PUDDLE_CONTRACT_ADDRESS)         mintLabel = 'Contract not deployed'
   else if (!isConnected)                mintLabel = 'Connect wallet to mint'
@@ -418,8 +422,8 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
   else if (mintStep === 'confirm')      mintLabel = 'Confirm in wallet…'
   else if (mintStatus === 'pending')    mintLabel = 'Signing…'
   else if (mintStatus === 'confirming') mintLabel = 'Confirming…'
-  else if (mintStep === 'done')         mintLabel = `Puddle #${displayedTokenId ?? '?'} minted! ✦`
-  else if (isOwnedByMe)                 mintLabel = `✦ Puddle #${displayedTokenId} — View on OpenSea`
+  else if (mintStep === 'done')         mintLabel = resolvedName ? `Puddle ${resolvedName} #${displayedTokenId ?? '?'} minted! ✦` : `Puddle #${displayedTokenId ?? '?'} minted! ✦`
+  else if (isOwnedByMe)                 mintLabel = resolvedName ? `✦ Puddle ${resolvedName} #${displayedTokenId}` : `✦ Puddle #${displayedTokenId} — View on OpenSea`
   else if (isOwnedByOther)             mintLabel = `Owned by ${owner?.slice(0,6)}…${owner?.slice(-4)}`
 
   const isMintedState = mintStep === 'done' || isOwnedByMe
@@ -439,6 +443,12 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     }
     handleMint()
   }, [isMintedState, openSeaUrl, isConnected, openConnectModal, handleMint])
+
+  // Scroll lock — prevent background scroll while modal is open (critical on mobile)
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
 
   // Close on Escape
   useEffect(() => {
@@ -462,7 +472,6 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
           value={name}
           onChange={e => setName(e.target.value)}
           maxLength={40}
-          autoFocus
         />
 
         {/* Ownership / wallet / loop metadata */}

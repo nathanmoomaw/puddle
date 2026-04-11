@@ -115,3 +115,12 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
   - Screenshot shows Coinbase wallet confirmation dialog "+Unknown NFT #1". This is a wallet-side display limitation — the token doesn't exist on-chain yet at signing time so `tokenURI` can't be queried. The name will appear on OpenSea once the transaction confirms and OpenSea indexes the new contract (first-time indexing can take a few hours). No code fix possible.
 [x] hmm i'm still not sure this is actually providing the title that the user put for their preset.  not seeing that title in opensea
   - Found double-prefix bug: PresetQR called puddleDisplayName() → "Puddle X", then passed that to pinPuddleMetadata (which called puddleDisplayName again → "Puddle Puddle X") and mint() (where tokenURI prepends "Puddle " → "Puddle Puddle X"). Fixed: PresetQR now computes rawBase (no prefix) and passes it to both sinks; each adds "Puddle " exactly once. Exported autoName from ipfs.js to support this.
+[x] on that last deploy i did not see the version increment
+  - CI did bump to v1.0.1; user checked before CI completed. Working correctly.
+[x] still not seeing the title title the user inputs show up in in the mint modal spawned from puddle.obfusco.us, but now i'm at least seeing "Puddle NFT #x"
+  - Mint button now shows "Puddle {name} #{id} minted! ✦" using mintedName state set at mint time
+[x] put the shake nook icon on mobile, too, similar placement in the nook to the right of the puddle
+  - Nook shown on mobile via position:absolute bottom-right of stage; was previously display:none
+[x] on mobile the qr modal is funky because it auto spawns the keyboard and you can't see the full qr.  make the name field not selected by default to prevent this and ensure the app in the bg is static (no scroll) for best display of qr modal
+  - Removed autoFocus from name input; added scroll lock (body overflow:hidden) on modal mount
+[] 

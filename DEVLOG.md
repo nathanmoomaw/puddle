@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-04-10 — QR modal UX, mobile shake nook, mint name display
+
+- **QR modal scroll lock**: Added `body overflow:hidden` on modal mount so background doesn't scroll on mobile. Cleaned up on close.
+- **QR modal keyboard fix**: Removed `autoFocus` from the preset name input — prevents iOS keyboard from auto-opening and obscuring the QR code.
+- **Mint name in UI**: Mint button now shows the preset name after mint — "Puddle {name} #{id} minted! ✦" instead of just the token ID.
+- **Mobile shake nook**: Enabled the ⚡ shake button on mobile (was `display:none`). Positioned absolutely at bottom-right of the puddle area within the stage.
+
 ## 2026-04-10 — Fix NFT double-prefix name bug
 
 - **Double "Puddle" prefix bug**: `PresetQR` was calling `puddleDisplayName()` to get `"Puddle X"`, then passing that to `pinPuddleMetadata` (which called `puddleDisplayName` again → `"Puddle Puddle X"`) and `mint()` (where the contract's `tokenURI` prepends `"Puddle "` → `"Puddle Puddle X"`). Fixed: `PresetQR` now computes `rawBase` (no prefix) and passes it to both sinks. Each sink adds `"Puddle "` exactly once. Exported `autoName` from `ipfs.js`.
