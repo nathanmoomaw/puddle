@@ -23,6 +23,7 @@ jobs:
         run: npm run build
         env:
           VITE_GIT_SHA: ${{ github.sha }}
+          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -52,6 +53,7 @@ jobs:
         run: npm run build
         env:
           VITE_GIT_SHA: ${{ github.sha }}
+          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -81,6 +83,7 @@ jobs:
         run: npm run build
         env:
           VITE_GIT_SHA: ${{ github.sha }}
+          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -114,6 +117,7 @@ jobs:
         run: npm run build
         env:
           VITE_GIT_SHA: ${{ github.sha }}
+          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:

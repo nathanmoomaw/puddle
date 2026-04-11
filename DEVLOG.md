@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-10 — RibbonPuddle contract deployed to Base mainnet
+
+- **Contract deployed**: `RibbonPuddle.sol` → `0x5B617bc5D45b03Fb9d468dc0969F9601c3C4E089` on Base mainnet
+- **CI wired**: `VITE_PUDDLE_CONTRACT_ADDRESS` added as GitHub Actions secret; all build jobs now inject it so mint UI is live in deployed app
+- **Local `.env`**: contract address added for local dev
+
 ## 2026-04-10 — Info modal toggle fix
 
 - **Info button toggle**: Clicking `ⓘ` while modal was open would close then immediately reopen it. Root cause: modal's `pointerdown` outside-click handler fired first (closing modal), then button `onClick` toggled it back open. Fix: `onPointerDown={e => e.stopPropagation()}` on the button — outside-click handler never sees the button press; `onClick` alone handles the toggle.
