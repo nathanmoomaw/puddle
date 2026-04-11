@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { buildPresetUrl, computePresetHash } from '../utils/presets'
 import { useMintPuddle, usePuddleOwner, PUDDLE_CONTRACT_ADDRESS } from '../crypto/contract'
-import { pinPuddleMetadata, puddleDisplayName } from '../crypto/ipfs'
+import { pinPuddleMetadata, autoName } from '../crypto/ipfs'
 import { checkMilestone } from '../crypto/milestones'
 import './PresetQR.css'
 
@@ -362,22 +362,24 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     if (!isConnected || !PUDDLE_CONTRACT_ADDRESS) return
     setMintStep('pinning')
 
-    // Resolve display name — "Puddle {user name}" or auto-generated if blank
-    const resolvedName = puddleDisplayName(name.trim(), contentHash)
+    // Raw base name (no "Puddle " prefix) — each sink adds its own prefix
+    // pinPuddleMetadata calls puddleDisplayName() internally → "Puddle {base}"
+    // contract tokenURI prepends "Puddle " to s.name → "Puddle {base}"
+    const rawBase = name.trim() || autoName(contentHash)
 
     // Pin QR image + metadata to IPFS (no-ops if VITE_PINATA_JWT unset)
     // The returned URI is stored on-chain so OpenSea can show the QR image
     const metadataURI = await pinPuddleMetadata({
       settings,
-      name: resolvedName,
+      name: rawBase,
       contentHash,
       presetUrl: url,
       canvas: canvasRef.current,
     })
 
     setMintStep('confirm')
-    // Pass resolved name and optional IPFS metadata URI on-chain
-    mint(contentHash, resolvedName, metadataURI || '')
+    // Store raw base name on-chain; tokenURI prepends "Puddle " automatically
+    mint(contentHash, rawBase, metadataURI || '')
   }, [isConnected, contentHash, name, url, settings, mint])
 
   // Watch for mint success — refetch ownership and fire milestone

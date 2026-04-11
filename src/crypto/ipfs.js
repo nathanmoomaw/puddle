@@ -20,7 +20,7 @@ const NOUNS = ['basin', 'bloom', 'cascade', 'cavern', 'crest', 'current', 'drift
   'flare', 'glyph', 'haven', 'hollow', 'lens', 'loop', 'mantle', 'mirage', 'murk',
   'orbit', 'prism', 'ripple', 'slick', 'surge', 'tide', 'veil', 'wake', 'whorl']
 
-function autoName(contentHash) {
+export function autoName(contentHash) {
   // Use first 4 bytes of contentHash as seed
   const seed = parseInt(contentHash.slice(2, 10), 16)
   const adj = ADJECTIVES[seed % ADJECTIVES.length]

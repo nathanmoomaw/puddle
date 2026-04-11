@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-04-10 — Fix NFT double-prefix name bug
+
+- **Double "Puddle" prefix bug**: `PresetQR` was calling `puddleDisplayName()` to get `"Puddle X"`, then passing that to `pinPuddleMetadata` (which called `puddleDisplayName` again → `"Puddle Puddle X"`) and `mint()` (where the contract's `tokenURI` prepends `"Puddle "` → `"Puddle Puddle X"`). Fixed: `PresetQR` now computes `rawBase` (no prefix) and passes it to both sinks. Each sink adds `"Puddle "` exactly once. Exported `autoName` from `ipfs.js`.
+
 ## 2026-04-10 — Auto patch version bump on v1 branch
 
 - **CI auto-version-bump**: `deploy-stable-branch` job now bumps `package.json` patch version on every push to `v1` (and future `v2`, etc.) branches. Commits back as "chore: bump version to vX.Y.Z" with loop guard (`!contains(head_commit.message, 'chore: bump version')`). InfoModal version display updates automatically.
