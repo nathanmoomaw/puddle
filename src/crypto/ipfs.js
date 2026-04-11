@@ -11,6 +11,28 @@
 
 const PINATA_JWT = import.meta.env.VITE_PINATA_JWT
 
+// Cute deterministic name generator for unnamed puddles
+// Uses contentHash to pick consistent adjective + noun
+const ADJECTIVES = ['amber', 'azure', 'bismuth', 'cobalt', 'coral', 'crimson', 'ember', 'fern',
+  'gilded', 'indigo', 'jade', 'lunar', 'midnight', 'neon', 'obsidian', 'opal', 'pearlescent',
+  'prism', 'quartz', 'sable', 'spectral', 'sterling', 'tidal', 'umber', 'verdant', 'violet']
+const NOUNS = ['basin', 'bloom', 'cascade', 'cavern', 'crest', 'current', 'drift', 'echo',
+  'flare', 'glyph', 'haven', 'hollow', 'lens', 'loop', 'mantle', 'mirage', 'murk',
+  'orbit', 'prism', 'ripple', 'slick', 'surge', 'tide', 'veil', 'wake', 'whorl']
+
+function autoName(contentHash) {
+  // Use first 4 bytes of contentHash as seed
+  const seed = parseInt(contentHash.slice(2, 10), 16)
+  const adj = ADJECTIVES[seed % ADJECTIVES.length]
+  const noun = NOUNS[Math.floor(seed / ADJECTIVES.length) % NOUNS.length]
+  return `${adj} ${noun}`
+}
+
+export function puddleDisplayName(name, contentHash) {
+  const base = name?.trim() || autoName(contentHash)
+  return `Puddle ${base}`
+}
+
 const PINATA_PIN_URL  = 'https://api.pinata.cloud/pinning/pinFileToIPFS'
 const PINATA_JSON_URL = 'https://api.pinata.cloud/pinning/pinJSONToIPFS'
 const IPFS_GATEWAY    = 'https://gateway.pinata.cloud/ipfs'
@@ -91,7 +113,7 @@ export async function pinPuddleMetadata({ settings, name, contentHash, presetUrl
   const imageCid = await pinQRImage(canvas, name)
 
   // 2. Build OpenSea-compatible metadata
-  const displayName = name || 'Unnamed Puddle'
+  const displayName = puddleDisplayName(name, contentHash)
   const metadata = {
     name:        displayName,
     description: `A unique Puddle synth preset. Scan the QR code to load this sound at puddle.obfusco.us`,

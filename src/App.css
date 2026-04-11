@@ -499,3 +499,53 @@
   70% { opacity: 0.6; transform: scale(1) translateY(-5px); }
   100% { opacity: 0; transform: scale(0.95) translateY(-15px); }
 }
+
+/* iOS silent mode hint banner */
+.ios-silent-hint {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(14, 10, 32, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 10px;
+  padding: 0.55rem 0.75rem 0.55rem 0.65rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 12px rgba(139, 92, 246, 0.1);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  cursor: pointer;
+  max-width: calc(100vw - 2rem);
+  animation: ios-hint-in 0.3s ease-out;
+}
+
+@keyframes ios-hint-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.ios-silent-hint__icon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.ios-silent-hint__text {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(200, 180, 255, 0.85);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.ios-silent-hint__close {
+  background: none;
+  border: none;
+  color: rgba(139, 92, 246, 0.5);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0 0 0 0.25rem;
+  flex-shrink: 0;
+  line-height: 1;
+}

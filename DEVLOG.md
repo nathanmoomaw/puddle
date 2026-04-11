@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-04-10 — iOS silent hint, NFT naming, contract redeploy
+
+- **iOS silent mode banner**: One-time dismissible hint for iOS users — "No sound? Check the Ring/Silent switch on the side of your iPhone." Shows on arrival, auto-dismisses after 9s, localStorage-persisted dismissal.
+- **NFT name format**: Minted names now follow "Puddle {name}" format. If no name entered, generates a deterministic cute name from contentHash (e.g. "Puddle cobalt whorl"). Resolved name passed to contract so on-chain tokenURI serves it without Pinata.
+- **Contract tokenURI**: `RibbonPuddle.sol` now overrides `tokenURI` to return base64 on-chain JSON metadata with correct display name. OpenSea reads this directly — no IPFS required.
+- **Contract rename**: Collection renamed "Ribbon Puddle" → "Puddle".
+- **Redeployed**: New contract at `0xb41A1E7daB44cC25A9B772c899383F462D72b44F` on Base mainnet. GitHub secret updated.
+
 ## 2026-04-10 — Post-mint OpenSea links in QR modal
 
 - **Minted button → OpenSea**: After minting, the mint button becomes clickable and opens `opensea.io/assets/base/{contract}/{tokenId}` in a new tab. Label changes to "✦ Puddle #N — View on OpenSea".

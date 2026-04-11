@@ -106,6 +106,21 @@ function App() {
   const [qrSettings, setQrSettings] = useState(null)
   const [wizardActive, setWizardActive] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
+
+  // iOS silent mode hint — show once on iOS if not yet dismissed
+  const [showIosHint, setShowIosHint] = useState(() => {
+    const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent)
+    return isIOS && !localStorage.getItem('puddle_ios_hint_dismissed')
+  })
+  const dismissIosHint = useCallback(() => {
+    localStorage.setItem('puddle_ios_hint_dismissed', '1')
+    setShowIosHint(false)
+  }, [])
+  useEffect(() => {
+    if (!showIosHint) return
+    const t = setTimeout(dismissIosHint, 9000)
+    return () => clearTimeout(t)
+  }, [showIosHint, dismissIosHint])
   const [presetSplashDone, setPresetSplashDone] = useState(!_urlPreset)
   const ribbonInteraction = useRef({ position: null, velocity: 0, active: false })
   const controlsRef = useRef(null)
@@ -925,6 +940,14 @@ function App() {
       )}
 
       <MilestoneToast milestone={currentMilestone} onDismiss={dismissMilestone} />
+
+      {showIosHint && (
+        <div className="ios-silent-hint" onClick={dismissIosHint} role="alert">
+          <span className="ios-silent-hint__icon">🔔</span>
+          <span className="ios-silent-hint__text">No sound? Check the Ring/Silent switch on the side of your iPhone.</span>
+          <button className="ios-silent-hint__close" aria-label="Dismiss">×</button>
+        </div>
+      )}
     </div>
   )
 }

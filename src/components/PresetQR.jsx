@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { buildPresetUrl, computePresetHash } from '../utils/presets'
 import { useMintPuddle, usePuddleOwner, PUDDLE_CONTRACT_ADDRESS } from '../crypto/contract'
-import { pinPuddleMetadata } from '../crypto/ipfs'
+import { pinPuddleMetadata, puddleDisplayName } from '../crypto/ipfs'
 import { checkMilestone } from '../crypto/milestones'
 import './PresetQR.css'
 
@@ -362,17 +362,21 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     if (!isConnected || !PUDDLE_CONTRACT_ADDRESS) return
     setMintStep('pinning')
 
+    // Resolve display name — "Puddle {user name}" or auto-generated if blank
+    const resolvedName = puddleDisplayName(name.trim(), contentHash)
+
     // Optional: pin metadata to IPFS first (no-ops if VITE_PINATA_JWT unset)
     await pinPuddleMetadata({
       settings,
-      name: name.trim() || 'Unnamed Puddle',
+      name: resolvedName,
       contentHash,
       presetUrl: url,
       canvas: canvasRef.current,
     })
 
     setMintStep('confirm')
-    mint(contentHash, name.trim())
+    // Store the resolved name on-chain so tokenURI can serve it without IPFS
+    mint(contentHash, resolvedName)
   }, [isConnected, contentHash, name, url, settings, mint])
 
   // Watch for mint success — refetch ownership and fire milestone

@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 /**
  * RibbonPuddle — ERC-721 token representing a unique synth preset ("puddle").
@@ -39,7 +41,30 @@ contract RibbonPuddle is ERC721, ERC721Enumerable, Ownable {
         string  name
     );
 
-    constructor() ERC721("Ribbon Puddle", "PUDDLE") Ownable(msg.sender) {}
+    constructor() ERC721("Puddle", "PUDDLE") Ownable(msg.sender) {}
+
+    // ─── Metadata ────────────────────────────────────────────────────────────
+
+    /**
+     * Returns on-chain JSON metadata so OpenSea shows the preset name
+     * without requiring IPFS pinning.
+     */
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(_ownerOf(tokenId) != address(0), "RibbonPuddle: nonexistent token");
+        PuddleState storage s = _states[tokenId];
+
+        string memory displayName = bytes(s.name).length > 0
+            ? string(abi.encodePacked("Puddle ", s.name))
+            : string(abi.encodePacked("Puddle #", Strings.toString(tokenId)));
+
+        string memory json = Base64.encode(bytes(string(abi.encodePacked(
+            '{"name":"', displayName, '",',
+            '"description":"A unique Puddle synth preset. Load it at puddle.obfusco.us",',
+            '"external_url":"https://puddle.obfusco.us"}'
+        ))));
+
+        return string(abi.encodePacked("data:application/json;base64,", json));
+    }
 
     // ─── Minting ────────────────────────────────────────────────────────────
 
