@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-04-10 — Auto patch version bump on v1 branch
+
+- **CI auto-version-bump**: `deploy-stable-branch` job now bumps `package.json` patch version on every push to `v1` (and future `v2`, etc.) branches. Commits back as "chore: bump version to vX.Y.Z" with loop guard (`!contains(head_commit.message, 'chore: bump version')`). InfoModal version display updates automatically.
+
 ## 2026-04-10 — OpenSea image from QR, contract redeploy
 
 - **OpenSea QR image**: Contract updated to store optional `metadataURI` (IPFS URI). When Pinata is configured, the QR canvas image is pinned to IPFS and the full metadata JSON (with image URL) is pinned too — that URI is now stored on-chain via `mint(contentHash, name, metadataURI)`. `tokenURI` returns the IPFS URI if set (OpenSea shows QR image), otherwise falls back to on-chain base64 JSON.
