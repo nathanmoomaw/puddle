@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-10 — Post-mint OpenSea links in QR modal
+
+- **Minted button → OpenSea**: After minting, the mint button becomes clickable and opens `opensea.io/assets/base/{contract}/{tokenId}` in a new tab. Label changes to "✦ Puddle #N — View on OpenSea".
+- **Badge → OpenSea link**: The `✦ Puddle #N` ownership badge in the meta row also links to OpenSea.
+- **Token ID fix**: Stored confirmed token ID in component state (`confirmedTokenId`) so it persists correctly through refetch cycles and doesn't display as #0.
+
 ## 2026-04-10 — RibbonPuddle contract deployed to Base mainnet
 
 - **Contract deployed**: `RibbonPuddle.sol` → `0x5B617bc5D45b03Fb9d468dc0969F9601c3C4E089` on Base mainnet

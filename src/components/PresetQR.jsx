@@ -294,6 +294,8 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
 
   // Mint hook
   const { mint, status: mintStatus, tokenId: freshTokenId, error: mintError } = useMintPuddle()
+  // Store confirmed token ID in state so it survives re-renders after refetch
+  const [confirmedTokenId, setConfirmedTokenId] = useState(null)
 
   // Build URL with current name
   const url = useMemo(
@@ -377,34 +379,59 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
   useEffect(() => {
     if (mintStatus === 'success') {
       setMintStep('done')
+      if (freshTokenId) setConfirmedTokenId(freshTokenId)
       refetchOwner()
       const ms = checkMilestone('first_mint')
       if (ms) onMilestone?.(ms)
     }
     if (mintStatus === 'error') setMintStep('idle')
-  }, [mintStatus, refetchOwner, onMilestone])
+  }, [mintStatus, freshTokenId, refetchOwner, onMilestone])
+
+  // After refetch resolves, capture ownedTokenId too
+  useEffect(() => {
+    if (ownedTokenId && !confirmedTokenId) setConfirmedTokenId(ownedTokenId)
+  }, [ownedTokenId, confirmedTokenId])
 
   // Derive ownership display info
-  const displayedTokenId = freshTokenId ?? ownedTokenId
+  const displayedTokenId = confirmedTokenId ?? freshTokenId ?? ownedTokenId
+
+  // OpenSea link for minted tokens
+  const openSeaUrl = displayedTokenId && PUDDLE_CONTRACT_ADDRESS
+    ? `https://opensea.io/assets/base/${PUDDLE_CONTRACT_ADDRESS}/${displayedTokenId}`
+    : null
   const isOwnedByMe = isMinted && walletAddress &&
     owner?.toLowerCase() === walletAddress.toLowerCase()
   const isOwnedByOther = isMinted && !isOwnedByMe
 
   // Mint button label
   let mintLabel = 'Mint as Puddle'
-  if (!PUDDLE_CONTRACT_ADDRESS)      mintLabel = 'Contract not deployed'
-  else if (!isConnected)             mintLabel = 'Connect wallet to mint'
-  else if (mintStep === 'pinning')   mintLabel = 'Uploading…'
-  else if (mintStep === 'confirm')   mintLabel = 'Confirm in wallet…'
-  else if (mintStatus === 'pending') mintLabel = 'Signing…'
+  if (!PUDDLE_CONTRACT_ADDRESS)         mintLabel = 'Contract not deployed'
+  else if (!isConnected)                mintLabel = 'Connect wallet to mint'
+  else if (mintStep === 'pinning')      mintLabel = 'Uploading…'
+  else if (mintStep === 'confirm')      mintLabel = 'Confirm in wallet…'
+  else if (mintStatus === 'pending')    mintLabel = 'Signing…'
   else if (mintStatus === 'confirming') mintLabel = 'Confirming…'
-  else if (mintStep === 'done')      mintLabel = `Puddle #${displayedTokenId} minted! ✦`
-  else if (isOwnedByMe)              mintLabel = `Your Puddle #${displayedTokenId}`
-  else if (isOwnedByOther)           mintLabel = `Owned by ${owner?.slice(0,6)}…${owner?.slice(-4)}`
+  else if (mintStep === 'done')         mintLabel = `Puddle #${displayedTokenId ?? '?'} minted! ✦`
+  else if (isOwnedByMe)                 mintLabel = `✦ Puddle #${displayedTokenId} — View on OpenSea`
+  else if (isOwnedByOther)             mintLabel = `Owned by ${owner?.slice(0,6)}…${owner?.slice(-4)}`
 
-  const mintDisabled = !isConnected || !PUDDLE_CONTRACT_ADDRESS || isMinted ||
+  const isMintedState = mintStep === 'done' || isOwnedByMe
+  const mintDisabled = !isConnected || !PUDDLE_CONTRACT_ADDRESS ||
+    (isMinted && !isMintedState) ||
     mintStep === 'pinning' || mintStep === 'confirm' ||
-    mintStatus === 'pending' || mintStatus === 'confirming' || mintStep === 'done'
+    mintStatus === 'pending' || mintStatus === 'confirming'
+
+  const handleMintOrView = useCallback(() => {
+    if (isMintedState && openSeaUrl) {
+      window.open(openSeaUrl, '_blank', 'noopener,noreferrer')
+      return
+    }
+    if (!isConnected && PUDDLE_CONTRACT_ADDRESS) {
+      openConnectModal?.()
+      return
+    }
+    handleMint()
+  }, [isMintedState, openSeaUrl, isConnected, openConnectModal, handleMint])
 
   // Close on Escape
   useEffect(() => {
@@ -434,11 +461,23 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
         {/* Ownership / wallet / loop metadata */}
         <div className="preset-qr-modal__meta">
           {isMinted && !ownerLoading && (
-            <span className={`preset-qr-modal__puddle-badge ${isOwnedByMe ? 'preset-qr-modal__puddle-badge--mine' : ''}`}>
-              {isOwnedByMe
-                ? `✦ Puddle #${displayedTokenId}`
-                : `Puddle #${displayedTokenId} · ${owner?.slice(0,6)}…${owner?.slice(-4)}`}
-            </span>
+            openSeaUrl
+              ? <a
+                  className={`preset-qr-modal__puddle-badge ${isOwnedByMe ? 'preset-qr-modal__puddle-badge--mine' : ''}`}
+                  href={openSeaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="View on OpenSea"
+                >
+                  {isOwnedByMe
+                    ? `✦ Puddle #${displayedTokenId}`
+                    : `Puddle #${displayedTokenId} · ${owner?.slice(0,6)}…${owner?.slice(-4)}`}
+                </a>
+              : <span className={`preset-qr-modal__puddle-badge ${isOwnedByMe ? 'preset-qr-modal__puddle-badge--mine' : ''}`}>
+                  {isOwnedByMe
+                    ? `✦ Puddle #${displayedTokenId}`
+                    : `Puddle #${displayedTokenId} · ${owner?.slice(0,6)}…${owner?.slice(-4)}`}
+                </span>
           )}
           {settings.walletAddress && (
             <span className="preset-qr-modal__wallet">
@@ -458,10 +497,10 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
             {copied ? 'Copied!' : 'Copy Link'}
           </button>
           <button
-            className={`preset-qr-modal__btn preset-qr-modal__btn--mint ${mintStep === 'done' || isOwnedByMe ? 'preset-qr-modal__btn--minted' : ''}`}
-            onClick={!isConnected && PUDDLE_CONTRACT_ADDRESS ? openConnectModal : handleMint}
-            disabled={mintDisabled && isConnected}
-            title={mintError ? String(mintError.shortMessage ?? mintError.message) : undefined}
+            className={`preset-qr-modal__btn preset-qr-modal__btn--mint ${isMintedState ? 'preset-qr-modal__btn--minted' : ''}`}
+            onClick={handleMintOrView}
+            disabled={mintDisabled && isConnected && !isMintedState}
+            title={mintError ? String(mintError.shortMessage ?? mintError.message) : isMintedState && openSeaUrl ? 'View on OpenSea' : undefined}
           >
             {mintLabel}
           </button>

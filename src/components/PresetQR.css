@@ -188,6 +188,23 @@
   text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
 }
 
+a.preset-qr-modal__puddle-badge {
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+a.preset-qr-modal__puddle-badge:hover {
+  opacity: 0.75;
+}
+
+.preset-qr-modal__btn--minted:hover:not(:disabled) {
+  background: rgba(0, 240, 255, 0.16);
+  border-color: rgba(0, 240, 255, 0.5);
+  color: rgba(0, 240, 255, 1);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+}
+
 /* Mint button — accent variant */
 .preset-qr-modal__btn--mint {
   background: rgba(139, 92, 246, 0.12);
