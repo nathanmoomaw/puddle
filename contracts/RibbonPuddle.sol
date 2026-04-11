@@ -22,10 +22,11 @@ contract RibbonPuddle is ERC721, ERC721Enumerable, Ownable {
     uint256 private _nextTokenId;
 
     struct PuddleState {
-        bytes32 contentHash; // keccak256 of canonical preset JSON
-        string  name;        // optional display name (mutable by owner in Phase 2)
-        address creator;     // original minter — never changes
-        uint64  mintedAt;    // unix timestamp
+        bytes32 contentHash;  // keccak256 of canonical preset JSON
+        string  name;         // optional display name (mutable by owner in Phase 2)
+        string  metadataURI;  // optional IPFS metadata URI (ipfs://CID) with image
+        address creator;      // original minter — never changes
+        uint64  mintedAt;     // unix timestamp
     }
 
     // tokenId → state
@@ -38,7 +39,8 @@ contract RibbonPuddle is ERC721, ERC721Enumerable, Ownable {
         uint256 indexed tokenId,
         bytes32 indexed contentHash,
         address indexed creator,
-        string  name
+        string  name,
+        string  metadataURI
     );
 
     constructor() ERC721("Puddle", "PUDDLE") Ownable(msg.sender) {}
@@ -46,12 +48,19 @@ contract RibbonPuddle is ERC721, ERC721Enumerable, Ownable {
     // ─── Metadata ────────────────────────────────────────────────────────────
 
     /**
-     * Returns on-chain JSON metadata so OpenSea shows the preset name
-     * without requiring IPFS pinning.
+     * Returns token metadata URI.
+     * If an IPFS metadataURI was stored at mint time (contains the QR image),
+     * return it directly so marketplaces (OpenSea) can display the image.
+     * Otherwise fall back to on-chain base64 JSON.
      */
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_ownerOf(tokenId) != address(0), "RibbonPuddle: nonexistent token");
         PuddleState storage s = _states[tokenId];
+
+        // Prefer IPFS metadata when available (has image)
+        if (bytes(s.metadataURI).length > 0) {
+            return s.metadataURI;
+        }
 
         string memory displayName = bytes(s.name).length > 0
             ? string(abi.encodePacked("Puddle ", s.name))
@@ -72,9 +81,10 @@ contract RibbonPuddle is ERC721, ERC721Enumerable, Ownable {
      * Mint a new Puddle for the caller.
      * @param contentHash  keccak256 of the canonical preset JSON (computed client-side)
      * @param name         optional display name (max 64 chars recommended)
+     * @param metadataURI  optional IPFS metadata URI (e.g. "ipfs://CID") — enables image on OpenSea
      * @return tokenId     the new token ID
      */
-    function mint(bytes32 contentHash, string calldata name)
+    function mint(bytes32 contentHash, string calldata name, string calldata metadataURI)
         external
         returns (uint256 tokenId)
     {
@@ -85,14 +95,15 @@ contract RibbonPuddle is ERC721, ERC721Enumerable, Ownable {
         _safeMint(msg.sender, tokenId);
 
         _states[tokenId] = PuddleState({
-            contentHash: contentHash,
-            name:        name,
-            creator:     msg.sender,
-            mintedAt:    uint64(block.timestamp)
+            contentHash:  contentHash,
+            name:         name,
+            metadataURI:  metadataURI,
+            creator:      msg.sender,
+            mintedAt:     uint64(block.timestamp)
         });
         _hashToToken[contentHash] = tokenId;
 
-        emit Minted(tokenId, contentHash, msg.sender, name);
+        emit Minted(tokenId, contentHash, msg.sender, name, metadataURI);
     }
 
     // ─── Read helpers ────────────────────────────────────────────────────────
@@ -114,13 +125,14 @@ contract RibbonPuddle is ERC721, ERC721Enumerable, Ownable {
         returns (
             bytes32 contentHash,
             string  memory name,
+            string  memory metadataURI,
             address creator,
             uint64  mintedAt
         )
     {
         require(_ownerOf(tokenId) != address(0), "RibbonPuddle: nonexistent token");
         PuddleState storage s = _states[tokenId];
-        return (s.contentHash, s.name, s.creator, s.mintedAt);
+        return (s.contentHash, s.name, s.metadataURI, s.creator, s.mintedAt);
     }
 
     /** Returns the current owner of a given content hash (address(0) if not minted). */

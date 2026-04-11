@@ -14,14 +14,15 @@ export const PUDDLE_CONTRACT_ADDRESS =
   import.meta.env.VITE_PUDDLE_CONTRACT_ADDRESS || undefined
 
 export const PUDDLE_ABI = [
-  // mint(bytes32 contentHash, string name) → uint256 tokenId
+  // mint(bytes32 contentHash, string name, string metadataURI) → uint256 tokenId
   {
     type: 'function',
     name: 'mint',
     stateMutability: 'nonpayable',
     inputs: [
-      { name: 'contentHash', type: 'bytes32' },
-      { name: 'name',        type: 'string'  },
+      { name: 'contentHash',  type: 'bytes32' },
+      { name: 'name',         type: 'string'  },
+      { name: 'metadataURI',  type: 'string'  },
     ],
     outputs: [{ name: 'tokenId', type: 'uint256' }],
   },
@@ -71,6 +72,7 @@ export const PUDDLE_ABI = [
       { indexed: true,  name: 'contentHash', type: 'bytes32' },
       { indexed: true,  name: 'creator',     type: 'address' },
       { indexed: false, name: 'name',        type: 'string'  },
+      { indexed: false, name: 'metadataURI', type: 'string'  },
     ],
   },
 ]
@@ -147,7 +149,7 @@ export function useMintPuddle() {
     : writeError                 ? 'error'
     : 'idle'
 
-  const mintFn = useCallback((contentHash, name = '') => {
+  const mintFn = useCallback((contentHash, name = '', metadataURI = '') => {
     if (!PUDDLE_CONTRACT_ADDRESS) {
       console.warn('RibbonPuddle: contract address not set (VITE_PUDDLE_CONTRACT_ADDRESS)')
       return
@@ -156,7 +158,7 @@ export function useMintPuddle() {
       address:      PUDDLE_CONTRACT_ADDRESS,
       abi:          PUDDLE_ABI,
       functionName: 'mint',
-      args:         [contentHash, name],
+      args:         [contentHash, name, metadataURI],
     })
   }, [writeContract])
 

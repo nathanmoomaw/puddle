@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-10 — OpenSea image from QR, contract redeploy
+
+- **OpenSea QR image**: Contract updated to store optional `metadataURI` (IPFS URI). When Pinata is configured, the QR canvas image is pinned to IPFS and the full metadata JSON (with image URL) is pinned too — that URI is now stored on-chain via `mint(contentHash, name, metadataURI)`. `tokenURI` returns the IPFS URI if set (OpenSea shows QR image), otherwise falls back to on-chain base64 JSON.
+- **Preset link on OpenSea**: IPFS metadata's `external_url` is the full preset URL, so tapping through from OpenSea loads that exact puddle state.
+- **Redeployed**: New contract at `0xccA43aF3Fcb9027732FF5f3ddbBF8B6E415267a0` on Base mainnet. GitHub secret + `.env` updated.
+
 ## 2026-04-10 — iOS silent hint, NFT naming, contract redeploy
 
 - **iOS silent mode banner**: One-time dismissible hint for iOS users — "No sound? Check the Ring/Silent switch on the side of your iPhone." Shows on arrival, auto-dismisses after 9s, localStorage-persisted dismissal.

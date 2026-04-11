@@ -365,8 +365,9 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     // Resolve display name — "Puddle {user name}" or auto-generated if blank
     const resolvedName = puddleDisplayName(name.trim(), contentHash)
 
-    // Optional: pin metadata to IPFS first (no-ops if VITE_PINATA_JWT unset)
-    await pinPuddleMetadata({
+    // Pin QR image + metadata to IPFS (no-ops if VITE_PINATA_JWT unset)
+    // The returned URI is stored on-chain so OpenSea can show the QR image
+    const metadataURI = await pinPuddleMetadata({
       settings,
       name: resolvedName,
       contentHash,
@@ -375,8 +376,8 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     })
 
     setMintStep('confirm')
-    // Store the resolved name on-chain so tokenURI can serve it without IPFS
-    mint(contentHash, resolvedName)
+    // Pass resolved name and optional IPFS metadata URI on-chain
+    mint(contentHash, resolvedName, metadataURI || '')
   }, [isConnected, contentHash, name, url, settings, mint])
 
   // Watch for mint success — refetch ownership and fire milestone
