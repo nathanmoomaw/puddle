@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import './MobileSplash.css'
 
 function isMobile() {
@@ -14,14 +14,10 @@ function requestFullscreen() {
 }
 
 export function MobileSplash({ onEnter }) {
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    // Only show on mobile, and only once per session
-    if (isMobile() && !sessionStorage.getItem('puddle_splashed')) {
-      setVisible(true)
-    }
-  }, [])
+  // Initialize synchronously to avoid FOUC — app flashes for one frame if we use useEffect
+  const [visible, setVisible] = useState(() =>
+    isMobile() && !sessionStorage.getItem('puddle_splashed')
+  )
 
   const handleEnter = useCallback(() => {
     sessionStorage.setItem('puddle_splashed', '1')

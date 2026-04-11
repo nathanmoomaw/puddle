@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-04-10 — Fix FOUC before mobile splash screen
+
+- **Splash FOUC**: `MobileSplash` was initializing `visible = false` then setting it true in `useEffect`, causing one frame of app visibility before the splash covered it. Fixed by using a synchronous `useState` lazy initializer — `isMobile() && !sessionStorage.getItem('puddle_splashed')` — evaluated on first render, no flicker.
+
 ## 2026-04-10 — QR modal UX, mobile shake nook, mint name display
 
 - **QR modal scroll lock**: Added `body overflow:hidden` on modal mount so background doesn't scroll on mobile. Cleaned up on close.

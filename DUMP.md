@@ -123,4 +123,6 @@ Feature requests and tasks. Format: `[]` = todo, `[x]` = done.
   - Nook shown on mobile via position:absolute bottom-right of stage; was previously display:none
 [x] on mobile the qr modal is funky because it auto spawns the keyboard and you can't see the full qr.  make the name field not selected by default to prevent this and ensure the app in the bg is static (no scroll) for best display of qr modal
   - Removed autoFocus from name input; added scroll lock (body overflow:hidden) on modal mount
+[x] i'm seeing some fouc or like a flash of the app before i see the splash screen on mobile sizes
+  - MobileSplash `visible` now initialized synchronously in useState lazy initializer instead of useEffect; eliminates one-frame flash of app before splash covers it
 [] 
