@@ -9,3 +9,6 @@ cache/
 
 # Domscribe artifacts
 .domscribe
+
+# DUMP lives in LIFE repo
+DUMP.md
