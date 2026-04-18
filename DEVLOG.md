@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-04-18 — Puddle v2: mode toggle polish + lo logo fix
+
+- **Mode toggle**: Moved `party · lo` rocker from bottom-center to top-left, positioned below QR (top:6px) and info (top:38px) buttons at top:60px left:6px — consistent placement in both party and lo modes
+- **Lo logo**: `AsciiLogo` now reads "puddle" (was "ribbon"); tagline updated to "v2 · lo mode"
+
 ## 2026-04-18 — Puddle v2: party/lo mode toggle
 
 - **AppShell**: Added `AppShell.jsx` as top-level wrapper — renders `App` (party/oil-spill) or `TextRibbonApp` (lo/ASCII) based on `puddle_visual_mode` localStorage key

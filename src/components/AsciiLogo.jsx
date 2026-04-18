@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import './AsciiLogo.css'
 
-const TAGLINE = 'v3 · ascii ribbon'
+const TAGLINE = 'v2 · lo mode'
 
 /**
  * Moebius strip drawn as a parametric curve on canvas.
@@ -115,7 +115,7 @@ export function AsciiLogo({ onClick }) {
 
   return (
     <div className="ascii-logo" onClick={onClick} role="button" tabIndex={0}>
-      <span className="ascii-logo__ribbon">ribbon</span>
+      <span className="ascii-logo__ribbon">puddle</span>
       <canvas
         ref={canvasRef}
         className="ascii-logo__moebius-canvas"
