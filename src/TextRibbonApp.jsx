@@ -308,28 +308,26 @@ export default function TextRibbonApp() {
 
       {/* Fixed top-left: QR + info (below party/lo toggle in AppShell) */}
       <button
-        className="app-header__qr-btn"
+        className="lo-qr-btn"
         onClick={handleQRCreate}
         title="Create preset QR code"
         aria-label="Create preset QR code"
-        style={{ position: 'fixed' }}
       >
         &#x25A3;
       </button>
       <button
-        className={`app-header__info-btn${showInfo ? ' app-header__info-btn--active' : ''}`}
+        className={`lo-info-btn${showInfo ? ' lo-info-btn--active' : ''}`}
         onClick={() => setShowInfo(v => !v)}
         onPointerDown={e => e.stopPropagation()}
         title="About Puddle"
         aria-label="About Puddle"
-        style={{ position: 'fixed' }}
       >
         ⓘ
       </button>
       {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
 
       {/* Fixed top-right: MIDI → POAP badge → wallet */}
-      <div className="app-header__right" style={{ position: 'fixed' }}>
+      <div className="lo-header-right">
         <button
           className={`keys-toggle__btn keys-toggle__midi ${midiDevice && midiDevice !== 'no-device' && midiDevice !== 'unsupported' && midiDevice !== 'denied' ? 'active' : ''} ${midiDevice === 'unsupported' || midiDevice === 'denied' ? 'keys-toggle__midi--err' : ''} ${midiDevice === 'no-device' ? 'keys-toggle__midi--waiting' : ''}`}
           onClick={connectMIDI}

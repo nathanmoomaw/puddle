@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-04-18 — Puddle v2: lo mode overlay button fixes
+
+- Fixed party/lo toggle overlapping lo mode status indicator — added `padding-left: 90px` to header left
+- Fixed QR/info/right-cluster invisible in lo mode — `z-index: 10` on header was covering them; replaced inline-style overrides with dedicated `.lo-qr-btn`, `.lo-info-btn`, `.lo-header-right` classes at `z-index: 20`
+
 ## 2026-04-18 — Puddle v2: lo mode feature parity + toggle reorder
 
 - **Toggle reorder**: party/lo pill is now first in the top-left stack; QR moves to top:34px, info to top:60px
