@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-18 — Puddle v2: lo mode feature parity + toggle reorder
+
+- **Toggle reorder**: party/lo pill is now first in the top-left stack; QR moves to top:34px, info to top:60px
+- **Lo mode parity**: TextRibbonApp now has full party-mode features — QR preset sharing, info modal, wallet, MIDI, POAP milestones, mobile splash, iOS silent-mode hint
+- Lo mode QR/info use `position: fixed` at same screen coordinates as party mode; right cluster (MIDI → badge → wallet) mirrors party layout
+
 ## 2026-04-18 — Puddle v2: mode toggle polish + lo logo fix
 
 - **Mode toggle**: Moved `party · lo` rocker from bottom-center to top-left, positioned below QR (top:6px) and info (top:38px) buttons at top:60px left:6px — consistent placement in both party and lo modes

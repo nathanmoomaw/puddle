@@ -51,7 +51,7 @@
 /* Info trigger button — below the QR icon, upper-left */
 .app-header__info-btn {
   position: absolute;
-  top: 38px;
+  top: 60px;
   left: 6px;
   background: none;
   border: none;
