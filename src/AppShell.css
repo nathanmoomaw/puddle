@@ -1,0 +1,40 @@
+.mode-toggle {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: border-color 0.2s, color 0.2s;
+  user-select: none;
+}
+
+.mode-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.mode-toggle__option {
+  transition: color 0.2s;
+}
+
+.mode-toggle__option--active {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.mode-toggle__sep {
+  opacity: 0.3;
+}

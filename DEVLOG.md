@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-04-18 — Puddle v2: party/lo mode toggle
+
+- **AppShell**: Added `AppShell.jsx` as top-level wrapper — renders `App` (party/oil-spill) or `TextRibbonApp` (lo/ASCII) based on `puddle_visual_mode` localStorage key
+- **Mode toggle**: Fixed pill button (bottom-center) overlays both modes — `party · lo` with active label highlighted, subtle monospace styling
+- **Dependency**: Installed `@chenglou/pretext` (required by `AsciiRibbon`)
+- Builds clean. Both modes share the same audio engine singleton — switching modes doesn't cut audio
+
 ## 2026-04-17 — Audness planning, version tagging, branch protection
 
 - **Audness eval**: Evaluated abstracting shared audio engine into `audness` monorepo (`@audness/core`, `@audness/input`, `@audness/ui`, `@audness/surface`). Verdict: do it — ~2,600 LOC is 95%+ identical across puddle + ribbon, already drifting.
