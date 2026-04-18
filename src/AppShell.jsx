@@ -20,19 +20,25 @@ export default function AppShell() {
     localStorage.setItem(STORAGE_KEY, next)
   }
 
-  return (
-    <>
-      {visualMode === 'party' ? <App /> : <TextRibbonApp />}
-      <button
-        className="mode-toggle"
-        onClick={toggle}
-        title={`Switch to ${visualMode === 'party' ? 'lo' : 'party'} mode`}
-        aria-label="Toggle visual mode"
-      >
-        <span className={`mode-toggle__option${visualMode === 'party' ? ' mode-toggle__option--active' : ''}`}>party</span>
-        <span className="mode-toggle__sep">·</span>
-        <span className={`mode-toggle__option${visualMode === 'lo' ? ' mode-toggle__option--active' : ''}`}>lo</span>
-      </button>
-    </>
-  )
+  if (visualMode === 'party') {
+    return (
+      <>
+        <App />
+        {/* Party mode: fixed pill toggle top-left */}
+        <button
+          className="mode-toggle"
+          onClick={toggle}
+          title="Switch to lo mode"
+          aria-label="Toggle visual mode"
+        >
+          <span className="mode-toggle__option mode-toggle__option--active">party</span>
+          <span className="mode-toggle__sep">·</span>
+          <span className="mode-toggle__option">lo</span>
+        </button>
+      </>
+    )
+  }
+
+  // Lo mode: pass toggle into TextRibbonApp so it can render inline in the header row
+  return <TextRibbonApp onToggleMode={toggle} />
 }

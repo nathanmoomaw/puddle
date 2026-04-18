@@ -77,34 +77,27 @@ html, body {
   100% { background-position: 0 40px, 40px 0; }
 }
 
-/* ─── Fixed overlay buttons (QR, info — mirror party mode positions) ─── */
-.lo-qr-btn {
-  position: fixed;
-  top: 34px;
-  left: 6px;
-  z-index: 20;
+/* ─── Inline header buttons ─── */
+.lo-qr-btn--inline {
   background: none;
   border: none;
   font-size: 1.1rem;
   cursor: pointer;
-  padding: 0 0.25rem;
+  padding: 0 0.15rem;
   opacity: 0.75;
-  transition: opacity 0.15s, transform 0.15s;
+  transition: opacity 0.15s;
   line-height: 1;
+  flex-shrink: 0;
   animation: qr-glow-cycle 8s ease-in-out infinite;
 }
-.lo-qr-btn:hover { opacity: 1; }
+.lo-qr-btn--inline:hover { opacity: 1; }
 
-.lo-info-btn {
-  position: fixed;
-  top: 60px;
-  left: 6px;
-  z-index: 20;
+.lo-info-btn--inline {
   background: none;
   border: none;
   font-size: 0.7rem;
   cursor: pointer;
-  padding: 0 0.25rem;
+  padding: 0 0.15rem;
   opacity: 0.4;
   transition: opacity 0.15s;
   line-height: 1;
@@ -112,20 +105,10 @@ html, body {
   font-family: 'Courier New', monospace;
   font-weight: 700;
   letter-spacing: 0.05em;
+  flex-shrink: 0;
 }
-.lo-info-btn:hover { opacity: 0.85; }
-.lo-info-btn--active { opacity: 0.85; }
-
-.lo-header-right {
-  position: fixed;
-  top: 6px;
-  right: 6px;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.25rem;
-}
+.lo-info-btn--inline:hover { opacity: 0.85; }
+.lo-info-btn--inline.lo-info-btn--active { opacity: 0.85; }
 
 /* ─── Header ─── */
 .text-ribbon-header {
@@ -147,7 +130,6 @@ html, body {
   align-items: center;
   gap: 8px;
   justify-content: flex-start;
-  padding-left: 90px; /* clear the fixed party/lo toggle */
 }
 
 .text-ribbon-header__right {

@@ -36,7 +36,7 @@ function nudge(current, min, max, intensity) {
 const _urlPresetData = readPresetFromUrl()
 const _urlPreset = _urlPresetData?.settings ?? null
 
-export default function TextRibbonApp() {
+export default function TextRibbonApp({ onToggleMode }) {
   const getEngine = useAudioEngine()
   const { address: walletAddress, isConnected } = useAccount()
 
@@ -306,51 +306,38 @@ export default function TextRibbonApp() {
       <div className="text-ribbon-bg" />
       <div className="text-ribbon-grid-floor" />
 
-      {/* Fixed top-left: QR + info (below party/lo toggle in AppShell) */}
-      <button
-        className="lo-qr-btn"
-        onClick={handleQRCreate}
-        title="Create preset QR code"
-        aria-label="Create preset QR code"
-      >
-        &#x25A3;
-      </button>
-      <button
-        className={`lo-info-btn${showInfo ? ' lo-info-btn--active' : ''}`}
-        onClick={() => setShowInfo(v => !v)}
-        onPointerDown={e => e.stopPropagation()}
-        title="About Puddle"
-        aria-label="About Puddle"
-      >
-        ⓘ
-      </button>
       {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
 
-      {/* Fixed top-right: MIDI → POAP badge → wallet */}
-      <div className="lo-header-right">
-        <button
-          className={`keys-toggle__btn keys-toggle__midi ${midiDevice && midiDevice !== 'no-device' && midiDevice !== 'unsupported' && midiDevice !== 'denied' ? 'active' : ''} ${midiDevice === 'unsupported' || midiDevice === 'denied' ? 'keys-toggle__midi--err' : ''} ${midiDevice === 'no-device' ? 'keys-toggle__midi--waiting' : ''}`}
-          onClick={connectMIDI}
-          title={
-            midiDevice === 'unsupported' ? 'MIDI not supported in this browser'
-            : midiDevice === 'denied' ? 'MIDI access denied'
-            : midiDevice === 'no-device' ? 'MIDI enabled — plug in a controller'
-            : midiDevice ? `MIDI: ${midiDevice}`
-            : 'Connect MIDI controller'
-          }
-        >
-          {midiDevice === 'unsupported' ? 'MIDI ✗'
-           : midiDevice === 'denied' ? 'MIDI ✗'
-           : midiDevice === 'no-device' ? 'MIDI …'
-           : midiDevice ? 'MIDI ✓'
-           : 'MIDI'}
-        </button>
-        <MilestoneBadge />
-        <WalletButton flagSet={walletFlagSet && !isConnected} onForget={handleForgetWallet} />
-      </div>
-
       <header className="text-ribbon-header">
+        {/* Left: horizontal row — qr | party·lo | i | play mode */}
         <div className="text-ribbon-header__left">
+          <button
+            className="lo-qr-btn lo-qr-btn--inline"
+            onClick={handleQRCreate}
+            title="Create preset QR code"
+            aria-label="Create preset QR code"
+          >
+            &#x25A3;
+          </button>
+          <button
+            className="mode-toggle mode-toggle--inline"
+            onClick={onToggleMode}
+            title="Switch to party mode"
+            aria-label="Toggle visual mode"
+          >
+            <span className="mode-toggle__option">party</span>
+            <span className="mode-toggle__sep">·</span>
+            <span className="mode-toggle__option mode-toggle__option--active">lo</span>
+          </button>
+          <button
+            className={`lo-info-btn lo-info-btn--inline${showInfo ? ' lo-info-btn--active' : ''}`}
+            onClick={() => setShowInfo(v => !v)}
+            onPointerDown={e => e.stopPropagation()}
+            title="About Puddle"
+            aria-label="About Puddle"
+          >
+            ⓘ
+          </button>
           <div className="text-ribbon-header__status">
             <span className={`status-dot${shaking ? ' status-dot--shake' : ''}`}>◈</span>
             <span className="status-mode">[{mode.toUpperCase()}]</span>
@@ -358,7 +345,10 @@ export default function TextRibbonApp() {
             {poly && <span className="status-poly">POLY</span>}
           </div>
         </div>
+
         <AsciiLogo onClick={() => handleShake(1.5)} />
+
+        {/* Right: shake | MIDI | badge | wallet */}
         <div className="text-ribbon-header__right">
           <button
             className="header-shake-btn"
@@ -366,6 +356,25 @@ export default function TextRibbonApp() {
             title="Shake (randomize)"
             aria-label="Shake"
           >⚡</button>
+          <button
+            className={`keys-toggle__btn keys-toggle__midi ${midiDevice && midiDevice !== 'no-device' && midiDevice !== 'unsupported' && midiDevice !== 'denied' ? 'active' : ''} ${midiDevice === 'unsupported' || midiDevice === 'denied' ? 'keys-toggle__midi--err' : ''} ${midiDevice === 'no-device' ? 'keys-toggle__midi--waiting' : ''}`}
+            onClick={connectMIDI}
+            title={
+              midiDevice === 'unsupported' ? 'MIDI not supported in this browser'
+              : midiDevice === 'denied' ? 'MIDI access denied'
+              : midiDevice === 'no-device' ? 'MIDI enabled — plug in a controller'
+              : midiDevice ? `MIDI: ${midiDevice}`
+              : 'Connect MIDI controller'
+            }
+          >
+            {midiDevice === 'unsupported' ? 'MIDI ✗'
+             : midiDevice === 'denied' ? 'MIDI ✗'
+             : midiDevice === 'no-device' ? 'MIDI …'
+             : midiDevice ? 'MIDI ✓'
+             : 'MIDI'}
+          </button>
+          <MilestoneBadge />
+          <WalletButton flagSet={walletFlagSet && !isConnected} onForget={handleForgetWallet} />
         </div>
       </header>
 

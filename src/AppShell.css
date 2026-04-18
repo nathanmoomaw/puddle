@@ -3,6 +3,7 @@
   top: 6px;
   left: 6px;
   z-index: 1000;
+  flex-shrink: 0;
   background: rgba(0, 0, 0, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
@@ -19,6 +20,12 @@
   -webkit-backdrop-filter: blur(6px);
   transition: border-color 0.2s, color 0.2s;
   user-select: none;
+}
+
+/* Inline variant — used inside lo mode header row */
+.mode-toggle--inline {
+  position: static;
+  z-index: auto;
 }
 
 .mode-toggle:hover {

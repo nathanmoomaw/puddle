@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-04-18 — Puddle v2: lo mode horizontal header row
+
+- Lo mode header left now shows a single horizontal row: `[QR] [party·lo] [ⓘ] [◈ PLAY]`
+- Moved toggle out of AppShell fixed pill into TextRibbonApp header (inline `mode-toggle--inline`)
+- AppShell fixed pill only renders in party mode now; lo mode owns its own toggle
+- MIDI/badge/wallet moved to header right alongside shake button
+
 ## 2026-04-18 — Puddle v2: lo mode overlay button fixes
 
 - Fixed party/lo toggle overlapping lo mode status indicator — added `padding-left: 90px` to header left
