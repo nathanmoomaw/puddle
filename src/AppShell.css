@@ -1,6 +1,6 @@
 .mode-toggle {
   position: fixed;
-  top: 60px;
+  top: 6px;
   left: 6px;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.55);
