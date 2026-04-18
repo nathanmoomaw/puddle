@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-04-17 — Audness planning, version tagging, branch protection
+
+- **Audness eval**: Evaluated abstracting shared audio engine into `audness` monorepo (`@audness/core`, `@audness/input`, `@audness/ui`, `@audness/surface`). Verdict: do it — ~2,600 LOC is 95%+ identical across puddle + ribbon, already drifting.
+- **Version tags**: Tagged puddle `nmj/ascii` HEAD as `v2-pre`; tagged ribbon `v3` branch HEAD as `v3`.
+- **Branch protection**: Enabled required PR review (1 approver) on all autodeploying branches — puddle: `main`, `v1`; ribbon: `main`, `v1`, `v2`, `v3`.
+- **POAP moved to ROADMAP**: POAP research/testing item moved from DUMP to Tokenization roadmap section.
+
+
 ## 2026-04-10 — Fix FOUC before mobile splash screen
 
 - **Splash FOUC**: `MobileSplash` was initializing `visible = false` then setting it true in `useEffect`, causing one frame of app visibility before the splash covered it. Fixed by using a synchronous `useState` lazy initializer — `isMobile() && !sessionStorage.getItem('puddle_splashed')` — evaluated on first render, no flicker.
