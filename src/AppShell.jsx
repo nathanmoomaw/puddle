@@ -21,22 +21,7 @@ export default function AppShell() {
   }
 
   if (visualMode === 'party') {
-    return (
-      <>
-        <App />
-        {/* Party mode: fixed pill toggle top-left */}
-        <button
-          className="mode-toggle"
-          onClick={toggle}
-          title="Switch to lo mode"
-          aria-label="Toggle visual mode"
-        >
-          <span className="mode-toggle__option mode-toggle__option--active">party</span>
-          <span className="mode-toggle__sep">·</span>
-          <span className="mode-toggle__option">lo</span>
-        </button>
-      </>
-    )
+    return <App onToggleMode={toggle} />
   }
 
   // Lo mode: pass toggle into TextRibbonApp so it can render inline in the header row

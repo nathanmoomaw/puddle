@@ -47,7 +47,7 @@ const _urlLoopData = _urlPresetData?.loopData ?? null
 // Capture the full preset URL before the hash is cleared on mount
 const _urlPresetHref = _urlPreset ? window.location.href : null
 
-function App() {
+function App({ onToggleMode }) {
   const getEngine = useAudioEngine()
   const { address: walletAddress, isConnected } = useAccount()
 
@@ -799,6 +799,18 @@ function App() {
           >
             &#x25A3;
           </button>
+          {onToggleMode && (
+            <button
+              className="mode-toggle mode-toggle--inline"
+              onClick={onToggleMode}
+              title="Switch to lo mode"
+              aria-label="Toggle visual mode"
+            >
+              <span className="mode-toggle__option mode-toggle__option--active">party</span>
+              <span className="mode-toggle__sep">·</span>
+              <span className="mode-toggle__option">lo</span>
+            </button>
+          )}
           <button
             className={`app-header__info-btn ${showInfo ? 'app-header__info-btn--active' : ''}`}
             onClick={() => setShowInfo(v => !v)}

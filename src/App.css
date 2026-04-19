@@ -209,11 +209,8 @@
   80% { transform: translateY(1px) rotate(-1deg); }
 }
 
-/* QR button in header — always visible, upper-left (below party/lo toggle) */
+/* QR button in header — inline in header left row */
 .app-header__qr-btn {
-  top: 34px;
-  position: absolute;
-  left: 6px;
   display: block;
   background: none;
   border: none;

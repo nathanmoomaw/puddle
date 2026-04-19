@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-04-19 — Party mode header: horizontal left row (QR → party·lo → ⓘ)
+
+- Party mode header left now matches lo mode: inline row `[QR] [party·lo] [ⓘ]`
+- App now accepts `onToggleMode` prop; AppShell passes it instead of rendering a fixed pill
+- QR and info buttons converted from absolute-positioned floats to normal flex items
+- Consistent top-left UX across both modes
+
 ## 2026-04-18 — Puddle v2: lo mode horizontal header row
 
 - Lo mode header left now shows a single horizontal row: `[QR] [party·lo] [ⓘ] [◈ PLAY]`

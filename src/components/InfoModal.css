@@ -48,11 +48,8 @@
   text-align: right;
 }
 
-/* Info trigger button — below the QR icon, upper-left */
+/* Info trigger button — inline in header left row */
 .app-header__info-btn {
-  position: absolute;
-  top: 60px;
-  left: 6px;
   background: none;
   border: none;
   font-size: 0.7rem;
