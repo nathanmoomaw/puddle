@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-28 — Puddle favicon: oil-spill iridescent puddle
+
+- Replaced möbius-logo favicon with oil-spill puddle design
+- Dark oval puddle with layered radial gradient color bands (cyan, magenta, green, violet, gold) simulating thin-film iridescence
+- Subtle ripple rings and surface sheen highlight; cyan rim glow
+
 ## 2026-04-19 — Party mode header: horizontal left row (QR → party·lo → ⓘ)
 
 - Party mode header left now matches lo mode: inline row `[QR] [party·lo] [ⓘ]`
