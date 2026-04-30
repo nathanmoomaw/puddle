@@ -166,6 +166,12 @@ function addGestureListener() {
 export function init() {
   if (ctx) return getEngine()
 
+  // iOS 17+: set audioSession type before creating AudioContext so the OS
+  // assigns "playback" category from the start, bypassing the mute switch.
+  if (typeof navigator !== 'undefined' && navigator.audioSession) {
+    try { navigator.audioSession.type = 'playback' } catch (_) {}
+  }
+
   ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' })
 
   // Re-add gesture listener any time AudioContext unexpectedly suspends (phone

@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-04-29 — iOS mute switch bypass: navigator.audioSession.type
+
+- Added `navigator.audioSession.type = 'playback'` before `AudioContext` creation in `init()`
+- iOS 17+ official API; sets AVAudioSession category to playback from the start, bypassing the hardware mute switch entirely
+- iOS 16 and earlier: existing silent `<audio>` element trick in `unlockIOSAudio()` continues to handle the upgrade on first gesture
+
 ## 2026-04-28 — Puddle favicon: oil-spill iridescent puddle
 
 - Replaced möbius-logo favicon with oil-spill puddle design
