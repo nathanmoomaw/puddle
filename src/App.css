@@ -169,7 +169,8 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  justify-content: flex-start;
+  justify-content: baseline;
+  padding: 0.5rem 0 0 0.5rem;
   height: 100%;
 }
 
