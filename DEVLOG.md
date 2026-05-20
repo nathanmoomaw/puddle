@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-20 — Fix party mode header height to match lo mode
+
+- .app-header gets height: 44px; padding: 4px 12px (matches .text-ribbon-header)
+- Eliminates layout shift when toggling party↔lo
+- Removed redundant left padding from .app-header__left (now covered by header padding)
+
 ## 2026-05-20 — Match party/lo header button layout
 
 - Party mode header left reverted to single flex row (display:flex, gap:8px)
