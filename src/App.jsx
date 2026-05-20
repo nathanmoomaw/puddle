@@ -791,26 +791,28 @@ function App({ onToggleMode }) {
       <header className="app-header">
         {/* Left: QR + info — always visible, upper-left */}
         <div className="app-header__left">
-          <button
-            className="app-header__qr-btn"
-            onClick={handleQRCreate}
-            title="Create preset QR code"
-            aria-label="Create preset QR code"
-          >
-            &#x25A3;
-          </button>
-          {onToggleMode && (
+          <div className="app-header__left-top">
             <button
-              className="mode-toggle mode-toggle--inline"
-              onClick={onToggleMode}
-              title="Switch to lo mode"
-              aria-label="Toggle visual mode"
+              className="app-header__qr-btn"
+              onClick={handleQRCreate}
+              title="Create preset QR code"
+              aria-label="Create preset QR code"
             >
-              <span className="mode-toggle__option mode-toggle__option--active">party</span>
-              <span className="mode-toggle__sep">·</span>
-              <span className="mode-toggle__option">lo</span>
+              &#x25A3;
             </button>
-          )}
+            {onToggleMode && (
+              <button
+                className="mode-toggle mode-toggle--inline"
+                onClick={onToggleMode}
+                title="Switch to lo mode"
+                aria-label="Toggle visual mode"
+              >
+                <span className="mode-toggle__option mode-toggle__option--active">party</span>
+                <span className="mode-toggle__sep">·</span>
+                <span className="mode-toggle__option">lo</span>
+              </button>
+            )}
+          </div>
           <button
             className={`app-header__info-btn ${showInfo ? 'app-header__info-btn--active' : ''}`}
             onClick={() => setShowInfo(v => !v)}

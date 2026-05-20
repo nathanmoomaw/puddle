@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-20 — Header left: ⓘ stacked below QR + party/lo
+
+- `.app-header__left` changed to `flex-direction: column`
+- QR + mode toggle wrapped in `.app-header__left-top` flex row
+- ⓘ info button now sits on its own row directly below
+
 ## 2026-05-20 — Integrate @audness/core engine (nmj/v1audness branch)
 
 - Replaced self-contained `src/audio/AudioEngine.js` with `@audness/core` (file: dep from audness monorepo)

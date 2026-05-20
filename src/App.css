@@ -167,10 +167,16 @@
 /* Left cluster — MIDI + wallet (+ QR on mobile) */
 .app-header__left {
   display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
   height: 100%;
+}
+
+.app-header__left-top {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 /* Right cluster — MIDI + POAP badge + wallet, stacked top-to-bottom */
