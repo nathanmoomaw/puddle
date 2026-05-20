@@ -18,6 +18,9 @@ function getHttpsConfig() {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), domscribe()],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
   server: {
     host: true,
     https: getHttpsConfig(),
