@@ -178,6 +178,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  padding: 6px 0 0 6px;
 }
 
 /* Right cluster — MIDI + POAP badge + wallet, stacked top-to-bottom */
