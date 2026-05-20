@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-05-20 — Bump to v1.1.0
+
+- Minor version bump: 1.0.0 → 1.1.0
+- InfoModal reads version directly from package.json — no other changes needed
+
 ## 2026-05-20 — Header left: ⓘ stacked below QR + party/lo
 
 - `.app-header__left` changed to `flex-direction: column`
