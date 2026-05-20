@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-05-20 — Integrate @audness/core engine (nmj/v1audness branch)
+
+- Replaced self-contained `src/audio/AudioEngine.js` with `@audness/core` (file: dep from audness monorepo)
+- `src/hooks/useAudioEngine.js` now wraps `useAudioEngine` from `@audness/core` with `{ appName: 'Puddle', workletUrl: '/bitcrush-processor.js' }`
+- Fixed audness vite.config.js: removed `assetsInclude: ['**/*.js']` which was silently preventing the package from building
+- Added iOS 17+ `navigator.audioSession.type = 'playback'` fix to `@audness/core` AudioEngine.js
+
 ## 2026-04-29 — iOS mute switch bypass: navigator.audioSession.type
 
 - Added `navigator.audioSession.type = 'playback'` before `AudioContext` creation in `init()`
