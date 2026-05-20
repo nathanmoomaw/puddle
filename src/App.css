@@ -170,7 +170,8 @@
   align-items: center;
   gap: 8px;
   justify-content: flex-start;
-  padding: 0 0 0 6px;
+  padding: 4px 0 0 6px;
+  align-self: start;
 }
 
 .app-header__left-top {

@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-20 — Pin party mode header left to top
+
+- Added `align-self: start` + `padding-top: 4px` to `.app-header__left`
+- Party mode left cluster now sits at top of header, matching lo mode position
+- Prevents vertical centering when logo makes header taller than 44px
+
 ## 2026-05-20 — Match party/lo header button layout
 
 - Party mode header left reverted to single flex row (display:flex, gap:8px)
