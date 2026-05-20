@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-20 — Match party header left cluster exactly to lo mode
+
+- `.app-header__left` now `height: 44px; padding: 4px 12px; box-sizing: border-box; align-self: start`
+- Identical geometry to lo mode's 44px header band — buttons center at same pixel coords
+- Screenshots moved to `screenshots/`
+
 ## 2026-05-20 — Pin party mode header left to top
 
 - Added `align-self: start` + `padding-top: 4px` to `.app-header__left`

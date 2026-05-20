@@ -164,14 +164,16 @@
   position: relative;
 }
 
-/* Left cluster — QR + mode toggle + info, pinned to top of grid cell */
+/* Left cluster — same 44px band + 4px/12px padding as lo mode header */
 .app-header__left {
   display: flex;
   align-items: center;
   gap: 8px;
   justify-content: flex-start;
-  padding: 10px 0 0 12px;
+  padding: 4px 0 4px 12px;
   align-self: start;
+  height: 44px;
+  box-sizing: border-box;
 }
 
 .app-header__left-top {
