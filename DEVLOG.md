@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-05-20 — Match party/lo header button layout
+
+- Party mode header left reverted to single flex row (display:flex, gap:8px)
+  to match lo mode's inline layout: [QR] [party·lo] [ⓘ]
+- Removed the two-row column layout that caused button jump on mode switch
+- Removed margin from .app-header__info-btn (was only needed for two-row layout)
+
 ## 2026-05-20 — Screenshots organized
 
 - Moved all root-level screenshots to `screenshots/` folder
