@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-20 — Screenshots organized
+
+- Moved all root-level screenshots to `screenshots/` folder
+- Added `screenshots/` to `.gitignore` — drop PNGs there for DUMP refs, not tracked in git
+- Removed previously-tracked screenshots from git history
+
 ## 2026-05-20 — Bump to v1.1.0
 
 - Minor version bump: 1.0.0 → 1.1.0
