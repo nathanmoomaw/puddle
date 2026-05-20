@@ -162,9 +162,6 @@
   gap: 0.25rem;
   width: 100%;
   position: relative;
-  height: 44px;
-  padding: 4px 12px;
-  box-sizing: border-box;
 }
 
 /* Left cluster — MIDI + wallet (+ QR on mobile) */
@@ -173,6 +170,7 @@
   align-items: center;
   gap: 8px;
   justify-content: flex-start;
+  padding: 0 0 0 6px;
 }
 
 .app-header__left-top {
