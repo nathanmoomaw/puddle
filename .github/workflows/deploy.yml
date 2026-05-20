@@ -18,6 +18,11 @@ jobs:
           node-version: 25
           cache: npm
 
+      - name: Build @audness/core
+        run: |
+          git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
+          cd ${{ github.workspace }}/../audness && npm install && npm run build --workspace=packages/core
+
       - run: npm ci
       - name: Build
         run: npm run build
@@ -47,6 +52,11 @@ jobs:
         with:
           node-version: 25
           cache: npm
+
+      - name: Build @audness/core
+        run: |
+          git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
+          cd ${{ github.workspace }}/../audness && npm install && npm run build --workspace=packages/core
 
       - run: npm ci
       - name: Build
@@ -96,6 +106,11 @@ jobs:
           git commit -m "chore: bump version to v${NEW_VERSION}"
           git push
 
+      - name: Build @audness/core
+        run: |
+          git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
+          cd ${{ github.workspace }}/../audness && npm install && npm run build --workspace=packages/core
+
       - run: npm ci
       - name: Build
         run: npm run build
@@ -129,6 +144,11 @@ jobs:
         with:
           node-version: 25
           cache: npm
+
+      - name: Build @audness/core
+        run: |
+          git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
+          cd ${{ github.workspace }}/../audness && npm install && npm run build --workspace=packages/core
 
       - run: npm ci
       - name: Build
