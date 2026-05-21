@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { wagmiConfig } from './crypto/config'
 import '@rainbow-me/rainbowkit/styles.css'
 import './index.css'
-import App from './App.jsx'
+import AppShell from './AppShell.jsx'
 
 // Clear wagmi's persisted connector state before the provider mounts.
 // Prevents auto-reconnect prompts (e.g. Coinbase Base Account modal) on page load.
@@ -22,7 +22,7 @@ createRoot(document.getElementById('root')).render(
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider theme={darkTheme({ accentColor: '#e040fb' })}>
-          <App />
+          <AppShell />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

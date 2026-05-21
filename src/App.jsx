@@ -47,7 +47,7 @@ const _urlLoopData = _urlPresetData?.loopData ?? null
 // Capture the full preset URL before the hash is cleared on mount
 const _urlPresetHref = _urlPreset ? window.location.href : null
 
-function App() {
+function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const getEngine = useAudioEngine()
   const { address: walletAddress, isConnected } = useAccount()
 
@@ -75,31 +75,31 @@ function App() {
     setWalletFlagSet(false)
   }, [])
 
-  const [mode, setMode] = useState(_urlPreset?.mode ?? 'play')
+  const [mode, setMode] = useState(_urlPreset?.mode ?? initialSynthState?.mode ?? 'play')
   const [inputMode, setInputMode] = useState('touch')
-  const [oscParams, setOscParams] = useState(_urlPreset?.oscParams ?? [
+  const [oscParams, setOscParams] = useState(_urlPreset?.oscParams ?? initialSynthState?.oscParams ?? [
     { waveform: 'sawtooth', detune: 0, mix: 1.0 },
     { waveform: 'sawtooth', detune: 0, mix: 0.0 },
     { waveform: 'sawtooth', detune: 0, mix: 0.0 },
   ])
-  const [volume, setVolume] = useState(_urlPreset?.volume ?? 0.5)
-  const [octaves, setOctaves] = useState(_urlPreset?.octaves ?? 2)
-  const [delayParams, setDelayParams] = useState(_urlPreset?.delayParams ?? { time: 0.3, feedback: 0.4, mix: 0 })
-  const [reverbMix, setReverbMix] = useState(_urlPreset?.reverbMix ?? 0)
-  const [crunch, setCrunch] = useState(_urlPreset?.crunch ?? 0)
-  const [filterParams, setFilterParams] = useState(_urlPreset?.filterParams ?? { cutoff: 20000, resonance: 0 })
-  const [vcfCutoff, setVcfCutoff] = useState(_urlPreset?.vcfCutoff ?? 2000)
-  const [vcfResonance, setVcfResonance] = useState(_urlPreset?.vcfResonance ?? 8)
-  const [vcfRouting, setVcfRouting] = useState(_urlPreset?.vcfRouting ?? [false, false, false])
-  const [glideSpeed, setGlideSpeed] = useState(_urlPreset?.glideSpeed ?? 0.005)
-  const [stepped, setStepped] = useState(_urlPreset?.stepped ?? false)
-  const [scale, setScale] = useState(_urlPreset?.scale ?? ['chromatic'])
+  const [volume, setVolume] = useState(_urlPreset?.volume ?? initialSynthState?.volume ?? 0.5)
+  const [octaves, setOctaves] = useState(_urlPreset?.octaves ?? initialSynthState?.octaves ?? 2)
+  const [delayParams, setDelayParams] = useState(_urlPreset?.delayParams ?? initialSynthState?.delayParams ?? { time: 0.3, feedback: 0.4, mix: 0 })
+  const [reverbMix, setReverbMix] = useState(_urlPreset?.reverbMix ?? initialSynthState?.reverbMix ?? 0)
+  const [crunch, setCrunch] = useState(_urlPreset?.crunch ?? initialSynthState?.crunch ?? 0)
+  const [filterParams, setFilterParams] = useState(_urlPreset?.filterParams ?? initialSynthState?.filterParams ?? { cutoff: 20000, resonance: 0 })
+  const [vcfCutoff, setVcfCutoff] = useState(_urlPreset?.vcfCutoff ?? initialSynthState?.vcfCutoff ?? 2000)
+  const [vcfResonance, setVcfResonance] = useState(_urlPreset?.vcfResonance ?? initialSynthState?.vcfResonance ?? 8)
+  const [vcfRouting, setVcfRouting] = useState(_urlPreset?.vcfRouting ?? initialSynthState?.vcfRouting ?? [false, false, false])
+  const [glideSpeed, setGlideSpeed] = useState(_urlPreset?.glideSpeed ?? initialSynthState?.glideSpeed ?? 0.005)
+  const [stepped, setStepped] = useState(_urlPreset?.stepped ?? initialSynthState?.stepped ?? false)
+  const [scale, setScale] = useState(_urlPreset?.scale ?? initialSynthState?.scale ?? ['chromatic'])
   const [keyboardPositions, setKeyboardPositions] = useState(new Map())
   const [visualMode, setVisualMode] = useState(_urlPreset?.visualMode ?? 'party')
-  const [arpBpm, setArpBpm] = useState(_urlPreset?.arpBpm ?? 120)
-  const [hold, setHold] = useState(_urlPreset?.hold ?? false)
-  const [poly, setPoly] = useState(_urlPreset?.poly ?? false)
-  const [arpNotes, setArpNotes] = useState(_urlPreset?.arpNotes ?? [])
+  const [arpBpm, setArpBpm] = useState(_urlPreset?.arpBpm ?? initialSynthState?.arpBpm ?? 120)
+  const [hold, setHold] = useState(_urlPreset?.hold ?? initialSynthState?.hold ?? false)
+  const [poly, setPoly] = useState(_urlPreset?.poly ?? initialSynthState?.poly ?? false)
+  const [arpNotes, setArpNotes] = useState(_urlPreset?.arpNotes ?? initialSynthState?.arpNotes ?? [])
   const [shaking, setShaking] = useState(false)
   const [undulating, setUndulating] = useState(false)
   const [easterEgg, setEasterEgg] = useState(false)
@@ -777,6 +777,16 @@ function App() {
     clearAllMarbles()
   }, [getEngine, clearAllMarbles])
 
+  // Keep AppShell's synth snapshot current so mode switches preserve settings
+  useEffect(() => {
+    onSynthStateChange?.({
+      mode, poly, hold, oscParams, volume, octaves, delayParams, reverbMix, crunch,
+      filterParams, vcfCutoff, vcfResonance, vcfRouting, glideSpeed, stepped, scale, arpBpm, arpNotes,
+    })
+  }, [mode, poly, hold, oscParams, volume, octaves, delayParams, reverbMix, crunch,
+      filterParams, vcfCutoff, vcfResonance, vcfRouting, glideSpeed, stepped, scale, arpBpm, arpNotes,
+      onSynthStateChange]) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className={`app app--puddle ${visualMode === 'lo' ? 'lo-mode' : ''}`}>
       {!presetSplashDone
@@ -791,14 +801,28 @@ function App() {
       <header className="app-header">
         {/* Left: QR + info — always visible, upper-left */}
         <div className="app-header__left">
-          <button
-            className="app-header__qr-btn"
-            onClick={handleQRCreate}
-            title="Create preset QR code"
-            aria-label="Create preset QR code"
-          >
-            &#x25A3;
-          </button>
+          <div className="app-header__left-top">
+            <button
+              className="app-header__qr-btn"
+              onClick={handleQRCreate}
+              title="Create preset QR code"
+              aria-label="Create preset QR code"
+            >
+              &#x25A3;
+            </button>
+            {onToggleMode && (
+              <button
+                className="mode-toggle mode-toggle--inline"
+                onClick={onToggleMode}
+                title="Switch to lo mode"
+                aria-label="Toggle visual mode"
+              >
+                <span className="mode-toggle__option mode-toggle__option--active">party</span>
+                <span className="mode-toggle__sep">·</span>
+                <span className="mode-toggle__option">lo</span>
+              </button>
+            )}
+          </div>
           <button
             className={`app-header__info-btn ${showInfo ? 'app-header__info-btn--active' : ''}`}
             onClick={() => setShowInfo(v => !v)}

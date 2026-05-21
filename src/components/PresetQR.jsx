@@ -11,6 +11,37 @@ import './PresetQR.css'
 // Persists QR style seed across modal open/close cycles
 let persistedStyleSeed = 0
 
+// Build ASCII QR string using Unicode half-block chars (2 rows → 1 text row)
+// Produces roughly square modules in monospace fonts
+function buildAsciiQr(url) {
+  try {
+    const qr = QRCode.create(url, { errorCorrectionLevel: 'M' })
+    const { size } = qr.modules
+    const data = qr.modules.data
+    const M = 2 // quiet-zone margin in modules
+    const fullSize = size + M * 2
+    const lines = []
+    for (let r = 0; r < fullSize; r += 2) {
+      let line = ''
+      for (let c = 0; c < fullSize; c++) {
+        const mx = c - M
+        const my1 = r - M
+        const my2 = r + 1 - M
+        const top = mx >= 0 && mx < size && my1 >= 0 && my1 < size ? data[my1 * size + mx] : 0
+        const bot = mx >= 0 && mx < size && my2 >= 0 && my2 < size ? data[my2 * size + mx] : 0
+        if (top && bot) line += '█'
+        else if (top) line += '▀'
+        else if (bot) line += '▄'
+        else line += ' '
+      }
+      lines.push(line)
+    }
+    return lines.join('\n')
+  } catch {
+    return ''
+  }
+}
+
 // Oil-spill iridescent gradient — thin-film interference palette
 const GRADIENT_STOPS = [
   { offset: 0, color: [180, 40, 255] },     // deep violet
@@ -281,6 +312,8 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
   const [mintStep, setMintStep] = useState('idle') // 'idle'|'pinning'|'confirm'|'done'
   // Style seed persists across modal open/close (module-level persistedStyleSeed)
   const [qrStyleSeed, setQrStyleSeed] = useState(() => persistedStyleSeed)
+  const isLoMode = settings.visualMode === 'lo'
+  const [asciiQr, setAsciiQr] = useState('')
 
   const { address: walletAddress, isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
@@ -313,13 +346,18 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
 
   // Redraw QR when URL, name, or style seed changes
   useEffect(() => {
-    if (canvasRef.current && url) {
-      drawColoredQR(canvasRef.current, url, name, qrStyleSeed, {
-        marbles: settings.marbles,
-        activity: settings.puddleActivity,
-      })
-    }
-  }, [url, name, qrStyleSeed, settings.marbles, settings.puddleActivity])
+    if (isLoMode || !canvasRef.current || !url) return
+    drawColoredQR(canvasRef.current, url, name, qrStyleSeed, {
+      marbles: settings.marbles,
+      activity: settings.puddleActivity,
+    })
+  }, [url, name, qrStyleSeed, settings.marbles, settings.puddleActivity, isLoMode])
+
+  // Generate ASCII QR for lo mode (synchronous via QRCode.create)
+  useEffect(() => {
+    if (!isLoMode || !url) return
+    setAsciiQr(buildAsciiQr(url))
+  }, [url, isLoMode])
 
   const handleDownload = useCallback(() => {
     const canvas = canvasRef.current
@@ -459,11 +497,16 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
 
   return (
     <div className="preset-qr-overlay" onClick={onClose}>
-      <div className="preset-qr-modal" onClick={e => e.stopPropagation()}>
+      <div className={`preset-qr-modal${isLoMode ? ' preset-qr-modal--lo' : ''}`} onClick={e => e.stopPropagation()}>
         <button className="preset-qr-modal__close" onClick={onClose} aria-label="Close">&times;</button>
-        <button className="preset-qr-modal__shake" onClick={handleQRShake} aria-label="Randomize QR style">⚡</button>
+        {!isLoMode && (
+          <button className="preset-qr-modal__shake" onClick={handleQRShake} aria-label="Randomize QR style">⚡</button>
+        )}
 
-        <canvas ref={canvasRef} className="preset-qr-modal__canvas" />
+        {isLoMode
+          ? <pre className="preset-qr-modal__ascii">{asciiQr}</pre>
+          : <canvas ref={canvasRef} className="preset-qr-modal__canvas" />
+        }
 
         <input
           className="preset-qr-modal__name"
@@ -506,9 +549,11 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
         </div>
 
         <div className="preset-qr-modal__actions">
-          <button className="preset-qr-modal__btn" onClick={handleDownload}>
-            Save
-          </button>
+          {!isLoMode && (
+            <button className="preset-qr-modal__btn" onClick={handleDownload}>
+              Save
+            </button>
+          )}
           <button className="preset-qr-modal__btn" onClick={handleCopy}>
             {copied ? 'Copied!' : 'Copy Link'}
           </button>

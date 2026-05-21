@@ -1,5 +1,32 @@
 # Changelog
 
+## v1.1 — "Lo Mode" (2026-05-21)
+
+Builds on v1 with a second visual mode, shared audio engine lineage prep, and several UX fixes.
+
+### New Features
+
+- **Lo mode** — ASCII kaos pad as an alternative to the iridescent Three.js party mode; toggle via `party·lo` button in the header
+- **Settings persistence across modes** — all 18 synth parameters (osc, filter, VCF, delay, reverb, crunch, arp, scale, etc.) persist when switching between party and lo
+- **ASCII QR code** in lo mode — Unicode half-block char QR (green terminal aesthetic) via `QRCode.create()` matrix rendering
+- **Oil-spill favicon** — iridescent oval with thin-film color bands matching the puddle aesthetic
+- **iOS mute switch bypass** — `navigator.audioSession.type = 'playback'` for iOS 17+; silent `<audio>` element fallback for iOS 16 and earlier
+
+### UX Fixes
+
+- Party/lo header button cluster now at identical pixel coordinates in both modes
+- Stale version labels removed from lo mode (`RIBBON v3 · ASCII` → `puddle · lo`)
+- Typing in the QR modal name field no longer triggers synth keypresses (AsciiRibbon missing INPUT guard)
+- `party·lo` toggle, QR, and ⓘ buttons aligned consistently in both modes
+
+### Deployment
+
+- `puddle.obfusco.us` — production (this release)
+- `puddle.obfusco.us/v1` — updated to include lo mode (v1 branch)
+- `puddle.obfusco.us/v1.1` — permanent snapshot of this release (if deployed)
+
+---
+
 ## v1 — "Puddle" (2026-04-09)
 
 First stable release. Forked from Ribbon v3 and evolved into a standalone instrument.

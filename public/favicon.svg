@@ -1,28 +1,76 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00f0ff"/>
-      <stop offset="50%" stop-color="#ff6ec7"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="2" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
+    <radialGradient id="puddle-base" cx="42%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#1a0a2e"/>
+      <stop offset="40%" stop-color="#0d1b3e"/>
+      <stop offset="75%" stop-color="#090914"/>
+      <stop offset="100%" stop-color="#040408"/>
+    </radialGradient>
+    <radialGradient id="band-cyan" cx="30%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0"/>
+      <stop offset="38%" stop-color="#00f0ff" stop-opacity="0"/>
+      <stop offset="52%" stop-color="#00eeff" stop-opacity="0.65"/>
+      <stop offset="62%" stop-color="#00ccff" stop-opacity="0.4"/>
+      <stop offset="75%" stop-color="#00f0ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="band-magenta" cx="62%" cy="58%" r="48%">
+      <stop offset="0%" stop-color="#ff3adc" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#ff3adc" stop-opacity="0"/>
+      <stop offset="48%" stop-color="#ff6ec7" stop-opacity="0.7"/>
+      <stop offset="62%" stop-color="#ff00aa" stop-opacity="0.45"/>
+      <stop offset="78%" stop-color="#ff3adc" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="band-green" cx="68%" cy="32%" r="42%">
+      <stop offset="0%" stop-color="#00ff88" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#00ff88" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#39ff90" stop-opacity="0.5"/>
+      <stop offset="65%" stop-color="#00ff88" stop-opacity="0.3"/>
+      <stop offset="78%" stop-color="#00ff88" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="band-violet" cx="38%" cy="68%" r="46%">
+      <stop offset="0%" stop-color="#9b5cf6" stop-opacity="0"/>
+      <stop offset="32%" stop-color="#9b5cf6" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#c060ff" stop-opacity="0.55"/>
+      <stop offset="64%" stop-color="#8b5cf6" stop-opacity="0.35"/>
+      <stop offset="78%" stop-color="#9b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="band-gold" cx="55%" cy="28%" r="38%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0"/>
+      <stop offset="38%" stop-color="#ffd700" stop-opacity="0"/>
+      <stop offset="52%" stop-color="#ffb800" stop-opacity="0.38"/>
+      <stop offset="67%" stop-color="#ffd700" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sheen" cx="35%" cy="30%" r="45%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="puddle">
+      <ellipse cx="32" cy="37" rx="26" ry="19"/>
+    </clipPath>
   </defs>
-  <rect width="64" height="64" rx="12" fill="#0a0a1a"/>
-  <!-- Glow aura -->
-  <path d="M 12,32 C 12,14 24,12 32,32 C 38,52 50,50 50,32 C 50,14 38,12 32,32 C 24,52 12,50 12,32 Z"
-    fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round" opacity="0.2" filter="url(#glow)"/>
-  <!-- Under strand -->
-  <path d="M 50,32 C 50,14 38,12 32,32 C 24,52 12,50 12,32"
-    fill="none" stroke="url(#g)" stroke-width="2.5" stroke-linecap="round" opacity="0.45"/>
-  <!-- Bridge -->
-  <ellipse cx="32" cy="32" rx="4" ry="3" fill="#0a0a1a"/>
-  <!-- Over strand -->
-  <path d="M 12,32 C 12,14 24,12 32,32 C 38,52 50,50 50,32"
-    fill="none" stroke="url(#g)" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- App background -->
+  <rect width="64" height="64" rx="11" fill="#07070f"/>
+
+  <!-- Puddle base -->
+  <ellipse cx="32" cy="37" rx="26" ry="19" fill="url(#puddle-base)"/>
+
+  <!-- Iridescent thin-film color bands, clipped to puddle -->
+  <g clip-path="url(#puddle)">
+    <ellipse cx="32" cy="37" rx="26" ry="19" fill="url(#band-cyan)"/>
+    <ellipse cx="32" cy="37" rx="26" ry="19" fill="url(#band-magenta)"/>
+    <ellipse cx="32" cy="37" rx="26" ry="19" fill="url(#band-green)"/>
+    <ellipse cx="32" cy="37" rx="26" ry="19" fill="url(#band-violet)"/>
+    <ellipse cx="32" cy="37" rx="26" ry="19" fill="url(#band-gold)"/>
+    <!-- Surface sheen highlight -->
+    <ellipse cx="32" cy="37" rx="26" ry="19" fill="url(#sheen)"/>
+  </g>
+
+  <!-- Puddle rim -->
+  <ellipse cx="32" cy="37" rx="26" ry="19" fill="none" stroke="#00eeff" stroke-width="0.6" opacity="0.35"/>
+
+  <!-- Subtle inner ripple rings -->
+  <ellipse cx="32" cy="37" rx="17" ry="12" fill="none" stroke="#ff6ec7" stroke-width="0.4" opacity="0.2"/>
+  <ellipse cx="32" cy="37" rx="9" ry="6" fill="none" stroke="#8b5cf6" stroke-width="0.35" opacity="0.2"/>
 </svg>

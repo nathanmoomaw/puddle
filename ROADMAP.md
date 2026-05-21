@@ -15,6 +15,9 @@
 - [x] QR code style: branch to a subtler style where letters don't blow out against the QR grain (less visible text)
 
 ## Tokenization / Crypto Roadmap
+- [ ] POAP: determine what POAP actually does in-app and test minting a POAP event
+
+
 - [ ] Define tokenization strategy for v1/v2/... scheme — each version could implement tokenization differently, tied to the abstract /v1 /v2 versioning
 - [x] Tokenize QR codes — the QR preset code represents a unique "state" (working name) that can be minted/owned
 - [ ] QR state mutability: settings can be mutated by the owner, QR auto-regenerates on change, name can only change when settings change. Original creator retains until sold/traded

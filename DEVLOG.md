@@ -1,5 +1,130 @@
 # Devlog
 
+## 2026-05-21 — v1.1 tagged and merged to v1 + main
+
+- Tagged current state as v1.1 "Lo Mode"
+- Merged nmj/v1audness → v1 branch (updates puddle.obfusco.us/v1)
+- Merged nmj/v1audness → main (updates puddle.obfusco.us production)
+
+## 2026-05-21 — Fix: typing in lo QR modal no longer plays notes
+
+- `AsciiRibbon` keydown handler was missing the INPUT/TEXTAREA guard
+- Added `if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return`
+
+## 2026-05-21 — ASCII QR code for lo mode
+
+- `PresetQR` now renders a `<pre>` with Unicode half-block chars in lo mode instead of the canvas
+- Uses `QRCode.toString(url, { type: 'utf8' })` — compact, scannable, terminal-green aesthetic
+- Shake button and Save (download) hidden in lo mode; Copy Link and Mint still work
+- `.preset-qr-modal--lo` variant: dark bg, green border/text, no iridescent effects
+
+## 2026-05-21 — Persist synth settings across party/lo mode switch
+
+- `AppShell` now holds a `synthStateRef` snapshot updated via `onSynthStateChange` callback
+- Both `App` (party) and `TextRibbonApp` (lo) accept `initialSynthState` prop — used to seed `useState` defaults on mount
+- All 18 synth params persist when toggling modes: osc, volume, delay, reverb, crunch, filter, VCF, glide, scale, octaves, arp, hold, poly
+- Removed stale version labels in lo mode: `RIBBON v3 · ASCII` → `puddle · lo`, `v2 · lo mode` → `lo mode`
+
+## 2026-05-20 — Match party header left cluster exactly to lo mode
+
+- `.app-header__left` now `height: 44px; padding: 4px 12px; box-sizing: border-box; align-self: start`
+- Identical geometry to lo mode's 44px header band — buttons center at same pixel coords
+- Screenshots moved to `screenshots/`
+
+## 2026-05-20 — Pin party mode header left to top
+
+- Added `align-self: start` + `padding-top: 4px` to `.app-header__left`
+- Party mode left cluster now sits at top of header, matching lo mode position
+- Prevents vertical centering when logo makes header taller than 44px
+
+## 2026-05-20 — Match party/lo header button layout
+
+- Party mode header left reverted to single flex row (display:flex, gap:8px)
+  to match lo mode's inline layout: [QR] [party·lo] [ⓘ]
+- Removed the two-row column layout that caused button jump on mode switch
+- Removed margin from .app-header__info-btn (was only needed for two-row layout)
+
+## 2026-05-20 — Screenshots organized
+
+- Moved all root-level screenshots to `screenshots/` folder
+- Added `screenshots/` to `.gitignore` — drop PNGs there for DUMP refs, not tracked in git
+- Removed previously-tracked screenshots from git history
+
+## 2026-05-20 — Bump to v1.1.0
+
+- Minor version bump: 1.0.0 → 1.1.0
+- InfoModal reads version directly from package.json — no other changes needed
+
+## 2026-05-20 — Header left: ⓘ stacked below QR + party/lo
+
+- `.app-header__left` changed to `flex-direction: column`
+- QR + mode toggle wrapped in `.app-header__left-top` flex row
+- ⓘ info button now sits on its own row directly below
+
+## 2026-05-20 — Integrate @audness/core engine (nmj/v1audness branch)
+
+- Replaced self-contained `src/audio/AudioEngine.js` with `@audness/core` (file: dep from audness monorepo)
+- `src/hooks/useAudioEngine.js` now wraps `useAudioEngine` from `@audness/core` with `{ appName: 'Puddle', workletUrl: '/bitcrush-processor.js' }`
+- Fixed audness vite.config.js: removed `assetsInclude: ['**/*.js']` which was silently preventing the package from building
+- Added iOS 17+ `navigator.audioSession.type = 'playback'` fix to `@audness/core` AudioEngine.js
+
+## 2026-04-29 — iOS mute switch bypass: navigator.audioSession.type
+
+- Added `navigator.audioSession.type = 'playback'` before `AudioContext` creation in `init()`
+- iOS 17+ official API; sets AVAudioSession category to playback from the start, bypassing the hardware mute switch entirely
+- iOS 16 and earlier: existing silent `<audio>` element trick in `unlockIOSAudio()` continues to handle the upgrade on first gesture
+
+## 2026-04-28 — Puddle favicon: oil-spill iridescent puddle
+
+- Replaced möbius-logo favicon with oil-spill puddle design
+- Dark oval puddle with layered radial gradient color bands (cyan, magenta, green, violet, gold) simulating thin-film iridescence
+- Subtle ripple rings and surface sheen highlight; cyan rim glow
+
+## 2026-04-19 — Party mode header: horizontal left row (QR → party·lo → ⓘ)
+
+- Party mode header left now matches lo mode: inline row `[QR] [party·lo] [ⓘ]`
+- App now accepts `onToggleMode` prop; AppShell passes it instead of rendering a fixed pill
+- QR and info buttons converted from absolute-positioned floats to normal flex items
+- Consistent top-left UX across both modes
+
+## 2026-04-18 — Puddle v2: lo mode horizontal header row
+
+- Lo mode header left now shows a single horizontal row: `[QR] [party·lo] [ⓘ] [◈ PLAY]`
+- Moved toggle out of AppShell fixed pill into TextRibbonApp header (inline `mode-toggle--inline`)
+- AppShell fixed pill only renders in party mode now; lo mode owns its own toggle
+- MIDI/badge/wallet moved to header right alongside shake button
+
+## 2026-04-18 — Puddle v2: lo mode overlay button fixes
+
+- Fixed party/lo toggle overlapping lo mode status indicator — added `padding-left: 90px` to header left
+- Fixed QR/info/right-cluster invisible in lo mode — `z-index: 10` on header was covering them; replaced inline-style overrides with dedicated `.lo-qr-btn`, `.lo-info-btn`, `.lo-header-right` classes at `z-index: 20`
+
+## 2026-04-18 — Puddle v2: lo mode feature parity + toggle reorder
+
+- **Toggle reorder**: party/lo pill is now first in the top-left stack; QR moves to top:34px, info to top:60px
+- **Lo mode parity**: TextRibbonApp now has full party-mode features — QR preset sharing, info modal, wallet, MIDI, POAP milestones, mobile splash, iOS silent-mode hint
+- Lo mode QR/info use `position: fixed` at same screen coordinates as party mode; right cluster (MIDI → badge → wallet) mirrors party layout
+
+## 2026-04-18 — Puddle v2: mode toggle polish + lo logo fix
+
+- **Mode toggle**: Moved `party · lo` rocker from bottom-center to top-left, positioned below QR (top:6px) and info (top:38px) buttons at top:60px left:6px — consistent placement in both party and lo modes
+- **Lo logo**: `AsciiLogo` now reads "puddle" (was "ribbon"); tagline updated to "v2 · lo mode"
+
+## 2026-04-18 — Puddle v2: party/lo mode toggle
+
+- **AppShell**: Added `AppShell.jsx` as top-level wrapper — renders `App` (party/oil-spill) or `TextRibbonApp` (lo/ASCII) based on `puddle_visual_mode` localStorage key
+- **Mode toggle**: Fixed pill button (bottom-center) overlays both modes — `party · lo` with active label highlighted, subtle monospace styling
+- **Dependency**: Installed `@chenglou/pretext` (required by `AsciiRibbon`)
+- Builds clean. Both modes share the same audio engine singleton — switching modes doesn't cut audio
+
+## 2026-04-17 — Audness planning, version tagging, branch protection
+
+- **Audness eval**: Evaluated abstracting shared audio engine into `audness` monorepo (`@audness/core`, `@audness/input`, `@audness/ui`, `@audness/surface`). Verdict: do it — ~2,600 LOC is 95%+ identical across puddle + ribbon, already drifting.
+- **Version tags**: Tagged puddle `nmj/ascii` HEAD as `v2-pre`; tagged ribbon `v3` branch HEAD as `v3`.
+- **Branch protection**: Enabled required PR review (1 approver) on all autodeploying branches — puddle: `main`, `v1`; ribbon: `main`, `v1`, `v2`, `v3`.
+- **POAP moved to ROADMAP**: POAP research/testing item moved from DUMP to Tokenization roadmap section.
+
+
 ## 2026-04-10 — Fix FOUC before mobile splash screen
 
 - **Splash FOUC**: `MobileSplash` was initializing `visible = false` then setting it true in `useEffect`, causing one frame of app visibility before the splash covered it. Fixed by using a synchronous `useState` lazy initializer — `isMobile() && !sessionStorage.getItem('puddle_splashed')` — evaluated on first render, no flicker.
