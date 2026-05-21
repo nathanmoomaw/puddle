@@ -377,6 +377,7 @@ export function AsciiRibbon({
   // ASDF keyboard play
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
       if (e.repeat) return
       if (e.metaKey || e.ctrlKey || e.altKey) return
       const nx = KEY_POSITIONS[e.code]

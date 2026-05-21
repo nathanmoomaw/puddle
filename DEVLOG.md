@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-05-21 — Fix: typing in lo QR modal no longer plays notes
+
+- `AsciiRibbon` keydown handler was missing the INPUT/TEXTAREA guard
+- Added `if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return`
+
 ## 2026-05-21 — ASCII QR code for lo mode
 
 - `PresetQR` now renders a `<pre>` with Unicode half-block chars in lo mode instead of the canvas
