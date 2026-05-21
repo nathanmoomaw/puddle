@@ -36,7 +36,7 @@ function nudge(current, min, max, intensity) {
 const _urlPresetData = readPresetFromUrl()
 const _urlPreset = _urlPresetData?.settings ?? null
 
-export default function TextRibbonApp({ onToggleMode }) {
+export default function TextRibbonApp({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const getEngine = useAudioEngine()
   const { address: walletAddress, isConnected } = useAccount()
 
@@ -57,28 +57,28 @@ export default function TextRibbonApp({ onToggleMode }) {
   }, [])
 
   // Core synth state
-  const [mode, setMode] = useState(_urlPreset?.mode ?? 'play')
-  const [poly, setPoly] = useState(_urlPreset?.poly ?? false)
-  const [hold, setHold] = useState(_urlPreset?.hold ?? false)
-  const [oscParams, setOscParams] = useState(_urlPreset?.oscParams ?? [
+  const [mode, setMode] = useState(_urlPreset?.mode ?? initialSynthState?.mode ?? 'play')
+  const [poly, setPoly] = useState(_urlPreset?.poly ?? initialSynthState?.poly ?? false)
+  const [hold, setHold] = useState(_urlPreset?.hold ?? initialSynthState?.hold ?? false)
+  const [oscParams, setOscParams] = useState(_urlPreset?.oscParams ?? initialSynthState?.oscParams ?? [
     { waveform: 'sawtooth', detune: 0, mix: 1.0 },
     { waveform: 'sawtooth', detune: 0, mix: 0.0 },
     { waveform: 'sawtooth', detune: 0, mix: 0.0 },
   ])
-  const [volume, setVolume] = useState(_urlPreset?.volume ?? 0.5)
-  const [octaves, setOctaves] = useState(_urlPreset?.octaves ?? 2)
-  const [delayParams, setDelayParams] = useState(_urlPreset?.delayParams ?? { time: 0.3, feedback: 0.4, mix: 0 })
-  const [reverbMix, setReverbMix] = useState(_urlPreset?.reverbMix ?? 0)
-  const [crunch, setCrunch] = useState(_urlPreset?.crunch ?? 0)
-  const [filterParams, setFilterParams] = useState(_urlPreset?.filterParams ?? { cutoff: 20000, resonance: 0 })
-  const [vcfCutoff, setVcfCutoff] = useState(_urlPreset?.vcfCutoff ?? 2000)
-  const [vcfResonance, setVcfResonance] = useState(_urlPreset?.vcfResonance ?? 8)
-  const [vcfRouting, setVcfRouting] = useState(_urlPreset?.vcfRouting ?? [false, false, false])
-  const [glideSpeed, setGlideSpeed] = useState(_urlPreset?.glideSpeed ?? 0.005)
-  const [stepped, setStepped] = useState(_urlPreset?.stepped ?? false)
-  const [scale, setScale] = useState(_urlPreset?.scale ?? ['chromatic'])
-  const [arpBpm, setArpBpm] = useState(_urlPreset?.arpBpm ?? 120)
-  const [arpNotes, setArpNotes] = useState(_urlPreset?.arpNotes ?? [])
+  const [volume, setVolume] = useState(_urlPreset?.volume ?? initialSynthState?.volume ?? 0.5)
+  const [octaves, setOctaves] = useState(_urlPreset?.octaves ?? initialSynthState?.octaves ?? 2)
+  const [delayParams, setDelayParams] = useState(_urlPreset?.delayParams ?? initialSynthState?.delayParams ?? { time: 0.3, feedback: 0.4, mix: 0 })
+  const [reverbMix, setReverbMix] = useState(_urlPreset?.reverbMix ?? initialSynthState?.reverbMix ?? 0)
+  const [crunch, setCrunch] = useState(_urlPreset?.crunch ?? initialSynthState?.crunch ?? 0)
+  const [filterParams, setFilterParams] = useState(_urlPreset?.filterParams ?? initialSynthState?.filterParams ?? { cutoff: 20000, resonance: 0 })
+  const [vcfCutoff, setVcfCutoff] = useState(_urlPreset?.vcfCutoff ?? initialSynthState?.vcfCutoff ?? 2000)
+  const [vcfResonance, setVcfResonance] = useState(_urlPreset?.vcfResonance ?? initialSynthState?.vcfResonance ?? 8)
+  const [vcfRouting, setVcfRouting] = useState(_urlPreset?.vcfRouting ?? initialSynthState?.vcfRouting ?? [false, false, false])
+  const [glideSpeed, setGlideSpeed] = useState(_urlPreset?.glideSpeed ?? initialSynthState?.glideSpeed ?? 0.005)
+  const [stepped, setStepped] = useState(_urlPreset?.stepped ?? initialSynthState?.stepped ?? false)
+  const [scale, setScale] = useState(_urlPreset?.scale ?? initialSynthState?.scale ?? ['chromatic'])
+  const [arpBpm, setArpBpm] = useState(_urlPreset?.arpBpm ?? initialSynthState?.arpBpm ?? 120)
+  const [arpNotes, setArpNotes] = useState(_urlPreset?.arpNotes ?? initialSynthState?.arpNotes ?? [])
   const [shaking, setShaking] = useState(false)
   const [doubleHarmonicUnlocked, setDoubleHarmonicUnlocked] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
@@ -298,6 +298,16 @@ export default function TextRibbonApp({ onToggleMode }) {
   }), [getEngine])
 
   useKeyboard(keyHandlers)
+
+  // Keep AppShell's synth snapshot current so mode switches preserve settings
+  useEffect(() => {
+    onSynthStateChange?.({
+      mode, poly, hold, oscParams, volume, octaves, delayParams, reverbMix, crunch,
+      filterParams, vcfCutoff, vcfResonance, vcfRouting, glideSpeed, stepped, scale, arpBpm, arpNotes,
+    })
+  }, [mode, poly, hold, oscParams, volume, octaves, delayParams, reverbMix, crunch,
+      filterParams, vcfCutoff, vcfResonance, vcfRouting, glideSpeed, stepped, scale, arpBpm, arpNotes,
+      onSynthStateChange]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="text-ribbon-app">

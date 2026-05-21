@@ -450,7 +450,7 @@ export function AsciiRibbon({
         onPointerCancel={handlePointerUp}
         style={{ touchAction: 'none', cursor: 'crosshair' }}
       />
-      <div className="ascii-ribbon__label">RIBBON v3 · ASCII</div>
+      <div className="ascii-ribbon__label">puddle · lo</div>
     </div>
   )
 }

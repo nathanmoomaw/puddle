@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-05-21 — Persist synth settings across party/lo mode switch
+
+- `AppShell` now holds a `synthStateRef` snapshot updated via `onSynthStateChange` callback
+- Both `App` (party) and `TextRibbonApp` (lo) accept `initialSynthState` prop — used to seed `useState` defaults on mount
+- All 18 synth params persist when toggling modes: osc, volume, delay, reverb, crunch, filter, VCF, glide, scale, octaves, arp, hold, poly
+- Removed stale version labels in lo mode: `RIBBON v3 · ASCII` → `puddle · lo`, `v2 · lo mode` → `lo mode`
+
 ## 2026-05-20 — Match party header left cluster exactly to lo mode
 
 - `.app-header__left` now `height: 44px; padding: 4px 12px; box-sizing: border-box; align-self: start`

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import './AsciiLogo.css'
 
-const TAGLINE = 'v2 · lo mode'
+const TAGLINE = 'lo mode'
 
 /**
  * Moebius strip drawn as a parametric curve on canvas.

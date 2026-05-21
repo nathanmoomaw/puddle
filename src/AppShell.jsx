@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import App from './App'
 import TextRibbonApp from './TextRibbonApp'
 import './AppShell.css'
@@ -13,6 +13,11 @@ function getInitialMode() {
 
 export default function AppShell() {
   const [visualMode, setVisualMode] = useState(getInitialMode)
+  const synthStateRef = useRef(null)
+
+  const handleSynthStateChange = useCallback((settings) => {
+    synthStateRef.current = settings
+  }, [])
 
   function toggle() {
     const next = visualMode === 'party' ? 'lo' : 'party'
@@ -20,10 +25,15 @@ export default function AppShell() {
     localStorage.setItem(STORAGE_KEY, next)
   }
 
-  if (visualMode === 'party') {
-    return <App onToggleMode={toggle} />
+  const sharedProps = {
+    onToggleMode: toggle,
+    initialSynthState: synthStateRef.current,
+    onSynthStateChange: handleSynthStateChange,
   }
 
-  // Lo mode: pass toggle into TextRibbonApp so it can render inline in the header row
-  return <TextRibbonApp onToggleMode={toggle} />
+  if (visualMode === 'party') {
+    return <App {...sharedProps} />
+  }
+
+  return <TextRibbonApp {...sharedProps} />
 }
