@@ -11,6 +11,37 @@ import './PresetQR.css'
 // Persists QR style seed across modal open/close cycles
 let persistedStyleSeed = 0
 
+// Build ASCII QR string using Unicode half-block chars (2 rows → 1 text row)
+// Produces roughly square modules in monospace fonts
+function buildAsciiQr(url) {
+  try {
+    const qr = QRCode.create(url, { errorCorrectionLevel: 'M' })
+    const { size } = qr.modules
+    const data = qr.modules.data
+    const M = 2 // quiet-zone margin in modules
+    const fullSize = size + M * 2
+    const lines = []
+    for (let r = 0; r < fullSize; r += 2) {
+      let line = ''
+      for (let c = 0; c < fullSize; c++) {
+        const mx = c - M
+        const my1 = r - M
+        const my2 = r + 1 - M
+        const top = mx >= 0 && mx < size && my1 >= 0 && my1 < size ? data[my1 * size + mx] : 0
+        const bot = mx >= 0 && mx < size && my2 >= 0 && my2 < size ? data[my2 * size + mx] : 0
+        if (top && bot) line += '█'
+        else if (top) line += '▀'
+        else if (bot) line += '▄'
+        else line += ' '
+      }
+      lines.push(line)
+    }
+    return lines.join('\n')
+  } catch {
+    return ''
+  }
+}
+
 // Oil-spill iridescent gradient — thin-film interference palette
 const GRADIENT_STOPS = [
   { offset: 0, color: [180, 40, 255] },     // deep violet
@@ -322,12 +353,10 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     })
   }, [url, name, qrStyleSeed, settings.marbles, settings.puddleActivity, isLoMode])
 
-  // Generate ASCII QR for lo mode
+  // Generate ASCII QR for lo mode (synchronous via QRCode.create)
   useEffect(() => {
     if (!isLoMode || !url) return
-    QRCode.toString(url, { type: 'utf8', margin: 1, errorCorrectionLevel: 'M' }, (err, str) => {
-      if (!err) setAsciiQr(str)
-    })
+    setAsciiQr(buildAsciiQr(url))
   }, [url, isLoMode])
 
   const handleDownload = useCallback(() => {

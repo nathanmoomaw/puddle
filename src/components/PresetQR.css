@@ -311,13 +311,14 @@ a.preset-qr-modal__puddle-badge:hover {
 
 .preset-qr-modal__ascii {
   font-family: 'Courier New', monospace;
-  font-size: 6px;
+  font-size: 7px;
   line-height: 1;
-  color: rgba(0, 255, 65, 0.9);
-  background: transparent;
+  color: rgba(0, 255, 65, 0.95);
+  background: #0a0a0a;
   margin: 0;
-  padding: 0;
+  padding: 4px;
   letter-spacing: 0;
   white-space: pre;
   user-select: none;
+  border-radius: 4px;
 }
