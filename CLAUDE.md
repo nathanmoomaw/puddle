@@ -10,10 +10,11 @@ A web-based iridescent oil-spill synthesizer. 2D kaos pad (the "puddle") as the 
 
 ## Versioning & Deployment
 - `main` → `puddle.obfusco.us` (production, latest stable)
-- `nmj/*` branches → `puddle-dev.obfusco.us` (dev preview, auto-deploy)
-- Version tags (`v1`, `v2`, ...) → `puddle.obfusco.us/v1`, etc. (permanent snapshots)
+- `nmj/**` and `dev/**` branches → `puddle-dev.obfusco.us` (dev preview, auto-deploy)
+- `v*` branches → `puddle.obfusco.us/v1`, `/v2`, etc. (living stable tracks)
+- Version tags (`v1.1`, `v2`, ...) → `puddle.obfusco.us/v1.1`, etc. (permanent snapshots)
 - CI/CD: GitHub Actions → S3 + CloudFront
-- Current dev branch: `nmj/ascii` → exploring v2
+- Current dev branch: `dev/v2` (v2 development, auto-deploys to puddle-dev)
 
 ## Audness Engine Lineage
 Puddle v1 is **frozen** — self-contained, no external engine dependency, permanent at `puddle.obfusco.us/v1`.
