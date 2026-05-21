@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-05-21 — dev/v2 branch cut; nmj/v2 audit
+
+- Cut `dev/v2` from main — CI autodeploys to puddle-dev.obfusco.us
+- `nmj/v2` audit: its tip is a direct ancestor of `dev/v2`; all work already included
+
 ## 2026-05-21 — v1.1 tagged and merged to v1 + main
 
 - Tagged current state as v1.1 "Lo Mode"
