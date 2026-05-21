@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-21 — v1.1 tagged and merged to v1 + main
+
+- Tagged current state as v1.1 "Lo Mode"
+- Merged nmj/v1audness → v1 branch (updates puddle.obfusco.us/v1)
+- Merged nmj/v1audness → main (updates puddle.obfusco.us production)
+
 ## 2026-05-21 — Fix: typing in lo QR modal no longer plays notes
 
 - `AsciiRibbon` keydown handler was missing the INPUT/TEXTAREA guard
