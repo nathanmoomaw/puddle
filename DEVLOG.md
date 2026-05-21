@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-05-21 — ASCII QR code for lo mode
+
+- `PresetQR` now renders a `<pre>` with Unicode half-block chars in lo mode instead of the canvas
+- Uses `QRCode.toString(url, { type: 'utf8' })` — compact, scannable, terminal-green aesthetic
+- Shake button and Save (download) hidden in lo mode; Copy Link and Mint still work
+- `.preset-qr-modal--lo` variant: dark bg, green border/text, no iridescent effects
+
 ## 2026-05-21 — Persist synth settings across party/lo mode switch
 
 - `AppShell` now holds a `synthStateRef` snapshot updated via `onSynthStateChange` callback

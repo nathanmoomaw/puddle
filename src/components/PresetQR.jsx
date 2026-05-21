@@ -281,6 +281,8 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
   const [mintStep, setMintStep] = useState('idle') // 'idle'|'pinning'|'confirm'|'done'
   // Style seed persists across modal open/close (module-level persistedStyleSeed)
   const [qrStyleSeed, setQrStyleSeed] = useState(() => persistedStyleSeed)
+  const isLoMode = settings.visualMode === 'lo'
+  const [asciiQr, setAsciiQr] = useState('')
 
   const { address: walletAddress, isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
@@ -313,13 +315,20 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
 
   // Redraw QR when URL, name, or style seed changes
   useEffect(() => {
-    if (canvasRef.current && url) {
-      drawColoredQR(canvasRef.current, url, name, qrStyleSeed, {
-        marbles: settings.marbles,
-        activity: settings.puddleActivity,
-      })
-    }
-  }, [url, name, qrStyleSeed, settings.marbles, settings.puddleActivity])
+    if (isLoMode || !canvasRef.current || !url) return
+    drawColoredQR(canvasRef.current, url, name, qrStyleSeed, {
+      marbles: settings.marbles,
+      activity: settings.puddleActivity,
+    })
+  }, [url, name, qrStyleSeed, settings.marbles, settings.puddleActivity, isLoMode])
+
+  // Generate ASCII QR for lo mode
+  useEffect(() => {
+    if (!isLoMode || !url) return
+    QRCode.toString(url, { type: 'utf8', margin: 1, errorCorrectionLevel: 'M' }, (err, str) => {
+      if (!err) setAsciiQr(str)
+    })
+  }, [url, isLoMode])
 
   const handleDownload = useCallback(() => {
     const canvas = canvasRef.current
@@ -459,11 +468,16 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
 
   return (
     <div className="preset-qr-overlay" onClick={onClose}>
-      <div className="preset-qr-modal" onClick={e => e.stopPropagation()}>
+      <div className={`preset-qr-modal${isLoMode ? ' preset-qr-modal--lo' : ''}`} onClick={e => e.stopPropagation()}>
         <button className="preset-qr-modal__close" onClick={onClose} aria-label="Close">&times;</button>
-        <button className="preset-qr-modal__shake" onClick={handleQRShake} aria-label="Randomize QR style">⚡</button>
+        {!isLoMode && (
+          <button className="preset-qr-modal__shake" onClick={handleQRShake} aria-label="Randomize QR style">⚡</button>
+        )}
 
-        <canvas ref={canvasRef} className="preset-qr-modal__canvas" />
+        {isLoMode
+          ? <pre className="preset-qr-modal__ascii">{asciiQr}</pre>
+          : <canvas ref={canvasRef} className="preset-qr-modal__canvas" />
+        }
 
         <input
           className="preset-qr-modal__name"
@@ -506,9 +520,11 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
         </div>
 
         <div className="preset-qr-modal__actions">
-          <button className="preset-qr-modal__btn" onClick={handleDownload}>
-            Save
-          </button>
+          {!isLoMode && (
+            <button className="preset-qr-modal__btn" onClick={handleDownload}>
+              Save
+            </button>
+          )}
           <button className="preset-qr-modal__btn" onClick={handleCopy}>
             {copied ? 'Copied!' : 'Copy Link'}
           </button>
