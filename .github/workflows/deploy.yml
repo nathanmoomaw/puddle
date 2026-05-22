@@ -53,6 +53,19 @@ jobs:
           node-version: 25
           cache: npm
 
+      - name: Resolve dev deploy target
+        id: devpath
+        run: |
+          REF="${{ github.ref }}"
+          if [[ "$REF" =~ ^refs/heads/dev/(v[0-9]+.*)$ ]]; then
+            VERSION="${BASH_REMATCH[1]}"
+            echo "BASE_PATH=/${VERSION}/" >> "$GITHUB_OUTPUT"
+            echo "S3_PREFIX=${VERSION}/" >> "$GITHUB_OUTPUT"
+          else
+            echo "BASE_PATH=/" >> "$GITHUB_OUTPUT"
+            echo "S3_PREFIX=" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build @audness/core
         run: |
           git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
@@ -64,6 +77,7 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: ${{ steps.devpath.outputs.BASE_PATH }}
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -71,11 +85,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Deploy to dev S3
-        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/ --delete
+      # Root deploy (nmj/** or non-versioned dev/**) — preserve existing /vX/ subdirs
+      - name: Deploy to dev S3 (root)
+        if: steps.devpath.outputs.S3_PREFIX == ''
+        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/ --delete --exclude "v*/*"
+
+      # Versioned deploy (dev/vX) — scoped to /vX/ prefix only
+      - name: Deploy to dev S3 (versioned)
+        if: steps.devpath.outputs.S3_PREFIX != ''
+        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/${{ steps.devpath.outputs.S3_PREFIX }} --delete
 
       - name: Invalidate dev CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/${{ steps.devpath.outputs.S3_PREFIX }}*"
 
   deploy-stable-branch:
     if: startsWith(github.ref, 'refs/heads/v')

@@ -70,6 +70,10 @@ export function RibbonLogo() {
         */}
       </defs>
 
+      {/* Dark inset behind the letters — traces the actual text bounds */}
+      <rect x="5" y="7" width="125" height="57" rx="7" ry="7"
+        fill="rgba(4,4,14,0.58)" pointerEvents="none" />
+
       {/* ── Letter strokes ── */}
       <g
         className="logo-letters"

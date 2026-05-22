@@ -1,5 +1,15 @@
 # Devlog
 
+## 2026-05-22 — v2 glass-panel aesthetic: transparent controls, neon/angular, puddle click-through
+
+- **Transparent control panels**: removed all console panel backgrounds on desktop (left/right/bottom) and mobile; controls now float transparently above the puddle — clicks on empty space between controls fall through to the puddle
+- **Pointer-events passthrough**: header and control panels set to `pointer-events: none`; all interactive elements (buttons, knobs, rockers, faders, VCF) restored to `pointer-events: auto` individually
+- **Neon/angular v2 aesthetic**: rockers and hold-split are angular (border-radius: 2px); vivid cyan/magenta neon borders and glows; osc cards use minimal neon-border-only glass look; text-shadows added to all labels for puddle legibility
+- **Wild zone enhanced**: `handleWildTouch` now affects all 3 oscs simultaneously (extreme 4800-cent detune range), burst of 3–5 staggered notes, triggers visual undulate, extreme VCF + glide randomization — much more dramatic than before
+- **Logo background**: replaced CSS oval pseudo-element with an SVG `<rect>` tightly traced to the actual letter bounds (x:5 y:7 w:125 h:57)
+- **CI/CD dev/vX branches**: `deploy-dev` job now detects `dev/vX` branches, builds with `VITE_BASE_PATH=/vX/`, deploys to `s3://puddle-dev.obfusco.us/vX/`; root deploys exclude `v*/` to preserve existing versions
+- **vite.config.js**: added `base: process.env.VITE_BASE_PATH || '/'` to support sub-path deployments
+
 ## 2026-05-22 — v2 polish: full-bleed puddle, zone knobs, Space/Tone macros, lo mode parity
 
 - **DualKnob zone labels**: hover reveals DET/MIX zone labels; CSS highlights inner/outer arc per active zone; cursor switches between ns-resize/ew-resize

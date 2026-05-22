@@ -9,6 +9,11 @@
 - [x] Full-bleed puddle — position:fixed covers entire viewport on both desktop and mobile
 - [x] Normal zone remapping + wild touches outside center panel
 - [x] Lo mode parity — AsciiBipolarKnob Space/Tone added to AsciiControls
+- [x] Transparent control panels — all console backgrounds removed, controls float as neon glass above puddle; click-through for empty areas
+- [x] Neon/angular aesthetic — rockers angular (2px radius), vivid cyan borders, neon fader/lights
+- [x] Wild zone enhanced — burst of 3–5 notes, all 3 oscs randomized, visual undulate feedback
+- [x] Logo background — SVG rect tracing actual letter bounds replaces CSS oval
+- [x] CI/CD dev/vX branches — `dev/v2`, `dev/v1` etc auto-deploy to puddle-dev.obfusco.us/v2/, /v1/
 
 ## Up Next
 - [x] Smooth möbius paths in logo (bezier refinement, tighter curves)

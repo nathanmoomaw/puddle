@@ -645,7 +645,7 @@
   .controls__layout { display: contents; }
   .controls__main { display: contents; }
 
-  /* Left panel — play/arp, mono/poly, hold, stop, bpm, vol, octaves, scale, speed */
+  /* Left panel — transparent overlay, pointer events pass through empty space */
   .controls__toggles {
     grid-column: 1;
     grid-row: 2;
@@ -657,15 +657,15 @@
     padding: 0.5rem 0.5rem 0.75rem 0.4rem;
     border-right: none;
     box-shadow: none;
-    background: rgba(22, 18, 40, 0.65);
-    border: 1px solid rgba(70, 60, 110, 0.15);
-    border-right-color: rgba(80, 160, 255, 0.06);
-    border-radius: 6px 8px 0 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     border-bottom: none;
     margin-right: -23px;
     position: relative;
     z-index: 1;
-    overflow-y: auto;
+    overflow-y: visible;
+    pointer-events: none;
   }
 
   .controls__toggles .controls__fader {
@@ -735,7 +735,7 @@
     z-index: 4;
   }
 
-  /* Right panel — oscillators */
+  /* Right panel — transparent overlay */
   .controls__oscillators {
     grid-column: 3;
     grid-row: 2;
@@ -743,18 +743,18 @@
     align-self: stretch;
     gap: 0;
     padding: 0.5rem 0.4rem 0.5rem 0.5rem;
-    background: rgba(22, 18, 40, 0.65);
-    border: 1px solid rgba(70, 60, 110, 0.15);
-    border-left-color: rgba(80, 160, 255, 0.06);
-    border-radius: 8px 6px 0 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     border-bottom: none;
     margin-left: -23px;
     position: relative;
     z-index: 1;
-    overflow-y: auto;
+    overflow-y: visible;
+    pointer-events: none;
   }
 
-  /* Bottom panel — grid row 3, spans all columns, above puddle */
+  /* Bottom panel — transparent overlay */
   .controls__shared {
     grid-column: 1 / -1;
     grid-row: 3;
@@ -764,13 +764,12 @@
     gap: 0.4rem 0.6rem;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem 1.25rem;
-    background: rgba(14, 11, 28, 0.92);
-    border-top: 1px solid rgba(80, 160, 255, 0.14);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    padding: 0.25rem 1.25rem 0.5rem;
+    background: transparent;
+    border-top: none;
     position: relative;
     z-index: 1;
+    pointer-events: none;
   }
 
   /* VCF sits as a flex item in the bottom bar */
@@ -811,23 +810,12 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    border-radius: 8px;
+    border-radius: 0;
     flex-shrink: 0;
-    /* Sit above fixed puddle */
     position: relative;
     z-index: 1;
-    /* Semi-transparent on mobile so puddle shows through */
-    background:
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 1px,
-        rgba(140, 130, 170, 0.06) 1px,
-        rgba(140, 130, 170, 0.06) 2px
-      ),
-      linear-gradient(180deg, rgba(14, 11, 28, 0.88) 0%, rgba(10, 8, 20, 0.9) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: transparent;
+    pointer-events: none;
   }
 
   .controls__layout {
@@ -1014,5 +1002,72 @@
   /* Hide circle shake button on mobile — replaced by floating bolt in header */
   .controls__shake-btn {
     display: none;
+  }
+}
+
+/* ── v2 Neon / Angular overrides ──────────────────────────────────────────────
+   Transparent panels: all interactive elements restore pointer events.
+   Empty space between controls falls through to the puddle.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Restore pointer events on every interactive element */
+.controls .rocker,
+.controls button,
+.controls input,
+.controls .rotary-knob__body,
+.controls .dual-knob,
+.controls .bipolar-knob,
+.controls .controls__fader-track,
+.controls .vcf-control,
+.controls .activation-mode,
+.controls .activation__hold-left,
+.controls .activation__hold-right,
+.controls .activation__stop,
+.controls .activation__marble-slot,
+.controls .marble-size-btn {
+  pointer-events: auto;
+}
+
+/* Labels: readable against the puddle behind them */
+.controls__label,
+.controls__section > span,
+.rotary-knob__label,
+.controls__fader-label,
+.controls__fader-value,
+.bipolar-knob__label,
+.bipolar-knob__side,
+.controls__osc-label {
+  text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,0.9);
+}
+
+/* Osc cards — transparent, just neon outline, puddle visible through */
+.controls__osc {
+  background: transparent !important;
+  border: 1px solid rgba(0, 240, 255, 0.12) !important;
+  border-top-color: rgba(0, 240, 255, 0.18) !important;
+  border-radius: 3px !important;
+  box-shadow: none !important;
+}
+
+/* Top accent strip stays but more vivid */
+.controls__osc::before {
+  opacity: 0.6 !important;
+}
+
+/* Fader thumb — neon accent */
+.controls__fader-thumb {
+  border-radius: 2px !important;
+  background: rgba(0, 240, 255, 0.9) !important;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.7), 0 0 2px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* VCF panel — transparent, neon outline */
+@media (min-width: 768px) {
+  .controls__shared .vcf-control {
+    background: transparent !important;
+    border: 1px solid rgba(224, 64, 251, 0.18) !important;
+    border-radius: 3px !important;
+    padding: 0.3rem 0.5rem !important;
+    box-shadow: none !important;
   }
 }

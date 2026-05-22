@@ -626,32 +626,59 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     return () => { clearTimeout(t); window.removeEventListener('resize', measure) }
   }, [])
 
-  // Wild touch handler — fires when user touches outside normal play zone
+  // Wild touch handler — fires when user touches outside normal play zone.
+  // Triggers extreme parameter shifts + note burst for an "out of this world" effect.
   const handleWildTouch = useCallback((x, y) => {
     const engine = getEngine()
-    const intensity = 0.7 + Math.random() * 0.3
-    // Wild Space + Tone
+
+    // Visual feedback — brief undulate pulse
+    setUndulating(true)
+    clearTimeout(undulateTimerRef.current)
+    undulateTimerRef.current = setTimeout(() => setUndulating(false), 700)
+
+    // Extreme Space + Tone macro shift
     handleSpace(Math.random())
     handleTone(Math.random())
-    // Extreme detune + waveform shift for a random osc
-    const oscIdx = Math.floor(Math.random() * 3)
-    const wf = WAVEFORMS[Math.floor(Math.random() * WAVEFORMS.length)]
-    const det = Math.round((Math.random() - 0.5) * 2400)
+
+    // Rip ALL 3 oscs — extreme detune (4800 ct range) + random waveforms
     setOscParams(prev => {
-      const next = [...prev]
-      next[oscIdx] = { ...next[oscIdx], waveform: wf, detune: det }
+      const next = prev.map((osc, i) => {
+        const wf = WAVEFORMS[Math.floor(Math.random() * WAVEFORMS.length)]
+        const det = Math.round((Math.random() - 0.5) * 4800)
+        engine.setWaveform(wf, i)
+        engine.setOscDetune(i, det)
+        return { ...osc, waveform: wf, detune: det }
+      })
       return next
     })
-    engine.setWaveform(wf, oscIdx)
-    engine.setOscDetune(oscIdx, det)
-    // Randomize VCF routing
-    setVcfRouting([Math.random() > 0.4, Math.random() > 0.4, Math.random() > 0.4])
-    // Play a wild note
-    const hz = positionToFrequency(Math.random(), { octaves, stepped, scale })
-    const id = `wild_${Date.now()}`
-    engine.voiceOn(id, hz, 0.4 + intensity * 0.6)
-    setTimeout(() => engine.voiceOff(id), 200 + intensity * 300)
-  }, [getEngine, handleSpace, handleTone, octaves, stepped, scale])
+
+    // Extreme VCF — high resonance, swept cutoff
+    const wildCutoff = 200 + Math.random() * 18000
+    const wildRes = 10 + Math.random() * 10
+    setVcfCutoff(wildCutoff)
+    engine.setVcfCutoff(wildCutoff)
+    setVcfResonance(wildRes)
+    engine.setVcfResonance(wildRes)
+    setVcfRouting([Math.random() > 0.3, Math.random() > 0.3, Math.random() > 0.3])
+
+    // Glide extremes
+    const wildGlide = 0.05 + Math.random() * 0.25
+    setGlideSpeed(wildGlide)
+    engine.setGlideSpeed(wildGlide)
+
+    // Burst of 3–5 staggered wild notes
+    const burstCount = 3 + Math.floor(Math.random() * 3)
+    for (let i = 0; i < burstCount; i++) {
+      const delay = i * (40 + Math.random() * 70)
+      setTimeout(() => {
+        const hz = positionToFrequency(Math.random(), { octaves, stepped, scale })
+        const id = `wild_${Date.now()}_${i}`
+        const vel = 0.5 + Math.random() * 0.5
+        engine.voiceOn(id, hz, vel)
+        setTimeout(() => engine.voiceOff(id), 120 + Math.random() * 500)
+      }, delay)
+    }
+  }, [getEngine, handleSpace, handleTone, octaves, stepped, scale, setGlideSpeed])
 
   // Grid floor parallax — shifts background-position with puddle touch (perspective floor)
   useEffect(() => {

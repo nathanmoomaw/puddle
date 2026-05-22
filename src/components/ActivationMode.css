@@ -588,3 +588,45 @@
     min-width: 0;
   }
 }
+
+/* ── v2 Neon / Angular overrides ───────────────────────────────────────────── */
+
+/* Rockers: angular, transparent body, vivid neon border */
+.rocker {
+  border-radius: 3px;
+  background: rgba(4, 4, 14, 0.78);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+}
+
+.rocker__side--active {
+  background: rgba(0, 240, 255, 0.07);
+  box-shadow: inset 0 0 8px rgba(0, 240, 255, 0.12);
+  transform: none;
+}
+
+.rocker__side:not(.rocker__side--active) {
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Lights: bright neon on active */
+.switch-light--on {
+  box-shadow: 0 0 12px var(--light-color), 0 0 5px var(--light-color);
+}
+
+/* Hold split: angular */
+.activation__hold-split {
+  border-radius: 3px;
+  background: rgba(4, 4, 14, 0.78);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  box-shadow: none;
+}
+
+/* Stop button label text-shadow for visibility */
+.activation__stop,
+.activation__hold-left,
+.activation__hold-right {
+  text-shadow: 0 0 6px rgba(0,0,0,0.9);
+}

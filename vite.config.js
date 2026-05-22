@@ -18,6 +18,7 @@ function getHttpsConfig() {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), domscribe()],
+  base: process.env.VITE_BASE_PATH || '/',
   resolve: {
     dedupe: ['react', 'react-dom'],
   },

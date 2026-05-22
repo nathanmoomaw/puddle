@@ -163,8 +163,23 @@
   gap: 0.25rem;
   width: 100%;
   position: relative;
-  /* Puddle shows through behind header */
+  /* Puddle shows through behind header — pass pointer events through empty areas */
   background: transparent;
+  pointer-events: none;
+}
+
+/* Re-enable pointer events for all interactive elements in the header */
+.app-header button,
+.app-header a,
+.app-header [role="button"],
+.app-header__logo {
+  pointer-events: auto;
+}
+
+/* Info modal and version selector are DOM-children of header but need their own events */
+.info-modal,
+.version-selector {
+  pointer-events: auto;
 }
 
 /* Left cluster — same 44px band + 4px/12px padding as lo mode header */
@@ -208,20 +223,7 @@
   position: relative;
 }
 
-.app-header__logo::before {
-  content: '';
-  position: absolute;
-  inset: -8px -20px;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(4, 4, 14, 0.75) 0%,
-    rgba(4, 4, 14, 0.5) 45%,
-    transparent 75%
-  );
-  pointer-events: none;
-  z-index: -1;
-}
+/* Logo background is now an SVG rect inside the logo — see RibbonLogo.jsx */
 
 .app-header__logo:active .ribbon-logo {
   animation: shake 0.4s ease-out;
