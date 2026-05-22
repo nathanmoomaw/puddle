@@ -1,5 +1,12 @@
 # Roadmap
 
+## Up Next (v2 dev/v2 branch)
+- [x] Liquid sky layout — puddle full-screen behind controls
+- [x] Dual-tier osc knob — mix (outer arc) + detune (inner notch) in one component
+- [x] Version selector — inline v1|v2 nav in header; merge to v1/main after confirmation
+- [ ] Version selector: confirm placement, merge to v1 branch and main
+- [ ] Simplify effect controls — combine/bake-in effects to reduce knob count (v2 design direction)
+
 ## Up Next
 - [x] Smooth möbius paths in logo (bezier refinement, tighter curves)
 - [ ] Logo rethink: new approach needed — möbius shape still not satisfying; consider redrawing from scratch with a proper bezier editor or using a reference lemniscate

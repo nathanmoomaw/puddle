@@ -307,19 +307,22 @@
   animation: puddle-grid-drift 20s linear infinite;
 }
 
-/* Desktop: stretch to fill the grid row set by the side control panels */
+/* Desktop: v2 liquid sky — puddle fills entire stage behind controls */
 @media (min-width: 768px) {
   .puddle {
-    grid-column: 2;
-    grid-row: 2;
-    justify-self: stretch;
-    align-self: stretch;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    max-width: 100%;
-    aspect-ratio: auto;
-    min-height: 0;
-    position: relative;
-    z-index: 3;
+    height: 100%;
+    max-width: none;
+    aspect-ratio: unset;
+    margin: 0;
+    clip-path: none;
+    grid-column: unset;
+    grid-row: unset;
+    z-index: 0;
+    filter: none;
+    border-radius: 0;
   }
 }
 

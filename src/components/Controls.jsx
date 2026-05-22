@@ -2,6 +2,7 @@ import { useCallback, useRef as useRefHook, useEffect, forwardRef, memo } from '
 import { SCALES, SCALE_LABELS } from '../utils/scales'
 import { ActivationMode } from './ActivationMode'
 import { RotaryKnob } from './RotaryKnob'
+import { DualKnob } from './DualKnob'
 import { VCFControl } from './VCFControl'
 import './Controls.css'
 
@@ -248,25 +249,15 @@ const OscSection = memo(function OscSection({ index, params, getEngine, onUpdate
         </div>
       </div>
       <div className="controls__osc-knobs">
-        <RotaryKnob
-          value={params.mix}
-          min={0}
-          max={1}
-          step={0.01}
-          onChange={handleMix}
+        <DualKnob
+          mixValue={params.mix}
+          detuneValue={params.detune}
+          onMixChange={handleMix}
+          onDetuneChange={handleDetune}
           color={OSC_COLORS[index]}
-          label={`Mix ${Math.round(params.mix * 100)}%`}
-          size={42}
-        />
-        <RotaryKnob
-          value={params.detune}
-          min={-1200}
-          max={1200}
-          step={1}
-          onChange={handleDetune}
-          color={OSC_COLORS[index]}
-          label={`Det ${params.detune}¢`}
-          size={42}
+          size={52}
+          mixLabel={`${Math.round(params.mix * 100)}%`}
+          detuneLabel={`${params.detune}¢`}
         />
       </div>
     </div>

@@ -16,6 +16,7 @@ import { AsciiLogo } from './components/AsciiLogo'
 import { WalletButton } from './components/WalletButton'
 import { MilestoneBadge } from './components/MilestoneBadge'
 import { InfoModal } from './components/InfoModal'
+import { VersionSelector } from './components/VersionSelector'
 import { PresetQR } from './components/PresetQR'
 import { MobileSplash } from './components/MobileSplash'
 import { MilestoneToast, useMilestoneToast } from './components/MilestoneToast'
@@ -348,6 +349,7 @@ export default function TextRibbonApp({ onToggleMode, initialSynthState, onSynth
           >
             ⓘ
           </button>
+          <VersionSelector />
           <div className="text-ribbon-header__status">
             <span className={`status-dot${shaking ? ' status-dot--shake' : ''}`}>◈</span>
             <span className="status-mode">[{mode.toUpperCase()}]</span>

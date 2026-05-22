@@ -1,5 +1,15 @@
 # Changelog
 
+## v2 — "Liquid Sky" (dev/v2, in progress)
+
+### New Features
+
+- **Full-screen puddle** — puddle extends behind all controls (desktop); controls float as overlay panels above the oil-spill surface
+- **Dual-tier osc knob** — per-oscillator mix and detune combined into a single concentric-ring knob; outer arc = mix level, inner notch = detune position
+- **Version selector** — inline `v1 | v2` navigation in both party and lo mode headers; links to stable version subpaths
+
+---
+
 ## v1.1 — "Lo Mode" (2026-05-21)
 
 Builds on v1 with a second visual mode, shared audio engine lineage prep, and several UX fixes.

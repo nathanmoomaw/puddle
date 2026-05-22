@@ -710,7 +710,7 @@
     overflow-y: auto;
   }
 
-  /* Bottom panel — grid row 3, spans all columns, never overlaps puddle */
+  /* Bottom panel — grid row 3, spans all columns, above puddle */
   .controls__shared {
     grid-column: 1 / -1;
     grid-row: 3;
@@ -725,6 +725,8 @@
     border-top: 1px solid rgba(80, 160, 255, 0.14);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 1;
   }
 
   /* VCF sits as a flex item in the bottom bar */

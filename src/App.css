@@ -103,6 +103,9 @@
     width: 100%;
     flex: 1;
     min-height: 0;
+    /* v2 liquid sky: puddle fills stage absolutely behind controls */
+    position: relative;
+    overflow: hidden;
   }
 
   .app {

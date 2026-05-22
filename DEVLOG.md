@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-22 — v2 foundation: liquid sky layout, dual-tier osc knobs, version selector
+
+- **Liquid sky layout**: puddle now fills entire stage as a fixed background behind all controls (desktop); removed blob clip-path and drop-shadow, controls float above at z-index 1
+- **Dual-tier osc knob** (`DualKnob`): replaces two separate mix/detune RotaryKnobs per oscillator with a single concentric-ring knob — outer ring = mix (SVG arc), inner circle = detune (rotating notch); interaction zone detected by pointer distance from center
+- **Version selector**: compact inline `v1 | v2` nav added to both party and lo mode headers; active version detected from URL path; ready to merge to v1/main after confirmation
+
 ## 2026-05-21 — dev/v2 branch cut; nmj/v2 audit
 
 - Cut `dev/v2` from main — CI autodeploys to puddle-dev.obfusco.us

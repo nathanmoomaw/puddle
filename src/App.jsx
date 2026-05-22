@@ -22,6 +22,7 @@ import { readPresetFromUrl } from './utils/presets'
 import { WalletButton } from './components/WalletButton'
 import { MilestoneBadge } from './components/MilestoneBadge'
 import { InfoModal } from './components/InfoModal'
+import { VersionSelector } from './components/VersionSelector'
 import { MobileSplash } from './components/MobileSplash'
 import { PresetSplash } from './components/PresetSplash'
 import { useMarbles } from './hooks/useMarbles'
@@ -833,6 +834,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
             ⓘ
           </button>
           {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
+          <VersionSelector />
         </div>
         {/* Center: logo — always dead center via CSS grid */}
         <div className="app-header__logo" onClick={() => { requestMotionPermission(); handleShake(0.5) }} role="button" tabIndex={0} aria-label="Shake / Randomize">
