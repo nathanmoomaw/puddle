@@ -268,18 +268,27 @@
 
 .puddle__label {
   position: absolute;
-  bottom: 12%;
+  /* Center in the visible play area — above bottom controls, below header */
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.35);
   letter-spacing: 0.1em;
   pointer-events: none;
   z-index: 5;
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 1);
   text-align: center;
   white-space: nowrap;
+  /* Fade in slowly so it doesn't distract */
+  animation: label-fade-in 2s ease-in-out both;
+}
+
+@keyframes label-fade-in {
+  0% { opacity: 0; }
+  60% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 .puddle__hint {
@@ -307,10 +316,10 @@
   animation: puddle-grid-drift 20s linear infinite;
 }
 
-/* Desktop: v2 liquid sky — puddle fills entire stage behind controls */
+/* Desktop + mobile: v2 liquid sky — puddle is fixed fullscreen background */
 @media (min-width: 768px) {
   .puddle {
-    position: absolute;
+    position: fixed;
     inset: 0;
     width: 100%;
     height: 100%;
@@ -326,13 +335,21 @@
   }
 }
 
-/* Mobile — fill available vertical space */
+/* Mobile — fixed fullscreen behind controls */
 @media (max-width: 767px) {
   .puddle {
-    flex: 1;
-    min-height: 300px;
-    aspect-ratio: unset;
-    max-width: 100%;
+    position: fixed;
+    inset: 0;
     width: 100%;
+    height: 100%;
+    max-width: none;
+    aspect-ratio: unset;
+    margin: 0;
+    clip-path: none;
+    z-index: 0;
+    filter: none;
+    border-radius: 0;
+    flex: unset;
+    min-height: unset;
   }
 }

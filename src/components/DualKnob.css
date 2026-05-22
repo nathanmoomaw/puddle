@@ -35,14 +35,24 @@
   position: relative;
   width: var(--knob-size, 52px);
   height: var(--knob-size, 52px);
-  cursor: grab;
+  cursor: ns-resize;
   user-select: none;
   -webkit-user-select: none;
   border-radius: 50%;
 }
 
-.dual-knob__body:active {
+.dual-knob__body:active,
+.dual-knob__body[data-zone="outer"]:active {
   cursor: grabbing;
+}
+
+/* Zone-specific cursor feedback */
+.dual-knob__body[data-zone="outer"] {
+  cursor: ew-resize;
+}
+
+.dual-knob__body[data-zone="inner"] {
+  cursor: ns-resize;
 }
 
 /* SVG arc ring — absolute, fills body */
@@ -72,6 +82,61 @@
   transition: none;
 }
 
+/* Zone separator ring — highlights on hover */
+.dual-knob__zone-sep {
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 0.8;
+  transition: stroke 0.15s;
+  pointer-events: none;
+}
+
+.dual-knob__body[data-zone="outer"] .dual-knob__zone-sep {
+  stroke: color-mix(in srgb, var(--knob-color, var(--cyan)) 40%, transparent);
+}
+
+.dual-knob__body[data-zone="inner"] .dual-knob__zone-sep {
+  stroke: rgba(255, 255, 255, 0.18);
+}
+
+/* Zone labels — faint, appear on hover */
+.dual-knob__zone-label {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.38rem;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  transition: color 0.15s, opacity 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dual-knob__zone-label--mix {
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dual-knob__zone-label--det {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.35rem;
+  color: rgba(255, 255, 255, 0.12);
+}
+
+/* Highlight zone labels on hover */
+.dual-knob__body[data-zone="outer"] .dual-knob__zone-label--mix {
+  color: color-mix(in srgb, var(--knob-color, var(--cyan)) 80%, white);
+  opacity: 0.9;
+}
+
+.dual-knob__body[data-zone="inner"] .dual-knob__zone-label--det {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 /* Inner circle — detune notch */
 .dual-knob__inner {
   position: absolute;
@@ -96,7 +161,22 @@
   pointer-events: none;
 }
 
-.dual-knob__body:hover .dual-knob__inner {
+/* Zone-specific hover glow */
+.dual-knob__body[data-zone="outer"] .dual-knob__ring-track {
+  stroke: rgba(255, 255, 255, 0.12);
+  transition: stroke 0.15s;
+}
+
+.dual-knob__body[data-zone="inner"] .dual-knob__inner {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.5),
+    0 0 8px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dual-knob__body[data-zone="outer"] .dual-knob__inner {
   border-color: color-mix(in srgb, var(--knob-color, var(--cyan)) 50%, transparent);
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.5),
@@ -105,7 +185,7 @@
     inset 0 -1px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Notch ring — rotates to show detune */
+/* Notch ring — rotates to show detune (pointer-events: none from parent) */
 .dual-knob__notch-ring {
   position: absolute;
   inset: 0;

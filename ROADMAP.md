@@ -5,7 +5,10 @@
 - [x] Dual-tier osc knob — mix (outer arc) + detune (inner notch) in one component
 - [x] Version selector — inline v1|v2 nav in header; merge to v1/main after confirmation
 - [ ] Version selector: confirm placement, merge to v1 branch and main
-- [ ] Simplify effect controls — combine/bake-in effects to reduce knob count (v2 design direction)
+- [x] Simplify effect controls — Space/Tone BipolarKnob macros replace reverb/delay/crunch
+- [x] Full-bleed puddle — position:fixed covers entire viewport on both desktop and mobile
+- [x] Normal zone remapping + wild touches outside center panel
+- [x] Lo mode parity — AsciiBipolarKnob Space/Tone added to AsciiControls
 
 ## Up Next
 - [x] Smooth möbius paths in logo (bezier refinement, tighter curves)

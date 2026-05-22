@@ -1,10 +1,79 @@
-import { useCallback, useRef as useRefHook, useEffect, forwardRef, memo } from 'react'
+import { useCallback, useRef as useRefHook, useEffect, forwardRef, memo, useRef } from 'react'
 import { SCALES, SCALE_LABELS } from '../utils/scales'
 import { ActivationMode } from './ActivationMode'
 import { RotaryKnob } from './RotaryKnob'
 import { DualKnob } from './DualKnob'
 import { VCFControl } from './VCFControl'
 import './Controls.css'
+
+// ── BipolarKnob — circular SVG knob: 0=left(7-o-clock), 0.5=top(12), 1=right(5-o-clock) ──
+// Imported from ribbon v3 lo mode design; used for Space and Tone macro controls.
+function BipolarKnob({ label, subLabel, value, onChange, color = '#00e5cc' }) {
+  const dragging = useRef(false)
+  const startY = useRef(0)
+  const startVal = useRef(0)
+
+  const MIN_DEG = -135
+  const MAX_DEG = 135
+  const angleDeg = MIN_DEG + value * (MAX_DEG - MIN_DEG)
+  const angleRad = (angleDeg * Math.PI) / 180
+
+  const cx = 14, cy = 14, r = 9
+  const tipX = cx + r * Math.sin(angleRad)
+  const tipY = cy - r * Math.cos(angleRad)
+
+  const toXY = (deg) => {
+    const rad = (deg * Math.PI) / 180
+    return [cx + r * Math.sin(rad), cy - r * Math.cos(rad)]
+  }
+  const [x0, y0] = toXY(MIN_DEG)
+  const [x1, y1] = toXY(MAX_DEG)
+  const trackPath = `M ${x0} ${y0} A ${r} ${r} 0 1 1 ${x1} ${y1}`
+
+  const sweepSpan = angleDeg - MIN_DEG
+  const largeArc = sweepSpan > 180 ? 1 : 0
+  const activePath = `M ${x0} ${y0} A ${r} ${r} 0 ${largeArc} 1 ${tipX.toFixed(2)} ${tipY.toFixed(2)}`
+
+  const onDown = useCallback((e) => {
+    dragging.current = true
+    startY.current = e.clientY
+    startVal.current = value
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }, [value])
+
+  const onMove = useCallback((e) => {
+    if (!dragging.current) return
+    const delta = (startY.current - e.clientY) / 100
+    onChange(Math.max(0, Math.min(1, startVal.current + delta)))
+  }, [onChange])
+
+  const onUp = useCallback(() => { dragging.current = false }, [])
+
+  const sideLabel = value < 0.45 ? (subLabel?.left ?? 'L') : value > 0.55 ? (subLabel?.right ?? 'R') : '·'
+
+  return (
+    <div
+      className="bipolar-knob"
+      style={{ '--bipolar-color': color }}
+      onPointerDown={onDown}
+      onPointerMove={onMove}
+      onPointerUp={onUp}
+      onPointerCancel={onUp}
+      title={`${label}: drag up/down. Center=neutral, left=${subLabel?.left}, right=${subLabel?.right}`}
+    >
+      <div className="bipolar-knob__label">{label}</div>
+      <svg className="bipolar-knob__svg" viewBox="0 0 28 28" width="52" height="52">
+        <path d={trackPath} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="2.5" strokeLinecap="round" />
+        <path d={activePath} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"
+          style={{ filter: `drop-shadow(0 0 3px ${color})` }} />
+        <circle cx={tipX} cy={tipY} r="2.5" fill={color}
+          style={{ filter: `drop-shadow(0 0 4px ${color})` }} />
+        <line x1={cx} y1={cy} x2={tipX} y2={tipY} stroke={color} strokeWidth="1" opacity="0.3" />
+      </svg>
+      <div className="bipolar-knob__side">{sideLabel}</div>
+    </div>
+  )
+}
 
 function DJFader({ value, onChange, ghostValue }) {
   const trackRef = useRefHook(null)
@@ -286,6 +355,11 @@ export const Controls = forwardRef(function Controls({
   setFilterParams,
   glideSpeed,
   setGlideSpeed,
+  // Space/Tone macro knobs (v2+)
+  space,
+  onSpaceChange,
+  tone,
+  onToneChange,
   shaking,
   mode,
   setMode,
@@ -532,24 +606,50 @@ export const Controls = forwardRef(function Controls({
               </div>
             </div>
 
-            <div className="controls__section controls__section--reverb">
-              <label className="controls__label">Reverb <span className="controls__value">{Math.round(reverbMix * 100)}%</span></label>
-              <RotaryKnob value={reverbMix} min={0} max={1} step={0.01} onChange={handleReverbMix} color="#00e5cc" size={40} />
-            </div>
-
-            <div className="controls__section controls__section--crunch">
-              <label className="controls__label">Crunch <span className="controls__value">{Math.round(crunch * 100)}%</span></label>
-              <RotaryKnob value={crunch} min={0} max={1} step={0.01} onChange={handleCrunch} color="#ff3366" size={40} />
-            </div>
-
-            <div className="controls__section controls__section--full controls__section--delay">
-              <label className="controls__label">Delay</label>
-              <div className="controls__rotary-row">
-                <RotaryKnob value={delayParams.time} min={0.05} max={1} step={0.01} onChange={handleDelayTime} color="#4d8bff" label="Time" size={40} />
-                <RotaryKnob value={delayParams.feedback} min={0} max={0.9} step={0.01} onChange={handleDelayFeedback} color="#9b8bff" label="Fdbk" size={40} />
-                <RotaryKnob value={delayParams.mix} min={0} max={1} step={0.01} onChange={handleDelayMix} color="#c8d0e0" label="Mix" size={40} />
+            {/* Space macro: 0=cathedral(reverb+delay), 0.5=dry, 1=orbit(rhythmic delay) */}
+            {onSpaceChange ? (
+              <div className="controls__section controls__section--space">
+                <BipolarKnob
+                  label="SPACE"
+                  subLabel={{ left: 'CATHEDRAL', right: 'ORBIT' }}
+                  value={space ?? 0.5}
+                  onChange={onSpaceChange}
+                  color="#00e5cc"
+                />
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="controls__section controls__section--reverb">
+                  <label className="controls__label">Reverb <span className="controls__value">{Math.round(reverbMix * 100)}%</span></label>
+                  <RotaryKnob value={reverbMix} min={0} max={1} step={0.01} onChange={handleReverbMix} color="#00e5cc" size={40} />
+                </div>
+                <div className="controls__section controls__section--crunch">
+                  <label className="controls__label">Crunch <span className="controls__value">{Math.round(crunch * 100)}%</span></label>
+                  <RotaryKnob value={crunch} min={0} max={1} step={0.01} onChange={handleCrunch} color="#ff3366" size={40} />
+                </div>
+                <div className="controls__section controls__section--full controls__section--delay">
+                  <label className="controls__label">Delay</label>
+                  <div className="controls__rotary-row">
+                    <RotaryKnob value={delayParams.time} min={0.05} max={1} step={0.01} onChange={handleDelayTime} color="#4d8bff" label="Time" size={40} />
+                    <RotaryKnob value={delayParams.feedback} min={0} max={0.9} step={0.01} onChange={handleDelayFeedback} color="#9b8bff" label="Fdbk" size={40} />
+                    <RotaryKnob value={delayParams.mix} min={0} max={1} step={0.01} onChange={handleDelayMix} color="#c8d0e0" label="Mix" size={40} />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Tone macro: 0=grit(crunch+low filter), 0.5=clean, 1=glitter(sparkle resonance) */}
+            {onToneChange ? (
+              <div className="controls__section controls__section--tone">
+                <BipolarKnob
+                  label="TONE"
+                  subLabel={{ left: 'GRIT', right: 'GLITTER' }}
+                  value={tone ?? 0.5}
+                  onChange={onToneChange}
+                  color="#ff8c42"
+                />
+              </div>
+            ) : null}
             {/* MIDI + wallet + QR — absolute lower-right of console */}
             {(onQRCreate || onConnectMIDI || utilitySlot) && (
               <div className="controls__console-corner">

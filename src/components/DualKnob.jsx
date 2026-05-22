@@ -5,12 +5,6 @@ const MIN_ANGLE = -135
 const MAX_ANGLE = 135
 const ANGLE_RANGE = 270
 
-/**
- * Dual-tier rotary knob.
- * Outer ring: mix (0–1) — drag on the ring band.
- * Inner circle: detune (minDetune–maxDetune) — drag on the center.
- * Both use vertical drag (up = increase).
- */
 export const DualKnob = memo(function DualKnob({
   mixValue,
   detuneValue,
@@ -35,6 +29,13 @@ export const DualKnob = memo(function DualKnob({
   const startDetune = useRef(0)
 
   const INNER_RATIO = 0.55 // inner circle = 55% of total radius
+
+  // Track hover zone for visual feedback (no state — direct DOM)
+  const applyHoverZone = useCallback((zone) => {
+    const body = knobRef.current
+    if (!body) return
+    body.dataset.zone = zone ?? ''
+  }, [])
 
   // Map detune to rotation angle
   const detuneRange = maxDetune - minDetune
@@ -76,27 +77,42 @@ export const DualKnob = memo(function DualKnob({
     }
   }, [minDetune, detuneRange])
 
-  const onPointerDown = useCallback((e) => {
+  const getZone = useCallback((e) => {
     const knob = knobRef.current
-    if (!knob) return
+    if (!knob) return 'outer'
     const rect = knob.getBoundingClientRect()
     const cx = rect.left + rect.width / 2
     const cy = rect.top + rect.height / 2
     const dx = e.clientX - cx
     const dy = e.clientY - cy
     const dist = Math.sqrt(dx * dx + dy * dy)
-    const innerRadius = (rect.width / 2) * INNER_RATIO
+    return dist < (rect.width / 2) * INNER_RATIO ? 'inner' : 'outer'
+  }, [])
 
-    draggingZone.current = dist < innerRadius ? 'inner' : 'outer'
+  const onPointerEnter = useCallback((e) => {
+    if (!draggingZone.current) applyHoverZone(getZone(e))
+  }, [applyHoverZone, getZone])
+
+  const onPointerLeave = useCallback(() => {
+    if (!draggingZone.current) applyHoverZone(null)
+  }, [applyHoverZone])
+
+  const onPointerDown = useCallback((e) => {
+    const zone = getZone(e)
+    draggingZone.current = zone
+    applyHoverZone(zone)
     startY.current = e.clientY
     startMix.current = mixValue
     startDetune.current = detuneValue
     e.currentTarget.setPointerCapture(e.pointerId)
     if (ghostRef.current) ghostRef.current.classList.add('dual-knob__ghost--visible')
-  }, [mixValue, detuneValue])
+  }, [mixValue, detuneValue, getZone, applyHoverZone])
 
   const onPointerMove = useCallback((e) => {
-    if (!draggingZone.current) return
+    if (!draggingZone.current) {
+      applyHoverZone(getZone(e))
+      return
+    }
     const dy = startY.current - e.clientY
     const deltaRatio = dy / 200
 
@@ -118,7 +134,8 @@ export const DualKnob = memo(function DualKnob({
   const onPointerUp = useCallback(() => {
     draggingZone.current = null
     if (ghostRef.current) ghostRef.current.classList.remove('dual-knob__ghost--visible')
-  }, [])
+    applyHoverZone(null)
+  }, [applyHoverZone])
 
   const innerSize = size * INNER_RATIO * 2
 
@@ -141,6 +158,8 @@ export const DualKnob = memo(function DualKnob({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
         style={{ touchAction: 'none' }}
       >
         {/* Outer ring — SVG arc showing mix level */}
@@ -173,6 +192,14 @@ export const DualKnob = memo(function DualKnob({
             strokeDasharray={`${fillArcLength} ${circumference}`}
             strokeDashoffset={-startOffset}
           />
+          {/* Zone separator ring — thin circle at inner/outer boundary */}
+          <circle
+            className="dual-knob__zone-sep"
+            cx={size / 2}
+            cy={size / 2}
+            r={(size / 2) * INNER_RATIO}
+            fill="none"
+          />
         </svg>
 
         {/* Inner circle — detune notch */}
@@ -184,7 +211,12 @@ export const DualKnob = memo(function DualKnob({
           >
             <div className="dual-knob__notch" />
           </div>
+          {/* Zone label inside inner circle */}
+          <span className="dual-knob__zone-label dual-knob__zone-label--det">DET</span>
         </div>
+
+        {/* Mix zone label — top of outer ring */}
+        <span className="dual-knob__zone-label dual-knob__zone-label--mix">MIX</span>
 
         {/* Ghost slider overlay — shows during drag */}
         <div className="dual-knob__ghost" ref={ghostRef}>

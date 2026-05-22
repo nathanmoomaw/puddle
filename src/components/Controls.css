@@ -498,6 +498,50 @@
   padding-top: 0.15rem;
 }
 
+/* ── BipolarKnob (Space / Tone macros) ── */
+.bipolar-knob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: ns-resize;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.bipolar-knob__label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--bipolar-color, var(--cyan));
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.bipolar-knob__svg {
+  display: block;
+  overflow: visible;
+}
+
+.bipolar-knob__side {
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  min-height: 0.9em;
+  text-transform: uppercase;
+}
+
+/* Space + Tone sections in shared panel */
+.controls__section--space,
+.controls__section--tone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
 .controls__section > input[type="range"] {
   width: 100%;
 }
@@ -769,6 +813,21 @@
     box-sizing: border-box;
     border-radius: 8px;
     flex-shrink: 0;
+    /* Sit above fixed puddle */
+    position: relative;
+    z-index: 1;
+    /* Semi-transparent on mobile so puddle shows through */
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 1px,
+        rgba(140, 130, 170, 0.06) 1px,
+        rgba(140, 130, 170, 0.06) 2px
+      ),
+      linear-gradient(180deg, rgba(14, 11, 28, 0.88) 0%, rgba(10, 8, 20, 0.9) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .controls__layout {
@@ -902,11 +961,14 @@
     gap: 0.4rem 0.75rem;
   }
 
-  /* Mobile layout: Delay|Reverb row, Filter|Crunch row */
-  .controls__section--delay   { order: -5; grid-column: 1; }
-  .controls__section--reverb  { order: -4; grid-column: 2; }
+  /* Mobile layout: Space|Tone row, Filter row */
+  .controls__section--space   { order: -5; grid-column: 1; }
+  .controls__section--tone    { order: -4; grid-column: 2; }
   .controls__section--filter  { order: -3; grid-column: 1; }
   .controls__section--crunch  { order: -2; grid-column: 2; }
+  /* Legacy delay/reverb rows (shown when no Space/Tone handlers passed) */
+  .controls__section--delay   { order: -5; grid-column: 1; }
+  .controls__section--reverb  { order: -4; grid-column: 2; }
 
   /* Override --full spanning for delay on mobile */
   .controls__shared .controls__section--delay { grid-column: 1; }

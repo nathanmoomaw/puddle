@@ -17,6 +17,8 @@ export const Puddle = forwardRef(function Puddle({
   recordEvent, onDragEscape, onPuddleActivity, onNoteOn,
   puddleMarbles, onMarbleRemove, onMarblePuddlePickUp, onMarbleImpulse, marbleDepressions,
   keyboardPositions,
+  normalZone,   // ref: { xMin, xMax } fraction of viewport — normal play area
+  onWildTouch,  // called when touch lands outside normalZone
 }, ref) {
   const [positions, setPositions] = useState(new Map())
   const [activePointers, setActivePointers] = useState(new Set())
@@ -35,16 +37,35 @@ export const Puddle = forwardRef(function Puddle({
     }))
   }, [arpNotes, mode, poly, hold, octaves])
 
+  // Remap raw x (viewport fraction) to 0-1 within the normal play zone
+  const remapX = useCallback((rawX) => {
+    const zone = normalZone?.current
+    if (!zone) return rawX
+    const { xMin = 0, xMax = 1 } = zone
+    if (xMax <= xMin) return rawX
+    return Math.max(0, Math.min(1, (rawX - xMin) / (xMax - xMin)))
+  }, [normalZone])
+
+  // True when raw x is clearly outside the normal play zone
+  const isOutsideZone = useCallback((rawX) => {
+    const zone = normalZone?.current
+    if (!zone) return false
+    const { xMin = 0, xMax = 1 } = zone
+    const deadband = 0.03
+    return rawX < xMin - deadband || rawX > xMax + deadband
+  }, [normalZone])
+
   const onPositionChange = useCallback((pointerId, x, y) => {
     if (mode === 'arp' && poly && hold) return
 
+    const mappedX = remapX(x)
     const voiceId = `touch_${pointerId}`
     if (ribbonInteraction) {
-      ribbonInteraction.current.position = x
+      ribbonInteraction.current.position = mappedX
       ribbonInteraction.current.velocity = y
     }
     const engine = getEngine()
-    const hz = positionToFrequency(x, { octaves, stepped, scale })
+    const hz = positionToFrequency(mappedX, { octaves, stepped, scale })
 
     if (mode === 'arp') {
       engine.setFrequency(hz)
@@ -54,13 +75,20 @@ export const Puddle = forwardRef(function Puddle({
       engine.voiceSetFrequency(voiceId, hz)
     }
     if (y !== undefined) engine.voiceSetVelocity(voiceId, y)
-    setPositions(prev => new Map(prev).set(voiceId, { x, y }))
-  }, [getEngine, mode, poly, hold, octaves, stepped, scale, ribbonInteraction])
+    setPositions(prev => new Map(prev).set(voiceId, { x: mappedX, y }))
+  }, [getEngine, mode, poly, hold, octaves, stepped, scale, ribbonInteraction, remapX])
 
   const onDown = useCallback((pointerId, x, y) => {
+    // Wild zone — touches outside normal play area trigger extreme param changes
+    if (isOutsideZone(x)) {
+      onWildTouch?.(x, y)
+      return
+    }
+
+    const mappedX = remapX(x)
     const engine = getEngine()
     const voiceId = `touch_${pointerId}`
-    const hz = positionToFrequency(x, { octaves, stepped, scale })
+    const hz = positionToFrequency(mappedX, { octaves, stepped, scale })
     setActivePointers(prev => new Set(prev).add(voiceId))
     if (ribbonInteraction) ribbonInteraction.current.active = true
 
@@ -92,7 +120,7 @@ export const Puddle = forwardRef(function Puddle({
     if (mode === 'play') {
       if (hold && !poly && engine.getActiveVoiceCount() > 0) {
         engine.setAllActiveFrequencies(hz)
-        setPositions(() => new Map([[voiceId, { x, y }]]))
+        setPositions(() => new Map([[voiceId, { x: mappedX, y }]]))
       } else {
         if (!poly) engine.allNotesOff()
         engine.voiceOn(voiceId, hz, y)
@@ -109,7 +137,7 @@ export const Puddle = forwardRef(function Puddle({
     if (hold && mode !== 'arp' && engine.getActiveVoiceCount() === 0) {
       engine.voiceOn(voiceId, hz, y)
     }
-  }, [getEngine, mode, hold, poly, octaves, stepped, scale, ribbonInteraction, arpStart, onArpNoteToggle, recordEvent, onNoteOn])
+  }, [getEngine, mode, hold, poly, octaves, stepped, scale, ribbonInteraction, arpStart, onArpNoteToggle, recordEvent, onNoteOn, remapX, isOutsideZone, onWildTouch])
 
   const onUp = useCallback((pointerId) => {
     const voiceId = `touch_${pointerId}`

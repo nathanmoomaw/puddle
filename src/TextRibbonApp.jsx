@@ -80,6 +80,8 @@ export default function TextRibbonApp({ onToggleMode, initialSynthState, onSynth
   const [scale, setScale] = useState(_urlPreset?.scale ?? initialSynthState?.scale ?? ['chromatic'])
   const [arpBpm, setArpBpm] = useState(_urlPreset?.arpBpm ?? initialSynthState?.arpBpm ?? 120)
   const [arpNotes, setArpNotes] = useState(_urlPreset?.arpNotes ?? initialSynthState?.arpNotes ?? [])
+  const [space, setSpace] = useState(0.5)
+  const [tone, setTone] = useState(0.5)
   const [shaking, setShaking] = useState(false)
   const [doubleHarmonicUnlocked, setDoubleHarmonicUnlocked] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
@@ -131,6 +133,32 @@ export default function TextRibbonApp({ onToggleMode, initialSynthState, onSynth
   modeRef.current = mode
   polyRef.current = poly
   holdRef.current = hold
+
+  const handleSpace = useCallback((v) => {
+    setSpace(v)
+    const t = v <= 0.5 ? (0.5 - v) * 2 : (v - 0.5) * 2
+    if (v <= 0.5) {
+      setReverbMix(t * 0.78)
+      setDelayParams({ time: 0.25 + t * 0.15, feedback: 0.2 + t * 0.3, mix: t * 0.35 })
+    } else {
+      setReverbMix(t * 0.15)
+      setDelayParams({ time: 0.28 + t * 0.22, feedback: 0.3 + t * 0.42, mix: t * 0.7 })
+    }
+  }, [])
+
+  const handleTone = useCallback((v) => {
+    setTone(v)
+    const t = v <= 0.5 ? (0.5 - v) * 2 : (v - 0.5) * 2
+    if (v <= 0.5) {
+      setCrunch(t * 0.82)
+      setVcfCutoff(20000 - t * 19500)
+      setVcfResonance(t * 12)
+    } else {
+      setCrunch(t * 0.08)
+      setVcfCutoff(20000 - t * 13000)
+      setVcfResonance(t * 16)
+    }
+  }, [])
 
   // Apply URL preset on mount
   useEffect(() => {
@@ -204,18 +232,13 @@ export default function TextRibbonApp({ onToggleMode, initialSynthState, onSynth
       detune: nudge(p.detune, -50, 50, intensity),
       mix: nudge(p.mix, 0, 1, intensity),
     })))
-    setDelayParams(prev => ({
-      time: nudge(prev.time, 0, 1, intensity),
-      feedback: nudge(prev.feedback, 0, 0.9, intensity),
-      mix: nudge(prev.mix, 0, 1, intensity),
-    }))
-    setReverbMix(v => nudge(v, 0, 1, intensity))
-    setCrunch(v => nudge(v, 0, 1, intensity))
+    handleSpace(Math.random())
+    handleTone(Math.random())
     setArpBpm(v => nudge(v, 40, 280, intensity))
     setOctaves(() => [2, 3, 4][Math.floor(Math.random() * 3)])
 
     if (Math.random() < 0.03) setDoubleHarmonicUnlocked(true)
-  }, [shakeNoiseBurst])
+  }, [shakeNoiseBurst, handleSpace, handleTone])
 
   useShake(handleShake, sidebarRef, canvasAreaRef)
 
@@ -412,6 +435,8 @@ export default function TextRibbonApp({ onToggleMode, initialSynthState, onSynth
             onStop={handleStop}
             onShake={() => handleShake(1)}
             doubleHarmonicUnlocked={doubleHarmonicUnlocked}
+            space={space} onSpaceChange={handleSpace}
+            tone={tone} onToneChange={handleTone}
           />
         </aside>
 

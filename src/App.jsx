@@ -108,6 +108,10 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const [wizardActive, setWizardActive] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
 
+  // v2 macro knobs: Space (reverb+delay) and Tone (crunch+vcf)
+  const [space, setSpace] = useState(0.5)
+  const [tone, setTone] = useState(0.5)
+
   // iOS silent mode hint — show once on iOS if not yet dismissed
   const [showIosHint, setShowIosHint] = useState(() => {
     const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent)
@@ -126,6 +130,8 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const ribbonInteraction = useRef({ position: null, velocity: 0, active: false })
   const controlsRef = useRef(null)
   const ribbonRef = useRef(null)
+  // Normal play zone — center column between side panels (fraction of viewport width)
+  const normalZoneRef = useRef({ xMin: 0, xMax: 1 })
   const gridBgRef = useRef(null)
   const gridFloorRef = useRef(null)
   const gridOffsetRef = useRef({ x: 0, y: 0 }) // current lerped offset
@@ -401,6 +407,54 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     prevGoopCountRef.current = count
   }, [goopLevels, showMilestone])
 
+  // SPACE: 0=cathedral (reverb+delay wash), 0.5=dry, 1=orbit (rhythmic delay)
+  const handleSpace = useCallback((v) => {
+    setSpace(v)
+    const engine = getEngine()
+    if (v <= 0.5) {
+      const t = (0.5 - v) * 2
+      setReverbMix(t * 0.78)
+      engine.setReverb({ mix: t * 0.78 })
+      const newDelay = { time: 0.25 + t * 0.15, feedback: 0.2 + t * 0.3, mix: t * 0.35 }
+      setDelayParams(newDelay)
+      engine.setDelay(newDelay)
+    } else {
+      const t = (v - 0.5) * 2
+      setReverbMix(t * 0.15)
+      engine.setReverb({ mix: t * 0.15 })
+      const newDelay = { time: 0.28 + t * 0.22, feedback: 0.3 + t * 0.42, mix: t * 0.7 }
+      setDelayParams(newDelay)
+      engine.setDelay(newDelay)
+    }
+  }, [getEngine, setReverbMix, setDelayParams])
+
+  // TONE: 0=grit (warm crunch + low filter), 0.5=clean, 1=glitter (sparkle resonance)
+  const handleTone = useCallback((v) => {
+    setTone(v)
+    const engine = getEngine()
+    if (v <= 0.5) {
+      const t = (0.5 - v) * 2
+      setCrunch(t * 0.82)
+      engine.setCrunch(t * 0.82)
+      const cutoff = 20000 - t * 19500
+      setVcfCutoff(cutoff)
+      engine.setVcfCutoff(cutoff)
+      const res = t * 12
+      setVcfResonance(res)
+      engine.setVcfResonance(res)
+    } else {
+      const t = (v - 0.5) * 2
+      setCrunch(t * 0.08)
+      engine.setCrunch(t * 0.08)
+      const cutoff = 20000 - t * 13000
+      setVcfCutoff(cutoff)
+      engine.setVcfCutoff(cutoff)
+      const res = t * 16
+      setVcfResonance(res)
+      engine.setVcfResonance(res)
+    }
+  }, [getEngine, setCrunch, setVcfCutoff, setVcfResonance])
+
   // --- Shake/Quake handler (reads state from refs to avoid dependency churn) ---
   const handleShake = useCallback((intensity) => {
     const engine = getEngine()
@@ -458,34 +512,12 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
       engine.setGlideSpeed(newSpeed)
     }
 
+    // Space + Tone macro randomization (drives reverb/delay/crunch/vcf)
     if (shouldNudge()) {
-      const newTime = nudge(delayParamsRef.current.time, 0.05, 1, intensity)
-      setDelayParams(prev => ({ ...prev, time: newTime }))
-      engine.setDelay({ time: newTime })
+      handleSpace(Math.random())
     }
-
     if (shouldNudge()) {
-      const newFeedback = nudge(delayParamsRef.current.feedback, 0, 0.9, intensity)
-      setDelayParams(prev => ({ ...prev, feedback: newFeedback }))
-      engine.setDelay({ feedback: newFeedback })
-    }
-
-    if (shouldNudge()) {
-      const newDelayMix = nudge(delayParamsRef.current.mix, 0, 1, intensity)
-      setDelayParams(prev => ({ ...prev, mix: newDelayMix }))
-      engine.setDelay({ mix: newDelayMix })
-    }
-
-    if (shouldNudge()) {
-      const newReverb = nudge(reverbMixRef.current, 0, 1, intensity)
-      setReverbMix(newReverb)
-      engine.setReverb({ mix: newReverb })
-    }
-
-    if (shouldNudge()) {
-      const newCrunch = nudge(crunchRef.current, 0, 1, intensity)
-      setCrunch(newCrunch)
-      engine.setCrunch(newCrunch)
+      handleTone(Math.random())
     }
 
     // VCF — slightly higher frequency per design intent
@@ -566,10 +598,60 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
         }
       }, noteDuration)
     }
-  }, [getEngine, handleArpNoteToggle, shakeClean, showMilestone])
+  }, [getEngine, handleArpNoteToggle, shakeClean, showMilestone, handleSpace, handleTone])
 
   handleShakeRef.current = handleShake
   useShake(handleShake, controlsRef, ribbonRef)
+
+  // Measure normal play zone — center column between side control panels
+  useEffect(() => {
+    const measure = () => {
+      if (window.innerWidth < 768) {
+        normalZoneRef.current = { xMin: 0, xMax: 1 }
+        return
+      }
+      const toggles = document.querySelector('.controls__toggles')
+      const oscs = document.querySelector('.controls__oscillators')
+      if (toggles && oscs) {
+        const vw = window.innerWidth
+        normalZoneRef.current = {
+          xMin: Math.max(0, toggles.getBoundingClientRect().right / vw),
+          xMax: Math.min(1, oscs.getBoundingClientRect().left / vw),
+        }
+      }
+    }
+    // Measure after layout settles
+    const t = setTimeout(measure, 200)
+    window.addEventListener('resize', measure)
+    return () => { clearTimeout(t); window.removeEventListener('resize', measure) }
+  }, [])
+
+  // Wild touch handler — fires when user touches outside normal play zone
+  const handleWildTouch = useCallback((x, y) => {
+    const engine = getEngine()
+    const intensity = 0.7 + Math.random() * 0.3
+    // Wild Space + Tone
+    handleSpace(Math.random())
+    handleTone(Math.random())
+    // Extreme detune + waveform shift for a random osc
+    const oscIdx = Math.floor(Math.random() * 3)
+    const wf = WAVEFORMS[Math.floor(Math.random() * WAVEFORMS.length)]
+    const det = Math.round((Math.random() - 0.5) * 2400)
+    setOscParams(prev => {
+      const next = [...prev]
+      next[oscIdx] = { ...next[oscIdx], waveform: wf, detune: det }
+      return next
+    })
+    engine.setWaveform(wf, oscIdx)
+    engine.setOscDetune(oscIdx, det)
+    // Randomize VCF routing
+    setVcfRouting([Math.random() > 0.4, Math.random() > 0.4, Math.random() > 0.4])
+    // Play a wild note
+    const hz = positionToFrequency(Math.random(), { octaves, stepped, scale })
+    const id = `wild_${Date.now()}`
+    engine.voiceOn(id, hz, 0.4 + intensity * 0.6)
+    setTimeout(() => engine.voiceOff(id), 200 + intensity * 300)
+  }, [getEngine, handleSpace, handleTone, octaves, stepped, scale])
 
   // Grid floor parallax — shifts background-position with puddle touch (perspective floor)
   useEffect(() => {
@@ -892,6 +974,8 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
           onMarbleImpulse={applyMarbleImpulse}
           marbleDepressions={marbleDepressionsRef}
           keyboardPositions={keyboardPositions}
+          normalZone={normalZoneRef}
+          onWildTouch={handleWildTouch}
         />
 
         {/* Shake nook — bottom-right corner of puddle on desktop */}
@@ -926,6 +1010,10 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
           setFilterParams={setFilterParams}
           glideSpeed={glideSpeed}
           setGlideSpeed={setGlideSpeed}
+          space={space}
+          onSpaceChange={handleSpace}
+          tone={tone}
+          onToneChange={handleTone}
           shaking={shaking}
           mode={mode}
           setMode={setMode}

@@ -1,5 +1,15 @@
 # Devlog
 
+## 2026-05-22 — v2 polish: full-bleed puddle, zone knobs, Space/Tone macros, lo mode parity
+
+- **DualKnob zone labels**: hover reveals DET/MIX zone labels; CSS highlights inner/outer arc per active zone; cursor switches between ns-resize/ew-resize
+- **Full-bleed puddle**: `position: fixed; inset: 0` on both desktop and mobile — puddle covers entire viewport behind controls and header; clip-path removed
+- **Logo backdrop**: radial gradient pseudo-element behind wordmark dissolves to transparent — gives contrast against the oil-spill surface without a hard box
+- **Space/Tone macros** (party mode): `BipolarKnob` component replaces reverb/delay/crunch knobs; left=CATHEDRAL/GRIT, right=ORBIT/GLITTER; maps 0–1 to layered effect parameters in `handleSpace`/`handleTone`
+- **"Touch puddle to play" label**: moved to true center of viewport with 2s fade-in delay; stronger text-shadow for legibility over shader
+- **Normal zone remapping**: pitch/velocity interaction constrained to the center column between side panels; x remapped 0–1 within that band; touches outside trigger `handleWildTouch` (random Space, Tone, waveform, VCF, and a wild note)
+- **Lo mode parity**: `AsciiBipolarKnob` added to `AsciiControls`; Space/Tone state + handlers wired in `TextRibbonApp`; shake now uses `handleSpace`/`handleTone` instead of nudging individual effect params directly
+
 ## 2026-05-22 — v2 foundation: liquid sky layout, dual-tier osc knobs, version selector
 
 - **Liquid sky layout**: puddle now fills entire stage as a fixed background behind all controls (desktop); removed blob clip-path and drop-shadow, controls float above at z-index 1

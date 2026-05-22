@@ -63,6 +63,55 @@ function AsciiSlider({ label, value, min = 0, max = 1, onChange, width = 16, uni
   )
 }
 
+// ASCII bipolar knob — left/center/right with vertical drag
+function AsciiBipolarKnob({ label, leftLabel, rightLabel, value, onChange }) {
+  const dragging = useRef(false)
+  const startY = useRef(0)
+  const startVal = useRef(0)
+
+  const onDown = useCallback((e) => {
+    dragging.current = true
+    startY.current = e.clientY
+    startVal.current = value
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }, [value])
+
+  const onMove = useCallback((e) => {
+    if (!dragging.current) return
+    const delta = (startY.current - e.clientY) / 100
+    onChange(Math.max(0, Math.min(1, startVal.current + delta)))
+  }, [onChange])
+
+  const onUp = useCallback(() => { dragging.current = false }, [])
+
+  const WIDTH = 11
+  const pos = Math.round(value * (WIDTH - 1))
+  const center = Math.floor((WIDTH - 1) / 2)
+  const bar = Array.from({ length: WIDTH }, (_, i) => {
+    if (i === pos) return '●'
+    if (i === center && pos !== center) return '|'
+    return '·'
+  }).join('')
+  const sideLabel = value < 0.45 ? leftLabel : value > 0.55 ? rightLabel : '·'
+
+  return (
+    <div
+      className="ascii-bipolar-knob"
+      onPointerDown={onDown}
+      onPointerMove={onMove}
+      onPointerUp={onUp}
+      onPointerCancel={onUp}
+    >
+      <div className="ascii-bipolar-knob__label">{label}: <span className="ascii-bipolar-knob__side">{sideLabel}</span></div>
+      <div className="ascii-bipolar-knob__bar">{bar}</div>
+      <div className="ascii-bipolar-knob__ends">
+        <span>{leftLabel}</span>
+        <span>{rightLabel}</span>
+      </div>
+    </div>
+  )
+}
+
 // ASCII rotary — just a value display with up/down drag
 function AsciiKnob({ label, value, min = 0, max = 1, onChange }) {
   const dragging = useRef(false)
@@ -170,6 +219,8 @@ export function AsciiControls({
   vcfRouting, setVcfRouting,
   onStop, onShake,
   doubleHarmonicUnlocked,
+  space, onSpaceChange,
+  tone, onToneChange,
 }) {
   const allScales = { ...SCALES, ...(doubleHarmonicUnlocked ? HIDDEN_SCALES : {}) }
 
@@ -298,11 +349,32 @@ export function AsciiControls({
       {/* ── FX ── */}
       <div className="ascii-box">
         <div className="ascii-box-header">⊛ EFFECTS</div>
-        <AsciiSlider label="DLY" value={delayParams.time} min={0} max={1} onChange={v => setDelayParams(d => ({ ...d, time: v }))} width={10} />
-        <AsciiSlider label="DFB" value={delayParams.feedback} min={0} max={0.9} onChange={v => setDelayParams(d => ({ ...d, feedback: v }))} width={10} />
-        <AsciiSlider label="DMX" value={delayParams.mix} min={0} max={1} onChange={v => setDelayParams(d => ({ ...d, mix: v }))} width={10} />
-        <AsciiSlider label="REV" value={reverbMix} min={0} max={1} onChange={setReverbMix} width={10} />
-        <AsciiSlider label="CRN" value={crunch} min={0} max={1} onChange={setCrunch} width={10} />
+        {onSpaceChange && onToneChange ? (
+          <>
+            <AsciiBipolarKnob
+              label="SPACE"
+              leftLabel="CATHEDRAL"
+              rightLabel="ORBIT"
+              value={space ?? 0.5}
+              onChange={onSpaceChange}
+            />
+            <AsciiBipolarKnob
+              label="TONE"
+              leftLabel="GRIT"
+              rightLabel="GLITTER"
+              value={tone ?? 0.5}
+              onChange={onToneChange}
+            />
+          </>
+        ) : (
+          <>
+            <AsciiSlider label="DLY" value={delayParams.time} min={0} max={1} onChange={v => setDelayParams(d => ({ ...d, time: v }))} width={10} />
+            <AsciiSlider label="DFB" value={delayParams.feedback} min={0} max={0.9} onChange={v => setDelayParams(d => ({ ...d, feedback: v }))} width={10} />
+            <AsciiSlider label="DMX" value={delayParams.mix} min={0} max={1} onChange={v => setDelayParams(d => ({ ...d, mix: v }))} width={10} />
+            <AsciiSlider label="REV" value={reverbMix} min={0} max={1} onChange={setReverbMix} width={10} />
+            <AsciiSlider label="CRN" value={crunch} min={0} max={1} onChange={setCrunch} width={10} />
+          </>
+        )}
       </div>
 
       {/* ── VCF ── */}

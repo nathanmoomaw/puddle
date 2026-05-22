@@ -212,6 +212,50 @@
   margin-right: 2px;
 }
 
+/* ─────────────── Bipolar Knob ─────────────── */
+.ascii-bipolar-knob {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: ns-resize;
+  padding: 4px 2px;
+  border: 1px solid #1a1a32;
+  background: #0a0a16;
+  margin: 2px 0;
+}
+
+.ascii-bipolar-knob:hover {
+  border-color: #3a3a60;
+}
+
+.ascii-bipolar-knob__label {
+  font-size: 9px;
+  color: #6060aa;
+  letter-spacing: 0.08em;
+}
+
+.ascii-bipolar-knob__side {
+  color: #88aaff;
+}
+
+.ascii-bipolar-knob__bar {
+  font-size: 11px;
+  color: #4488cc;
+  letter-spacing: -0.5px;
+}
+
+.ascii-bipolar-knob:hover .ascii-bipolar-knob__bar {
+  color: #66aaff;
+}
+
+.ascii-bipolar-knob__ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: #404070;
+  letter-spacing: 0.04em;
+}
+
 /* ─────────────── Scrollbar ─────────────── */
 .ascii-controls::-webkit-scrollbar {
   width: 4px;

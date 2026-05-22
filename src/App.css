@@ -98,14 +98,12 @@
     row-gap: 0;
     align-items: stretch;
     align-content: stretch;
-    /* max-width: 1200px; */
     margin-top: -30px;
     width: 100%;
     flex: 1;
     min-height: 0;
-    /* v2 liquid sky: puddle fills stage absolutely behind controls */
+    /* v2 liquid sky: puddle is position:fixed, stage is transparent grid for controls */
     position: relative;
-    overflow: hidden;
   }
 
   .app {
@@ -165,6 +163,8 @@
   gap: 0.25rem;
   width: 100%;
   position: relative;
+  /* Puddle shows through behind header */
+  background: transparent;
 }
 
 /* Left cluster — same 44px band + 4px/12px padding as lo mode header */
@@ -204,6 +204,23 @@
   outline: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  /* Inset-in-puddle effect — darkened dissolving halo for contrast */
+  position: relative;
+}
+
+.app-header__logo::before {
+  content: '';
+  position: absolute;
+  inset: -8px -20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(4, 4, 14, 0.75) 0%,
+    rgba(4, 4, 14, 0.5) 45%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: -1;
 }
 
 .app-header__logo:active .ribbon-logo {
@@ -425,6 +442,7 @@
     width: 140px;
   }
 
+  /* Puddle is position:fixed — stage just holds controls at bottom */
   .app__stage {
     flex: 1;
     min-height: 0;
@@ -432,6 +450,9 @@
     overflow-x: hidden;
     align-items: stretch;
     gap: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
   /* Mobile: nook in bottom-right of puddle area, absolutely positioned within stage */
