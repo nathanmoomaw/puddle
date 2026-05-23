@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-05-23 — peanut rockers, v1 version switcher, dev/v1 branch + deploy pipeline
+
+- **Peanut rockers**: rocker lobes made squarer (52×48px, was 60×46), bridge narrowed to 8px for a more pronounced pinched waist; mode-toggle (party/lo) similarly tightened (36×34px lobes, 6px bridge)
+- **Version switcher on v1**: `VersionSelector` component + CSS copied to `dev/v1` branch; renders v1|v2 nav in the left header below the info button
+- **dev/v1 branch**: created from `origin/v1`, patched with current deploy workflow (VITE_BASE_PATH, dev/** trigger), vite.config.js base setting, and VersionSelector — auto-deploys to `puddle-dev.obfusco.us/v1/`
+- **Deploy pipeline fixes**: `deploy-stable-branch` and `deploy-version` jobs now build with `VITE_BASE_PATH=/${VERSION}/` so versioned paths are asset-self-contained; `DEV_ROOT_VERSION` repo variable gates root deploy to only the designated branch (currently `v2`)
+
 ## 2026-05-23 — v2 polish: möbius rockers, color scheming, mobile corners, neon glow, marble key cmd
 
 - **Git tag**: `v2-pretty-sick` tagged to preserve this aesthetic state

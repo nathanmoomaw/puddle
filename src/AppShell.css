@@ -31,13 +31,13 @@
   border-color: rgba(0, 240, 255, 0.35);
 }
 
-/* Each option is an oval lobe of the figure-8 */
+/* Each option is a round lobe of the peanut */
 .mode-toggle__option {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 30px;
+  width: 36px;
+  height: 34px;
   border-radius: 50%;
   background: rgba(4, 4, 14, 0.85);
   border: 1px solid rgba(0, 240, 255, 0.15);
@@ -54,11 +54,11 @@
   z-index: 3;
 }
 
-/* Crossing bridge at the figure-8 waist — hides the text dot */
+/* Narrow bridge at peanut waist */
 .mode-toggle__sep {
   display: inline-block;
-  width: 12px;
-  height: 16px;
+  width: 6px;
+  height: 22px;
   background: rgba(4, 4, 14, 0.95);
   color: transparent;
   opacity: 1;
