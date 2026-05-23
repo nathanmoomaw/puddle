@@ -594,7 +594,7 @@
 
 /* ── v2 Neon / Angular overrides ───────────────────────────────────────────── */
 
-/* Rockers: figure-8 lemniscate — two oval lobes connected at a crossing bridge */
+/* Rockers: peanut — two round lobes overlapping at a narrow bridge */
 .rocker {
   background: none;
   border: none;
@@ -621,6 +621,11 @@
   transition: background 0.15s, box-shadow 0.15s;
 }
 
+/* Lobes overlap so inner border arcs are hidden behind each other */
+.rocker__side + .rocker__side {
+  margin-left: -16px;
+}
+
 .rocker__side--active {
   background: rgba(0, 240, 255, 0.08);
   box-shadow: 0 0 14px rgba(0, 240, 255, 0.28);
@@ -638,15 +643,15 @@
   background: rgba(0, 240, 255, 0.04);
 }
 
-/* Crossing bridge — narrow pinch at waist to create peanut silhouette */
+/* Bridge covers the overlap zone, hides inner border arcs, creates clean waist */
 .rocker::before {
   content: '';
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 8px;
-  height: 30px;
+  width: 20px;
+  height: 32px;
   background: rgba(4, 4, 14, 0.95);
   z-index: 2;
   pointer-events: none;
