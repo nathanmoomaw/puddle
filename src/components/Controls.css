@@ -971,11 +971,22 @@
   text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,0.9);
 }
 
-/* Osc cards — no border, just a subtle neon glow per-osc from the accent strip color */
+/* Osc cards — fully borderless, glow via filter drop-shadow below */
 .controls__osc {
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Remove top accent strip */
+.controls__osc::before {
+  display: none !important;
+}
+
+/* Remove separator between osc rows and shared controls */
+.controls__shared {
+  border-top: none !important;
   box-shadow: none !important;
 }
 
@@ -1022,4 +1033,17 @@
 }
 .controls__section--tone .bipolar-knob {
   filter: drop-shadow(0 0 6px rgba(255, 240, 31, 0.22));
+}
+
+/* Controls container: fully transparent — no industrial frame in v2 */
+.controls {
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.controls::before {
+  display: none !important;
 }

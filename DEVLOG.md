@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-23 — v2 polish: toggle boxing, active glow, strip osc borders
+
+- **Mode-toggle boxing** (item 210): removed `position: fixed` duplicate and added `appearance: none; outline: none` to kill browser button boxing; lowered non-active lobe background opacity to 0.45 (was 0.92) so lobes don't read as solid dark squares over puddle; boosted active glow to 0.5 intensity
+- **Active lobe glow** (item 211): increased active `box-shadow` to 22px/0.5; added directional glow per side (left lobe spreads left, right lobe spreads right); active `switch-light--on` gets wider glow rings + 7px size bump for extra luminosity
+- **Osc section cleanup** (item 212): hide `controls__osc::before` accent strip; remove `controls__shared` border-top separator; fully strip `.controls` container (background, border, outline, box-shadow, ::before rivets) — all controls now float transparent over the puddle
+
 ## 2026-05-23 — fix peanut rockers: borderless lobes, clean waist
 
 - **Root cause**: `border` on circular lobes creates arcs through the center; negative margin + z-index overlap made active lobe cover the inactive one

@@ -633,10 +633,18 @@
 }
 
 .rocker__side--active {
-  background: rgba(0, 240, 255, 0.12);
-  box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.18);
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.5), 0 0 8px rgba(0, 240, 255, 0.3);
   transform: none;
   z-index: 3;
+}
+
+.rocker__side--active:first-child {
+  box-shadow: -6px 0 20px rgba(0, 240, 255, 0.45), 0 0 14px rgba(0, 240, 255, 0.3);
+}
+
+.rocker__side--active:last-child {
+  box-shadow: 6px 0 20px rgba(0, 240, 255, 0.45), 0 0 14px rgba(0, 240, 255, 0.3);
 }
 
 .rocker__side:not(.rocker__side--active) {
@@ -669,7 +677,15 @@
 
 /* Lights: bright neon on active */
 .switch-light--on {
-  box-shadow: 0 0 12px var(--light-color), 0 0 5px var(--light-color);
+  box-shadow: 0 0 14px var(--light-color), 0 0 6px var(--light-color);
+}
+
+/* Active side: extra luminosity on lit lights */
+.rocker__side--active .switch-light--on {
+  opacity: 1;
+  box-shadow: 0 0 20px var(--light-color), 0 0 10px var(--light-color), 0 0 3px rgba(255, 255, 255, 0.6);
+  width: 7px;
+  height: 7px;
 }
 
 /* Hold split: angular */
