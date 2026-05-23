@@ -31,38 +31,40 @@
   border-color: rgba(0, 240, 255, 0.35);
 }
 
-/* Each option is a borderless round lobe of the peanut */
+/* Each option is a D-shaped lobe — tapers inward toward the center */
 .mode-toggle__option {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 34px;
-  border-radius: 50%;
-  background: rgba(4, 4, 14, 0.85);
+  background: rgba(20, 20, 40, 0.92);
   border: none;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07);
+  box-shadow: none;
   transition: background 0.2s, box-shadow 0.2s, color 0.2s;
   color: rgba(255, 255, 255, 0.4);
   z-index: 1;
   position: relative;
 }
 
+.mode-toggle__option:first-child {
+  border-radius: 50% 25% 25% 50%;
+  margin-right: -2px;
+}
+
+.mode-toggle__option:last-child {
+  border-radius: 25% 50% 50% 25%;
+  margin-left: -2px;
+}
+
 .mode-toggle__option--active {
   color: rgba(255, 255, 255, 0.9);
-  background: rgba(0, 240, 255, 0.08);
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.22), 0 0 0 1px rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
   z-index: 3;
 }
 
-/* Narrow dark waist between lobes */
+/* Hidden — shape defined by lobe border-radius now */
 .mode-toggle__sep {
-  display: inline-block;
-  width: 8px;
-  height: 22px;
-  background: rgba(4, 4, 14, 0.95);
-  color: transparent;
-  z-index: 2;
-  position: relative;
-  flex-shrink: 0;
+  display: none;
 }
