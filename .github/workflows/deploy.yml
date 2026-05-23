@@ -72,28 +72,26 @@ jobs:
 
       - run: npm ci
 
-      # All dev branches: build for root and deploy to root (preserving /vX/ subdirs)
-      - name: Build (root)
-        run: npm run build
-        env:
-          VITE_GIT_SHA: ${{ github.sha }}
-          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
-          VITE_BASE_PATH: /
-
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      # Only the designated root version (DEV_ROOT_VERSION) deploys to root
+      - name: Build (root)
+        if: steps.devpath.outputs.VERSION == vars.DEV_ROOT_VERSION
+        run: npm run build
+        env:
+          VITE_GIT_SHA: ${{ github.sha }}
+          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: /
+
       - name: Deploy to dev S3 (root)
+        if: steps.devpath.outputs.VERSION == vars.DEV_ROOT_VERSION
         run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/ --delete --exclude "v*/*"
 
-      # Mirror all versioned paths from prod so /v1/, /v2/, etc. are never empty on dev
-      - name: Mirror versioned paths from prod
-        run: aws s3 sync s3://puddle.obfusco.us/ s3://puddle-dev.obfusco.us/ --exclude "*" --include "v[0-9]*/*"
-
-      # Versioned dev branches (dev/vX): also build for /vX/ and deploy there
+      # All versioned dev branches: build for /vX/ and deploy there
       - name: Build (versioned)
         if: steps.devpath.outputs.IS_VERSIONED == 'true'
         run: npm run build
