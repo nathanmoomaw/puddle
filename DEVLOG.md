@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-23 — fix peanut rockers: borderless lobes, clean waist
+
+- **Root cause**: `border` on circular lobes creates arcs through the center; negative margin + z-index overlap made active lobe cover the inactive one
+- **Fix**: removed `border` from `.rocker__side` and `.mode-toggle__option`; use `box-shadow: 0 0 0 1px` for the faint outline (renders outside element, no internal arc); removed negative margin; waist bridge narrowed to 10px / 8px respectively
+- **Active state**: cyan glow + 1px ring via layered box-shadow; no border to create crossing artifacts
+
 ## 2026-05-23 — peanut rockers, v1 version switcher, dev/v1 branch + deploy pipeline
 
 - **Peanut rockers**: rocker lobes made squarer (52×48px, was 60×46), bridge narrowed to 8px for a more pronounced pinched waist; mode-toggle (party/lo) similarly tightened (36×34px lobes, 6px bridge)

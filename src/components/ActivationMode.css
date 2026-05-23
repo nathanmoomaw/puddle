@@ -594,7 +594,7 @@
 
 /* ── v2 Neon / Angular overrides ───────────────────────────────────────────── */
 
-/* Rockers: peanut — two round lobes overlapping at a narrow bridge */
+/* Rockers: peanut — two borderless round lobes with a narrow dark waist */
 .rocker {
   background: none;
   border: none;
@@ -614,44 +614,40 @@
   padding: 0 4px;
   gap: 3px;
   background: rgba(4, 4, 14, 0.88);
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  box-shadow: none;
+  border: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07);
   transform: none !important;
   z-index: 1;
   transition: background 0.15s, box-shadow 0.15s;
 }
 
-/* Lobes overlap so inner border arcs are hidden behind each other */
-.rocker__side + .rocker__side {
-  margin-left: -16px;
-}
-
 .rocker__side--active {
   background: rgba(0, 240, 255, 0.08);
-  box-shadow: 0 0 14px rgba(0, 240, 255, 0.28);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.28), 0 0 0 1px rgba(0, 240, 255, 0.3);
   transform: none;
   z-index: 3;
 }
 
 .rocker__side:not(.rocker__side--active) {
   background: rgba(4, 4, 14, 0.85);
-  box-shadow: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07);
   transform: none;
 }
 
 .rocker__side:not(.rocker__side--active):hover {
   background: rgba(0, 240, 255, 0.04);
+  box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.15);
 }
 
-/* Bridge covers the overlap zone, hides inner border arcs, creates clean waist */
+/* Narrow dark waist — no border arcs to worry about now */
 .rocker::before {
   content: '';
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 20px;
-  height: 32px;
+  width: 10px;
+  height: 34px;
   background: rgba(4, 4, 14, 0.95);
   z-index: 2;
   pointer-events: none;
