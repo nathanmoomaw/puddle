@@ -89,6 +89,10 @@ jobs:
       - name: Deploy to dev S3 (root)
         run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/ --delete --exclude "v*/*"
 
+      # Mirror all versioned paths from prod so /v1/, /v2/, etc. are never empty on dev
+      - name: Mirror versioned paths from prod
+        run: aws s3 sync s3://puddle.obfusco.us/ s3://puddle-dev.obfusco.us/ --exclude "*" --include "v[0-9]*/*"
+
       # Versioned dev branches (dev/vX): also build for /vX/ and deploy there
       - name: Build (versioned)
         if: steps.devpath.outputs.IS_VERSIONED == 'true'
