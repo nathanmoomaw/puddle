@@ -58,6 +58,14 @@
   50% { opacity: 0.9; transform: scale(1.5); }
 }
 
+/* Dark glow behind each letter — provides contrast against bright puddle without a background box */
+.logo-letters {
+  filter:
+    drop-shadow(0 0 3px rgba(0, 0, 10, 1))
+    drop-shadow(0 0 7px rgba(0, 0, 10, 0.95))
+    drop-shadow(0 0 14px rgba(0, 0, 10, 0.8));
+}
+
 /* ── Lo mode: kill all animation ── */
 .lo-mode .ribbon-logo .ribbon-over,
 .lo-mode .ribbon-logo .shimmer-1,
@@ -76,5 +84,7 @@
 }
 
 .lo-mode .ribbon-logo .logo-letters {
-  filter: none;
+  filter:
+    drop-shadow(0 0 3px rgba(0, 0, 10, 1))
+    drop-shadow(0 0 7px rgba(0, 0, 10, 0.95));
 }

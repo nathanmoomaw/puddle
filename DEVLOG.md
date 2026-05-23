@@ -1,5 +1,17 @@
 # Devlog
 
+## 2026-05-23 — v2 polish: möbius rockers, color scheming, mobile corners, neon glow, marble key cmd
+
+- **Git tag**: `v2-pretty-sick` tagged to preserve this aesthetic state
+- **Color scheming**: iridescent shader now shifts hue based on dominant oscillator waveform (sine=blue, triangle=neutral, sawtooth=warm red, square=orange) + pitch position; smooth lerp via new `uOpdShift` uniform in `usePuddleRenderer`; `colorStateRef` passed from App through Puddle
+- **Logo dark glow**: removed SVG `<rect>` background; replaced with CSS `filter: drop-shadow` dark shadows on `.logo-letters` group for per-letter contrast against the puddle
+- **Marble key command**: pressing `m` drops the current tray marble at mouse cursor position; added `dropAtPosition()` to `useMarbles`, global `mousemove` tracker in App.jsx
+- **Möbius rocker switches**: rockers (play/arp, mono/poly) restyled as two elliptical lobes with a dark crossing bridge (same technique as the logo); party/lo mode toggle updated to match; compact lights in oval lobes
+- **DualKnob second ring**: added `dual-knob__outer-ring` SVG circle as permanent outer boundary; zone separator made prominent with cyan dashed ring (1.2px stroke, 2/3 dasharray) — clearly shows where to grab for mix vs detune
+- **Mobile corner layout**: controls repositioned as `position: fixed` bottom-left (ActivationMode) and bottom-right (OSC + Space/Tone) corner overlays; center puddle fully reachable; secondary controls (scale, octaves, speed) hidden on mobile
+- **Neon glow per section**: removed borders from osc cards and VCF panel; added per-osc `filter: drop-shadow` in cyan/magenta/green; Space=teal, Tone=gold bipolar knob glows
+- **Touch hint**: "touch puddle to play" disappears on first interaction; reappears after 37 seconds of no touches via `setTimeout` in Puddle
+
 ## 2026-05-22 — v2 glass-panel aesthetic: transparent controls, neon/angular, puddle click-through
 
 - **Transparent control panels**: removed all console panel backgrounds on desktop (left/right/bottom) and mobile; controls now float transparently above the puddle — clicks on empty space between controls fall through to the puddle

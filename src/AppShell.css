@@ -4,22 +4,21 @@
   left: 6px;
   z-index: 1000;
   flex-shrink: 0;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  padding: 4px 12px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0;
   cursor: pointer;
   font-family: 'Courier New', monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  transition: border-color 0.2s, color 0.2s;
+  color: rgba(255, 255, 255, 0.45);
   user-select: none;
+  position: relative;
+  transition: color 0.2s;
 }
 
 /* Inline variant — used inside lo mode header row */
@@ -28,19 +27,42 @@
   z-index: auto;
 }
 
-.mode-toggle:hover {
-  border-color: rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.6);
+.mode-toggle:hover .mode-toggle__option {
+  border-color: rgba(0, 240, 255, 0.35);
 }
 
+/* Each option is an oval lobe of the figure-8 */
 .mode-toggle__option {
-  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(4, 4, 14, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  color: rgba(255, 255, 255, 0.4);
+  z-index: 1;
+  position: relative;
 }
 
 .mode-toggle__option--active {
   color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 240, 255, 0.08);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.22);
+  z-index: 3;
 }
 
+/* Crossing bridge at the figure-8 waist — hides the text dot */
 .mode-toggle__sep {
-  opacity: 0.3;
+  display: inline-block;
+  width: 12px;
+  height: 16px;
+  background: rgba(4, 4, 14, 0.95);
+  color: transparent;
+  opacity: 1;
+  z-index: 2;
+  position: relative;
+  flex-shrink: 0;
 }

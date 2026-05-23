@@ -130,6 +130,10 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const ribbonInteraction = useRef({ position: null, velocity: 0, active: false })
   const controlsRef = useRef(null)
   const ribbonRef = useRef(null)
+  // Color state for puddle shader — opdShift drives the iridescent spectrum hue
+  const colorStateRef = useRef({ opdShift: 0 })
+  // Mouse position relative to puddle (normalized 0–1), updated on mousemove
+  const mousePosRef = useRef({ x: 0.5, y: 0.5 })
   // Normal play zone — center column between side panels (fraction of viewport width)
   const normalZoneRef = useRef({ xMin: 0, xMax: 1 })
   const gridBgRef = useRef(null)
@@ -145,6 +149,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     puddleMarbles,
     spawnMarble,
     handlePickUp: handleMarblePickUp,
+    dropAtPosition: dropMarbleAtPosition,
     removeFromPuddle: removeMarbleFromPuddle,
     applyImpulse: applyMarbleImpulse,
     clearAllMarbles,
@@ -202,6 +207,13 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const vcfResonanceRef = useRef(vcfResonance)
   vcfCutoffRef.current = vcfCutoff
   vcfResonanceRef.current = vcfResonance
+
+  // Update shader color tint whenever oscillator params change
+  const WAVEFORM_OPD = { sine: 0.22, triangle: 0.0, sawtooth: -0.18, square: -0.3 }
+  useEffect(() => {
+    const dominant = oscParams.reduce((best, osc) => osc.mix > best.mix ? osc : best, oscParams[0])
+    colorStateRef.current.opdShift = WAVEFORM_OPD[dominant.waveform] ?? 0
+  }, [oscParams])
 
   // Apply URL preset to audio engine on first mount
   useEffect(() => {
@@ -263,7 +275,11 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     Digit4: () => setHold((h) => !h),
     KeyV: () => setVisualMode((m) => m === 'party' ? 'lo' : 'party'),
     Enter: () => handleShakeRef.current?.(0.5),
-  }), [mode, hold, getEngine, clearAllMarbles])
+    KeyM: () => {
+      const { x, y } = mousePosRef.current
+      dropMarbleAtPosition(x, y)
+    },
+  }), [mode, hold, getEngine, clearAllMarbles, dropMarbleAtPosition])
 
   useKeyboard(keyHandlers)
 
@@ -602,6 +618,20 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
 
   handleShakeRef.current = handleShake
   useShake(handleShake, controlsRef, ribbonRef)
+
+  // Track mouse position relative to puddle for marble drop key command
+  useEffect(() => {
+    function onMouseMove(e) {
+      if (!ribbonRef.current) return
+      const rect = ribbonRef.current.getBoundingClientRect()
+      mousePosRef.current = {
+        x: (e.clientX - rect.left) / rect.width,
+        y: 1 - (e.clientY - rect.top) / rect.height,
+      }
+    }
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
+    return () => window.removeEventListener('mousemove', onMouseMove)
+  }, [])
 
   // Measure normal play zone — center column between side control panels
   useEffect(() => {
@@ -1003,6 +1033,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
           keyboardPositions={keyboardPositions}
           normalZone={normalZoneRef}
           onWildTouch={handleWildTouch}
+          colorStateRef={colorStateRef}
         />
 
         {/* Shake nook — bottom-right corner of puddle on desktop */}

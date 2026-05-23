@@ -19,11 +19,14 @@ export const Puddle = forwardRef(function Puddle({
   keyboardPositions,
   normalZone,   // ref: { xMin, xMax } fraction of viewport — normal play area
   onWildTouch,  // called when touch lands outside normalZone
+  colorStateRef, // ref: { opdShift } — drives iridescent hue shift
 }, ref) {
   const [positions, setPositions] = useState(new Map())
   const [activePointers, setActivePointers] = useState(new Set())
   const [splashes, setSplashes] = useState([])
   const splashIdRef = useRef(0)
+  const [showTouchHint, setShowTouchHint] = useState(true)
+  const touchHintTimerRef = useRef(null)
   const threeContainerRef = useRef(null)
   const confettiCanvasRef = useRef(null)
   const confettiParticles = useRef([])
@@ -78,7 +81,15 @@ export const Puddle = forwardRef(function Puddle({
     setPositions(prev => new Map(prev).set(voiceId, { x: mappedX, y }))
   }, [getEngine, mode, poly, hold, octaves, stepped, scale, ribbonInteraction, remapX])
 
+  // Hide touch hint on first interaction; reshow after 37s of silence
+  const resetTouchHintTimer = useCallback(() => {
+    setShowTouchHint(false)
+    clearTimeout(touchHintTimerRef.current)
+    touchHintTimerRef.current = setTimeout(() => setShowTouchHint(true), 37000)
+  }, [])
+
   const onDown = useCallback((pointerId, x, y) => {
+    resetTouchHintTimer()
     // Wild zone — touches outside normal play area trigger extreme param changes
     if (isOutsideZone(x)) {
       onWildTouch?.(x, y)
@@ -137,7 +148,7 @@ export const Puddle = forwardRef(function Puddle({
     if (hold && mode !== 'arp' && engine.getActiveVoiceCount() === 0) {
       engine.voiceOn(voiceId, hz, y)
     }
-  }, [getEngine, mode, hold, poly, octaves, stepped, scale, ribbonInteraction, arpStart, onArpNoteToggle, recordEvent, onNoteOn, remapX, isOutsideZone, onWildTouch])
+  }, [getEngine, mode, hold, poly, octaves, stepped, scale, ribbonInteraction, arpStart, onArpNoteToggle, recordEvent, onNoteOn, remapX, isOutsideZone, onWildTouch, resetTouchHintTimer])
 
   const onUp = useCallback((pointerId) => {
     const voiceId = `touch_${pointerId}`
@@ -185,7 +196,7 @@ export const Puddle = forwardRef(function Puddle({
   const { puddleRef, ripples, handlers } = usePuddle(onPositionChange, onDown, onUp, handleDragEscape)
 
   // Three.js renderer
-  usePuddleRenderer(threeContainerRef, ripples, getEngine, marbleDepressions)
+  usePuddleRenderer(threeContainerRef, ripples, getEngine, marbleDepressions, colorStateRef, ribbonInteraction)
 
   // --- Water splash rings ---
   function addSplash(nx, ny) {
@@ -449,11 +460,13 @@ export const Puddle = forwardRef(function Puddle({
         />
       ))}
 
-      {/* Hz display */}
+      {/* Hz display — hint hides after first touch, reappears after 37s idle */}
       <div className="puddle__label">
         {allPositions.length > 0
           ? `${Math.round(positionToFrequency(allPositions[allPositions.length - 1][1].x, { octaves, stepped, scale }))} Hz`
-          : <>touch puddle to play<span className="puddle__hint">no sound? keep tapping!</span></>
+          : showTouchHint
+            ? <>touch puddle to play<span className="puddle__hint">no sound? keep tapping!</span></>
+            : null
         }
       </div>
     </div>

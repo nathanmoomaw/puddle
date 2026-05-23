@@ -60,6 +60,7 @@ void main() {
 // Fragment shader — iridescent oil film effect (thin-film interference)
 const fragmentShader = `
 uniform float uTime;
+uniform float uOpdShift;
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vPosition;
@@ -70,7 +71,8 @@ vec3 thinFilmColor(float thickness, float cosAngle) {
   // Optical path difference: 2 * n * d * cos(theta)
   // n ~= 1.5 (oil film), d = thickness, theta from view angle
   // Phase in terms of visible spectrum wavelengths
-  float opd = 2.0 * 1.5 * thickness * (0.6 + 0.4 * cosAngle);
+  // uOpdShift offsets the spectrum: negative=warmer (saw/square), positive=cooler (sine)
+  float opd = 2.0 * 1.5 * (thickness + uOpdShift) * (0.6 + 0.4 * cosAngle);
 
   // Interference for R, G, B wavelengths (in relative units)
   // Red ~= 650nm, Green ~= 530nm, Blue ~= 460nm (normalized so mid-thickness = 1.0)
@@ -143,7 +145,10 @@ void main() {
 }
 `
 
-export function usePuddleRenderer(containerRef, ripples, getEngine, marbleDepressions) {
+// opdShift by waveform: sine=cool(+), triangle=neutral, sawtooth=warm(-), square=warmer(-)
+const WAVEFORM_OPD = { sine: 0.22, triangle: 0.0, sawtooth: -0.18, square: -0.3 }
+
+export function usePuddleRenderer(containerRef, ripples, getEngine, marbleDepressions, colorStateRef, ribbonInteractionRef) {
   const sceneRef = useRef(null)
   const rendererRef = useRef(null)
   const cameraRef = useRef(null)
@@ -190,6 +195,7 @@ export function usePuddleRenderer(containerRef, ripples, getEngine, marbleDepres
         uRippleCount: { value: 0 },
         uDepressions: { value: new Array(9).fill(null).map(() => new THREE.Vector3(0, 0, 0)) },
         uDepressionCount: { value: 0 },
+        uOpdShift: { value: 0 },
       },
       transparent: true,
       side: THREE.DoubleSide,
@@ -240,6 +246,12 @@ export function usePuddleRenderer(containerRef, ripples, getEngine, marbleDepres
 
       material.uniforms.uTime.value = elapsed
       material.uniforms.uRippleCount.value = count
+
+      // Smooth color shift: waveform base + pitch position contribution
+      const waveShift = colorStateRef?.current?.opdShift ?? 0
+      const pitchPos = ribbonInteractionRef?.current?.position ?? 0.5
+      const targetOpd = waveShift + (pitchPos - 0.5) * 0.25
+      material.uniforms.uOpdShift.value += (targetOpd - material.uniforms.uOpdShift.value) * 0.04
 
       // Update ripple uniforms — reuse pre-allocated vectors (no heap allocation)
       for (let i = 0; i < count; i++) {

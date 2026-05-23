@@ -82,20 +82,37 @@
   transition: none;
 }
 
-/* Zone separator ring — highlights on hover */
-.dual-knob__zone-sep {
-  stroke: rgba(255, 255, 255, 0.07);
-  stroke-width: 0.8;
+/* Outer boundary ring — always-visible frame around the whole knob */
+.dual-knob__outer-ring {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+  pointer-events: none;
   transition: stroke 0.15s;
+}
+
+.dual-knob__body[data-zone="outer"] .dual-knob__outer-ring,
+.dual-knob__body[data-zone="inner"] .dual-knob__outer-ring {
+  stroke: color-mix(in srgb, var(--knob-color, var(--cyan)) 30%, transparent);
+}
+
+/* Zone separator ring — dashed ring clearly dividing outer (mix) from inner (detune) */
+.dual-knob__zone-sep {
+  stroke: rgba(0, 240, 255, 0.28);
+  stroke-width: 1.2;
+  stroke-dasharray: 2 3;
+  transition: stroke 0.15s, stroke-opacity 0.15s;
   pointer-events: none;
 }
 
 .dual-knob__body[data-zone="outer"] .dual-knob__zone-sep {
-  stroke: color-mix(in srgb, var(--knob-color, var(--cyan)) 40%, transparent);
+  stroke: color-mix(in srgb, var(--knob-color, var(--cyan)) 70%, white);
+  stroke-opacity: 0.7;
+  stroke-dasharray: none;
 }
 
 .dual-knob__body[data-zone="inner"] .dual-knob__zone-sep {
-  stroke: rgba(255, 255, 255, 0.18);
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-dasharray: none;
 }
 
 /* Zone labels — faint, appear on hover */
@@ -152,7 +169,7 @@
     rgba(25, 25, 45, 0.98) 60%,
     rgba(12, 12, 22, 1)
   );
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
   box-shadow:
     0 2px 6px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.07),

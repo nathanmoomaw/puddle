@@ -215,6 +215,25 @@ export function useMarbles(puddleRef) {
     document.addEventListener('pointerup', onUp)
   }, [puddleRef])
 
+  // Drop tray marble directly onto puddle at normalized coords (0–1)
+  const dropAtPosition = useCallback((x, y) => {
+    setMarbles(prev => {
+      const trayIdx = prev.findIndex(m => m.status === 'tray')
+      if (trayIdx === -1) return prev
+      const next = [...prev]
+      next[trayIdx] = {
+        ...next[trayIdx],
+        status: 'puddle',
+        x: Math.max(0.02, Math.min(0.98, x)),
+        y: Math.max(0.02, Math.min(0.98, y)),
+        dragX: null, dragY: null,
+        droppedAt: Date.now(),
+        vx: 0, vy: 0,
+      }
+      return next
+    })
+  }, [])
+
   // Remove a marble from the puddle back to tray
   const removeFromPuddle = useCallback((id) => {
     setMarbles(prev => prev.map(m =>
@@ -259,6 +278,7 @@ export function useMarbles(puddleRef) {
     puddleMarbles,
     spawnMarble,
     handlePickUp,
+    dropAtPosition,
     removeFromPuddle,
     applyImpulse,
     clearAllMarbles,

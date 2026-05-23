@@ -192,7 +192,15 @@ export const DualKnob = memo(function DualKnob({
             strokeDasharray={`${fillArcLength} ${circumference}`}
             strokeDashoffset={-startOffset}
           />
-          {/* Zone separator ring — thin circle at inner/outer boundary */}
+          {/* Outer boundary ring — frames the full knob */}
+          <circle
+            className="dual-knob__outer-ring"
+            cx={size / 2}
+            cy={size / 2}
+            r={(size / 2) - 1.5}
+            fill="none"
+          />
+          {/* Zone separator ring — visible boundary between outer (mix) and inner (detune) zones */}
           <circle
             className="dual-knob__zone-sep"
             cx={size / 2}
