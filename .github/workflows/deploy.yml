@@ -2,7 +2,7 @@ name: Deploy to S3
 
 on:
   push:
-    branches: [main, 'nmj/**', 'v[0-9]*']
+    branches: [main, 'nmj/**', 'dev/**', 'v[0-9]*']
     tags:
       - 'v[0-9]*'
 
@@ -43,7 +43,7 @@ jobs:
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
 
   deploy-dev:
-    if: startsWith(github.ref, 'refs/heads/nmj/')
+    if: startsWith(github.ref, 'refs/heads/nmj/') || startsWith(github.ref, 'refs/heads/dev/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -53,17 +53,24 @@ jobs:
           node-version: 25
           cache: npm
 
+      - name: Resolve dev deploy target
+        id: devpath
+        run: |
+          REF="${{ github.ref }}"
+          if [[ "$REF" =~ ^refs/heads/dev/(v[0-9]+.*)$ ]]; then
+            echo "VERSION=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo "IS_VERSIONED=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "VERSION=" >> "$GITHUB_OUTPUT"
+            echo "IS_VERSIONED=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build @audness/core
         run: |
           git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
           cd ${{ github.workspace }}/../audness && npm install && npm run build --workspace=packages/core
 
       - run: npm ci
-      - name: Build
-        run: npm run build
-        env:
-          VITE_GIT_SHA: ${{ github.sha }}
-          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -71,8 +78,31 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Deploy to dev S3
-        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/ --delete
+      # Only the designated root version (DEV_ROOT_VERSION) deploys to root
+      - name: Build (root)
+        if: steps.devpath.outputs.VERSION == vars.DEV_ROOT_VERSION
+        run: npm run build
+        env:
+          VITE_GIT_SHA: ${{ github.sha }}
+          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: /
+
+      - name: Deploy to dev S3 (root)
+        if: steps.devpath.outputs.VERSION == vars.DEV_ROOT_VERSION
+        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/ --delete --exclude "v*/*"
+
+      # All versioned dev branches: build for /vX/ and deploy there
+      - name: Build (versioned)
+        if: steps.devpath.outputs.IS_VERSIONED == 'true'
+        run: npm run build
+        env:
+          VITE_GIT_SHA: ${{ github.sha }}
+          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: /${{ steps.devpath.outputs.VERSION }}/
+
+      - name: Deploy to dev S3 (versioned)
+        if: steps.devpath.outputs.IS_VERSIONED == 'true'
+        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/${{ steps.devpath.outputs.VERSION }}/ --delete
 
       - name: Invalidate dev CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
@@ -106,6 +136,10 @@ jobs:
           git commit -m "chore: bump version to v${NEW_VERSION}"
           git push
 
+      - name: Get branch name
+        id: branch
+        run: echo "VERSION=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
       - name: Build @audness/core
         run: |
           git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
@@ -117,16 +151,13 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: /${{ steps.branch.outputs.VERSION }}/
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      - name: Get branch name
-        id: branch
-        run: echo "VERSION=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
       - name: Deploy stable branch to /vN/
         run: aws s3 sync dist/ s3://puddle.obfusco.us/${{ steps.branch.outputs.VERSION }}/ --delete
@@ -145,6 +176,10 @@ jobs:
           node-version: 25
           cache: npm
 
+      - name: Get version tag
+        id: tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
       - name: Build @audness/core
         run: |
           git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
@@ -156,16 +191,13 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: /${{ steps.tag.outputs.VERSION }}/
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      - name: Get version tag
-        id: tag
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Deploy versioned snapshot to /vN/
         run: aws s3 sync dist/ s3://puddle.obfusco.us/${{ steps.tag.outputs.VERSION }}/ --delete
