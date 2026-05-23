@@ -138,6 +138,10 @@ jobs:
           git commit -m "chore: bump version to v${NEW_VERSION}"
           git push
 
+      - name: Get branch name
+        id: branch
+        run: echo "VERSION=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
       - name: Build @audness/core
         run: |
           git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
@@ -149,16 +153,13 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: /${{ steps.branch.outputs.VERSION }}/
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      - name: Get branch name
-        id: branch
-        run: echo "VERSION=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
       - name: Deploy stable branch to /vN/
         run: aws s3 sync dist/ s3://puddle.obfusco.us/${{ steps.branch.outputs.VERSION }}/ --delete
@@ -177,6 +178,10 @@ jobs:
           node-version: 25
           cache: npm
 
+      - name: Get version tag
+        id: tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
       - name: Build @audness/core
         run: |
           git clone --depth 1 https://github.com/nathanmoomaw/audness.git ${{ github.workspace }}/../audness
@@ -188,16 +193,13 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: /${{ steps.tag.outputs.VERSION }}/
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      - name: Get version tag
-        id: tag
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Deploy versioned snapshot to /vN/
         run: aws s3 sync dist/ s3://puddle.obfusco.us/${{ steps.tag.outputs.VERSION }}/ --delete
