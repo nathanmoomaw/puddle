@@ -58,12 +58,11 @@ jobs:
         run: |
           REF="${{ github.ref }}"
           if [[ "$REF" =~ ^refs/heads/dev/(v[0-9]+.*)$ ]]; then
-            VERSION="${BASH_REMATCH[1]}"
-            echo "BASE_PATH=/${VERSION}/" >> "$GITHUB_OUTPUT"
-            echo "S3_PREFIX=${VERSION}/" >> "$GITHUB_OUTPUT"
+            echo "VERSION=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo "IS_VERSIONED=true" >> "$GITHUB_OUTPUT"
           else
-            echo "BASE_PATH=/" >> "$GITHUB_OUTPUT"
-            echo "S3_PREFIX=" >> "$GITHUB_OUTPUT"
+            echo "VERSION=" >> "$GITHUB_OUTPUT"
+            echo "IS_VERSIONED=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build @audness/core
@@ -72,12 +71,14 @@ jobs:
           cd ${{ github.workspace }}/../audness && npm install && npm run build --workspace=packages/core
 
       - run: npm ci
-      - name: Build
+
+      # All dev branches: build for root and deploy to root (preserving /vX/ subdirs)
+      - name: Build (root)
         run: npm run build
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
-          VITE_BASE_PATH: ${{ steps.devpath.outputs.BASE_PATH }}
+          VITE_BASE_PATH: /
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -85,18 +86,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # Root deploy (nmj/** or non-versioned dev/**) — preserve existing /vX/ subdirs
       - name: Deploy to dev S3 (root)
-        if: steps.devpath.outputs.S3_PREFIX == ''
         run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/ --delete --exclude "v*/*"
 
-      # Versioned deploy (dev/vX) — scoped to /vX/ prefix only
+      # Versioned dev branches (dev/vX): also build for /vX/ and deploy there
+      - name: Build (versioned)
+        if: steps.devpath.outputs.IS_VERSIONED == 'true'
+        run: npm run build
+        env:
+          VITE_GIT_SHA: ${{ github.sha }}
+          VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_BASE_PATH: /${{ steps.devpath.outputs.VERSION }}/
+
       - name: Deploy to dev S3 (versioned)
-        if: steps.devpath.outputs.S3_PREFIX != ''
-        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/${{ steps.devpath.outputs.S3_PREFIX }} --delete
+        if: steps.devpath.outputs.IS_VERSIONED == 'true'
+        run: aws s3 sync dist/ s3://puddle-dev.obfusco.us/${{ steps.devpath.outputs.VERSION }}/ --delete
 
       - name: Invalidate dev CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/${{ steps.devpath.outputs.S3_PREFIX }}*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
 
   deploy-stable-branch:
     if: startsWith(github.ref, 'refs/heads/v')
