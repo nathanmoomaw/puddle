@@ -279,7 +279,13 @@
   cursor: grab;
   touch-action: none;
   transition: transform 0.15s, box-shadow 0.15s;
-  animation: marble-appear 0.3s ease-out;
+  animation: marble-appear 0.3s ease-out, marble-tray-idle 5s ease-in-out infinite 0.35s;
+}
+
+@keyframes marble-tray-idle {
+  0%,  100% { filter: drop-shadow(0 0 3px var(--marble-color)); }
+  30%        { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 10px var(--marble-color)); }
+  65%        { filter: drop-shadow(0 1px 5px rgba(0,0,0,0.2)) drop-shadow(0 0 4px var(--marble-color)); }
 }
 
 .marble-visual--tray:hover {
@@ -637,8 +643,9 @@
   box-shadow:
     0 0 22px color-mix(in srgb, var(--side-glow-color, #00f0ff) 55%, transparent),
     0 0 8px color-mix(in srgb, var(--side-glow-color, #00f0ff) 35%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06);
   transform: none;
   z-index: 3;
 }
@@ -647,16 +654,18 @@
   box-shadow:
     -6px 0 22px color-mix(in srgb, var(--side-glow-color, #00f0ff) 50%, transparent),
     0 0 14px color-mix(in srgb, var(--side-glow-color, #00f0ff) 35%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    inset -1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
 .rocker__side--active:last-child {
   box-shadow:
     6px 0 22px color-mix(in srgb, var(--side-glow-color, #00f0ff) 50%, transparent),
     0 0 14px color-mix(in srgb, var(--side-glow-color, #00f0ff) 35%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
 .rocker__side:not(.rocker__side--active) {
@@ -714,3 +723,25 @@
 .activation__hold-right {
   text-shadow: 0 0 6px rgba(0,0,0,0.9);
 }
+
+/* Grain overlay — adds film-grain texture to active toggle lobes */
+.rocker__side {
+  overflow: hidden;
+}
+
+.rocker__side::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72 0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.rocker__side--active::after {
+  opacity: 0.18;
+}
+

@@ -19,6 +19,7 @@ import { PresetQR } from './components/PresetQR'
 import { positionToFrequency } from './utils/pitchMap'
 import { HIDDEN_SCALES } from './utils/scales'
 import { readPresetFromUrl } from './utils/presets'
+import { captureScreenshot } from './utils/screenshot'
 import { WalletButton } from './components/WalletButton'
 import { MilestoneBadge } from './components/MilestoneBadge'
 import { InfoModal } from './components/InfoModal'
@@ -156,6 +157,10 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     restoreMarbles,
   } = useMarbles(ribbonRef)
 
+  // Always-current ref so hold effect reads live marble positions
+  const puddleMarblesRef = useRef(puddleMarbles)
+  puddleMarblesRef.current = puddleMarbles
+
   // Marble depressions ref for shader (updated whenever puddleMarbles changes)
   const marbleDepressionsRef = useRef([])
   marbleDepressionsRef.current = puddleMarbles.map(m => ({
@@ -279,7 +284,16 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
       const { x, y } = mousePosRef.current
       dropMarbleAtPosition(x, y)
     },
-  }), [mode, hold, getEngine, clearAllMarbles, dropMarbleAtPosition])
+    KeyP: () => {
+      captureScreenshot({
+        mode, oscParams, volume, octaves, delayParams, reverbMix, crunch,
+        filterParams, vcfCutoff, vcfResonance, vcfRouting, glideSpeed,
+        stepped, scale, poly, hold, arpBpm, visualMode, arpNotes,
+      })
+    },
+  }), [mode, hold, oscParams, volume, octaves, delayParams, reverbMix, crunch,
+       filterParams, vcfCutoff, vcfResonance, vcfRouting, glideSpeed, stepped,
+       scale, poly, arpBpm, visualMode, arpNotes, getEngine, clearAllMarbles, dropMarbleAtPosition])
 
   useKeyboard(keyHandlers)
 
@@ -774,21 +788,26 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
       }
     } else if (!wasHold && hold) {
       // Hold turned ON — restart voices for any marbles already on the puddle
+      const currentMarbles = puddleMarblesRef.current
       if (mode !== 'arp') {
-        for (const marble of puddleMarbles) {
+        for (const marble of currentMarbles) {
           const hz = positionToFrequency(marble.x, { octaves, stepped, scale })
           engine.voiceOn(`marble_${marble.id}`, hz, marble.velocity)
         }
-      } else if (poly) {
-        // In arp+hold+poly: inject existing puddle marble frequencies
-        const marbleHzList = puddleMarbles.map(m =>
+      } else {
+        // arp mode (poly or mono): re-inject marble freqs so arpNotes effect restarts the arp
+        const marbleHzList = currentMarbles.map(m =>
           positionToFrequency(m.x, { octaves, stepped, scale })
         )
         if (marbleHzList.length > 0) {
-          setArpNotes(prev => {
-            const fingerNotes = prev.filter(hz => !marbleHzList.some(mhz => Math.abs(mhz - hz) < 1))
-            return [...fingerNotes, ...marbleHzList]
-          })
+          if (poly) {
+            setArpNotes(prev => {
+              const fingerNotes = prev.filter(hz => !marbleHzList.some(mhz => Math.abs(mhz - hz) < 1))
+              return [...fingerNotes, ...marbleHzList]
+            })
+          } else {
+            setArpNotes(marbleHzList)
+          }
         }
       }
     }
@@ -832,15 +851,19 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     }
 
     // In arp mode: sync marble freqs into arpNotes (by droppedAt order)
-    if (mode === 'arp' && hold && poly) {
+    if (mode === 'arp' && hold) {
       const marbleHzList = puddleMarbles.map(m =>
         positionToFrequency(m.x, { octaves, stepped, scale })
       )
-      setArpNotes(prev => {
-        // Keep finger-added notes (not from marbles), append marble notes
-        const fingerNotes = prev.filter(hz => !marbleHzList.some(mhz => Math.abs(mhz - hz) < 1))
-        return [...fingerNotes, ...marbleHzList]
-      })
+      if (poly) {
+        setArpNotes(prev => {
+          // Keep finger-added notes (not from marbles), append marble notes
+          const fingerNotes = prev.filter(hz => !marbleHzList.some(mhz => Math.abs(mhz - hz) < 1))
+          return [...fingerNotes, ...marbleHzList]
+        })
+      } else {
+        setArpNotes(marbleHzList)
+      }
     }
 
     prevPuddleMarbleIdsRef.current = currentIds

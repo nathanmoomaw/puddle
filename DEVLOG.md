@@ -1,5 +1,16 @@
 # Devlog
 
+## 2026-05-24 — v2 features: marble animations, float shadows, screenshot key, BPM 900, misc fixes
+
+- **Float effect** (item 215): triple-layer drop-shadow (depth + colored + distant reflection) on each osc section; activation + shared controls get a unified depth shadow
+- **Grain + enhanced 3D glow** (item 216): `::after` SVG fractalNoise grain overlay on active rocker lobes (`opacity: 0.18`, `mix-blend-mode: overlay`); inset top/side highlight + bottom shadow on all active lobe box-shadows
+- **Marble landing roll** (item 217): replaced flat scale animation with a multi-keyframe bounce+rocking sequence (`rotate -10deg → +5deg → -2deg → settle`); specular glint gains `marble-shimmer` keyframe with speed `--shimmer-speed` driven by marble x-position (pitch); staggered `--shimmer-delay` per marble id
+- **Tray marble idle** (item 218): `marble-tray-idle` 5s filter animation — glow pulse + drop-shadow float that doesn't conflict with hover scale transform
+- **Knob sensitivity near screen bottom** (item 219): record `spaceBelow` on pointer-down; clamp drag sensitivity to `min(200, max(50, spaceBelow*1.2))` so bottom-edge knobs need less drag distance
+- **Screenshot key P** (item 220): `captureScreenshot()` utility — `preserveDrawingBuffer: true` added to renderer; composites puddle canvas + QR code + watermark onto offscreen canvas and triggers PNG download
+- **Hold re-triggers marbles** (item 221): added `puddleMarblesRef` (always-current); hold-ON branch now handles arp+mono (was poly-only); marble placement effect also fixed for mono arp
+- **BPM max** (item 222): `max="900"` (was 300)
+
 ## 2026-05-23 — v2 polish: colored 3D rocker glow, kill inactive lobe fill
 
 - **Colored 3D glow** (item 213): pass `--side-glow-color` from JSX (primary light hex of each side); CSS uses `color-mix()` to derive fill + glow from that color; inset top/bottom shadows give depth illusion

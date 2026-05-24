@@ -990,15 +990,33 @@
   box-shadow: none !important;
 }
 
-/* Osc glow — each osc gets a colored bottom glow matching its knob color */
+/* Osc glow — each osc gets a depth shadow + colored glow for a floating look */
 .controls__oscillators .controls__osc-goopable:nth-child(1) .controls__osc {
-  filter: drop-shadow(0 2px 8px rgba(0, 240, 255, 0.18));
+  filter:
+    drop-shadow(0 8px 24px rgba(0,0,0,0.45))
+    drop-shadow(0 2px 8px rgba(0, 240, 255, 0.22))
+    drop-shadow(0 16px 32px rgba(0, 240, 255, 0.06));
 }
 .controls__oscillators .controls__osc-goopable:nth-child(2) .controls__osc {
-  filter: drop-shadow(0 2px 8px rgba(224, 64, 251, 0.18));
+  filter:
+    drop-shadow(0 8px 24px rgba(0,0,0,0.45))
+    drop-shadow(0 2px 8px rgba(224, 64, 251, 0.22))
+    drop-shadow(0 16px 32px rgba(224, 64, 251, 0.06));
 }
 .controls__oscillators .controls__osc-goopable:nth-child(3) .controls__osc {
-  filter: drop-shadow(0 2px 8px rgba(57, 255, 20, 0.18));
+  filter:
+    drop-shadow(0 8px 24px rgba(0,0,0,0.45))
+    drop-shadow(0 2px 8px rgba(57, 255, 20, 0.22))
+    drop-shadow(0 16px 32px rgba(57, 255, 20, 0.06));
+}
+
+/* Float shadow on shared controls and activation section */
+.controls__shared {
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.4));
+}
+
+.activation {
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.4));
 }
 
 /* Top accent strip stays but more vivid */

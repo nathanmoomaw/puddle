@@ -112,6 +112,7 @@
   background: radial-gradient(ellipse, rgba(255,255,255,0.65) 0%, transparent 100%);
   transform: rotate(-30deg);
   pointer-events: none;
+  animation: marble-shimmer var(--shimmer-speed, 3s) ease-in-out infinite var(--shimmer-delay, 0s);
 }
 
 .puddle__marble:hover {
@@ -122,8 +123,17 @@
 }
 
 @keyframes marble-land {
-  from { transform: translate(-50%, -50%) scale(1.4); opacity: 0.5; }
-  to   { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+  0%   { transform: translate(-50%, -50%) scale(1.35) rotate(-10deg); opacity: 0.6; }
+  40%  { transform: translate(-50%, -50%) scale(0.88) rotate(5deg); opacity: 1; }
+  65%  { transform: translate(-50%, -50%) scale(1.07) rotate(-2deg); opacity: 1; }
+  85%  { transform: translate(-50%, -50%) scale(0.97) rotate(1deg); }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
+
+@keyframes marble-shimmer {
+  0%,  100% { transform: rotate(-30deg) scale(1);     opacity: 0.75; }
+  40%       { transform: rotate(-24deg) scale(1.25) translateX(1px); opacity: 0.35; }
+  70%       { transform: rotate(-36deg) scale(0.85) translateX(-1px); opacity: 0.9; }
 }
 
 /* --- Puddle marble patterns --- */

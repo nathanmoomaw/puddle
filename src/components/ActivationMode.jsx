@@ -191,7 +191,7 @@ export function ActivationMode({
           className="slider--coral"
           type="range"
           min="40"
-          max="300"
+          max="900"
           step="1"
           value={arpBpm}
           onChange={(e) => setArpBpm(Number(e.target.value))}

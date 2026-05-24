@@ -29,6 +29,7 @@ export const RotaryKnob = memo(function RotaryKnob({
   const hasDragged = useRef(false)
   const startY = useRef(0)
   const startValue = useRef(0)
+  const dragSensitivity = useRef(200)
 
   const range = max - min
 
@@ -54,6 +55,10 @@ export const RotaryKnob = memo(function RotaryKnob({
     startValue.current = value
     e.currentTarget.setPointerCapture(e.pointerId)
 
+    // When near screen bottom, reduce drag distance required for full range
+    const spaceBelow = window.innerHeight - e.clientY
+    dragSensitivity.current = Math.min(200, Math.max(50, spaceBelow * 1.2))
+
     // Show ghost slider
     if (ghostRef.current) ghostRef.current.classList.add('rotary-knob__ghost--visible')
   }, [value])
@@ -63,9 +68,8 @@ export const RotaryKnob = memo(function RotaryKnob({
     hasDragged.current = true
 
     // Vertical drag: up = increase, down = decrease
-    // 200px of drag covers the full range
     const dy = startY.current - e.clientY
-    const deltaRatio = dy / 200
+    const deltaRatio = dy / dragSensitivity.current
     const newValue = Math.max(min, Math.min(max,
       startValue.current + deltaRatio * range
     ))

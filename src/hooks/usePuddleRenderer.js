@@ -174,6 +174,7 @@ export function usePuddleRenderer(containerRef, ripples, getEngine, marbleDepres
       alpha: true,
       antialias: false,
       powerPreference: 'default',
+      preserveDrawingBuffer: true,
     })
     renderer.setClearColor(0x000000, 0)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
