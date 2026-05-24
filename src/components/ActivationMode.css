@@ -633,18 +633,30 @@
 }
 
 .rocker__side--active {
-  background: rgba(0, 240, 255, 0.18);
-  box-shadow: 0 0 22px rgba(0, 240, 255, 0.5), 0 0 8px rgba(0, 240, 255, 0.3);
+  background: color-mix(in srgb, var(--side-glow-color, #00f0ff) 20%, transparent);
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--side-glow-color, #00f0ff) 55%, transparent),
+    0 0 8px color-mix(in srgb, var(--side-glow-color, #00f0ff) 35%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
   transform: none;
   z-index: 3;
 }
 
 .rocker__side--active:first-child {
-  box-shadow: -6px 0 20px rgba(0, 240, 255, 0.45), 0 0 14px rgba(0, 240, 255, 0.3);
+  box-shadow:
+    -6px 0 22px color-mix(in srgb, var(--side-glow-color, #00f0ff) 50%, transparent),
+    0 0 14px color-mix(in srgb, var(--side-glow-color, #00f0ff) 35%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .rocker__side--active:last-child {
-  box-shadow: 6px 0 20px rgba(0, 240, 255, 0.45), 0 0 14px rgba(0, 240, 255, 0.3);
+  box-shadow:
+    6px 0 22px color-mix(in srgb, var(--side-glow-color, #00f0ff) 50%, transparent),
+    0 0 14px color-mix(in srgb, var(--side-glow-color, #00f0ff) 35%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .rocker__side:not(.rocker__side--active) {

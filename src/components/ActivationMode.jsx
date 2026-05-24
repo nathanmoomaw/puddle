@@ -26,7 +26,10 @@ function Light({ color, on }) {
 function RockerSwitch({ leftLabel, rightLabel, leftLights, rightLights, isRight, onToggle }) {
   return (
     <div className="rocker" onClick={onToggle}>
-      <div className={`rocker__side ${!isRight ? 'rocker__side--active' : ''}`}>
+      <div
+        className={`rocker__side ${!isRight ? 'rocker__side--active' : ''}`}
+        style={{ '--side-glow-color': leftLights[0] }}
+      >
         <div className="rocker__lights">
           {leftLights.map((color, i) => (
             <Light key={i} color={color} on={!isRight} />
@@ -35,7 +38,10 @@ function RockerSwitch({ leftLabel, rightLabel, leftLights, rightLights, isRight,
         <span className="rocker__label">{leftLabel}</span>
       </div>
       <div className="rocker__divider" />
-      <div className={`rocker__side ${isRight ? 'rocker__side--active' : ''}`}>
+      <div
+        className={`rocker__side ${isRight ? 'rocker__side--active' : ''}`}
+        style={{ '--side-glow-color': rightLights[0] }}
+      >
         <div className="rocker__lights">
           {rightLights.map((color, i) => (
             <Light key={i} color={color} on={isRight} />

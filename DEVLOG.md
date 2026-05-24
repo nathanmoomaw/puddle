@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-05-23 — v2 polish: colored 3D rocker glow, kill inactive lobe fill
+
+- **Colored 3D glow** (item 213): pass `--side-glow-color` from JSX (primary light hex of each side); CSS uses `color-mix()` to derive fill + glow from that color; inset top/bottom shadows give depth illusion
+- **Mode-toggle inactive boxing** (item 214): drop inactive lobe background to `transparent` — only active lobe has fill/glow, which removes the dark blob on the "lo" side
+
 ## 2026-05-23 — v2 polish: toggle boxing, active glow, strip osc borders
 
 - **Mode-toggle boxing** (item 210): removed `position: fixed` duplicate and added `appearance: none; outline: none` to kill browser button boxing; lowered non-active lobe background opacity to 0.45 (was 0.92) so lobes don't read as solid dark squares over puddle; boosted active glow to 0.5 intensity

@@ -37,7 +37,7 @@
   justify-content: center;
   width: 36px;
   height: 34px;
-  background: rgba(20, 20, 40, 0.45);
+  background: transparent;
   border: none;
   box-shadow: none;
   transition: background 0.2s, box-shadow 0.2s, color 0.2s;
