@@ -227,23 +227,23 @@ export const DualKnob = memo(function DualKnob({
             strokeDasharray={`${fillArcLength} ${circumference}`}
             strokeDashoffset={-startOffset}
           />
-          {/* Mix dial line — radial needle across outer zone */}
+          {/* Mix dial needle — bright white line across outer zone, visible over any arc fill */}
           <line
             ref={mixLineRef}
             className="dual-knob__mix-line"
             x1={mixLineX1} y1={mixLineY1}
             x2={mixLineX2} y2={mixLineY2}
-            stroke={color}
-            strokeWidth="2"
+            stroke="rgba(255,255,255,0.92)"
+            strokeWidth="2.5"
             strokeLinecap="round"
           />
-          {/* Mix dial dot — cap at tip of arc */}
+          {/* Mix dial dot — colored cap at arc tip */}
           <circle
             ref={mixDotRef}
             className="dual-knob__mix-pointer"
             cx={mixTipX}
             cy={mixTipY}
-            r={strokeWidth * 0.72}
+            r={strokeWidth * 0.8}
             fill={color}
           />
           {/* Outer boundary ring — frames the full knob */}
