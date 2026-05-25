@@ -97,8 +97,18 @@
   transform: translate(-50%, -50%);
   cursor: pointer;
   z-index: 10;
-  animation: marble-land 0.25s ease-out;
+  animation:
+    marble-land 0.25s ease-out,
+    marble-idle-rock var(--roll-speed, 5.5s) ease-in-out infinite var(--roll-delay, 0.25s);
   transition: box-shadow 0.2s;
+}
+
+@keyframes marble-idle-rock {
+  0%   { transform: translate(-50%, -50%) rotate(var(--roll-a, -9deg)); }
+  25%  { transform: translate(-50%, -50%) rotate(0deg); }
+  50%  { transform: translate(-50%, -50%) rotate(var(--roll-b, 9deg)); }
+  75%  { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(var(--roll-a, -9deg)); }
 }
 
 .puddle__marble::after {

@@ -490,6 +490,36 @@
   align-items: flex-start;
 }
 
+/* Osc cycling waveform button header */
+.controls__osc-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.controls__osc-waveform-btn {
+  flex: 1;
+  background: none;
+  border: 1px solid var(--osc-color, var(--cyan));
+  color: var(--osc-color, var(--cyan));
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  text-shadow: 0 0 6px var(--osc-color, var(--cyan));
+  transition: box-shadow 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.controls__osc-waveform-btn:hover {
+  background: color-mix(in srgb, var(--osc-color, var(--cyan)) 12%, transparent);
+  box-shadow: 0 0 10px -2px var(--osc-color, var(--cyan));
+}
+
 /* Osc section knob pair — mix + detune side by side */
 .controls__osc-knobs {
   display: flex;
@@ -1063,5 +1093,10 @@
 }
 
 .controls::before {
+  display: none !important;
+}
+
+/* Remove the left-edge gradient overlay on OSC 3 — borders are gone in v2 */
+.controls__oscillators .controls__osc-goopable:last-child .controls__osc::after {
   display: none !important;
 }

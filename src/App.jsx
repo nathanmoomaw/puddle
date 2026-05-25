@@ -92,7 +92,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const [filterParams, setFilterParams] = useState(_urlPreset?.filterParams ?? initialSynthState?.filterParams ?? { cutoff: 20000, resonance: 0 })
   const [vcfCutoff, setVcfCutoff] = useState(_urlPreset?.vcfCutoff ?? initialSynthState?.vcfCutoff ?? 2000)
   const [vcfResonance, setVcfResonance] = useState(_urlPreset?.vcfResonance ?? initialSynthState?.vcfResonance ?? 8)
-  const [vcfRouting, setVcfRouting] = useState(_urlPreset?.vcfRouting ?? initialSynthState?.vcfRouting ?? [false, false, false])
+  const [vcfRouting, setVcfRouting] = useState(_urlPreset?.vcfRouting ?? initialSynthState?.vcfRouting ?? [true, true, true])
   const [glideSpeed, setGlideSpeed] = useState(_urlPreset?.glideSpeed ?? initialSynthState?.glideSpeed ?? 0.005)
   const [stepped, setStepped] = useState(_urlPreset?.stepped ?? initialSynthState?.stepped ?? false)
   const [scale, setScale] = useState(_urlPreset?.scale ?? initialSynthState?.scale ?? ['chromatic'])
@@ -219,6 +219,12 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     const dominant = oscParams.reduce((best, osc) => osc.mix > best.mix ? osc : best, oscParams[0])
     colorStateRef.current.opdShift = WAVEFORM_OPD[dominant.waveform] ?? 0
   }, [oscParams])
+
+  // Apply default VCF routing on first mount (all 3 on by default in v2)
+  useEffect(() => {
+    const engine = getEngine()
+    vcfRouting.forEach((enabled, i) => engine.setVcfRouting(i, enabled))
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Apply URL preset to audio engine on first mount
   useEffect(() => {

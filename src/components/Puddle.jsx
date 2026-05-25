@@ -430,6 +430,10 @@ export const Puddle = forwardRef(function Puddle({
             '--marble-size': `${m.size}px`,
             '--shimmer-speed': `${(3.8 - m.x * 2.4).toFixed(2)}s`,
             '--shimmer-delay': `${((m.id ?? 0) % 7) * 0.45}s`,
+            '--roll-speed': `${(4.5 + ((m.id ?? 0) % 5) * 0.8).toFixed(1)}s`,
+            '--roll-delay': `${0.25 + ((m.id ?? 0) % 3) * 0.6}s`,
+            '--roll-a': `${-7 - ((m.id ?? 0) % 4) * 2}deg`,
+            '--roll-b': `${7 + ((m.id ?? 0) % 3) * 2}deg`,
           }}
           onPointerDown={(e) => {
             e.stopPropagation()

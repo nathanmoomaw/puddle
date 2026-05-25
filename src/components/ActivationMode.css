@@ -709,12 +709,13 @@
   height: 7px;
 }
 
-/* Hold split: angular */
+/* Hold split: transparent like rockers */
 .activation__hold-split {
-  border-radius: 3px;
-  background: rgba(4, 4, 14, 0.78);
-  border: 1px solid rgba(0, 240, 255, 0.15);
+  background: none;
+  border: none;
   box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
 }
 
 /* Stop button label text-shadow for visibility */

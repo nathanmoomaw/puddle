@@ -187,16 +187,6 @@ export function ActivationMode({
         <label className="activation__tempo-label">
           BPM <span className="activation__tempo-value">{arpBpm}</span>
         </label>
-        <input
-          className="slider--coral"
-          type="range"
-          min="40"
-          max="900"
-          step="1"
-          value={arpBpm}
-          onChange={(e) => setArpBpm(Number(e.target.value))}
-          disabled={mode !== 'arp'}
-        />
       </div>
 
       {/* Dragging marble portal — renders at pointer position above everything */}

@@ -440,6 +440,12 @@
     align-items: stretch;
   }
 
+  /* Puddle is position:fixed — elevate header above it */
+  .app-header {
+    position: relative;
+    z-index: 10;
+  }
+
   .app-header .ribbon-logo {
     width: 140px;
   }

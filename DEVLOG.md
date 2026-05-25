@@ -1,5 +1,19 @@
 # Devlog
 
+## 2026-05-25 — v2 polish: OSC cycling button, screenshot gradient QR, detune ring contrast, marble roll, VCF default-on, BPM+Speed DualKnob
+
+- **OSC waveform cycling button** (item 238): replaced per-osc waveform button grid with a single `OSC ∿/⊓/⊿/△` button that cycles through sine→square→sawtooth→triangle on click; label reflects current waveform symbol; osc sections now show only the header button + DualKnob for a compact layout
+- **Screenshot gradient QR** (item 236+237): rewrote `captureScreenshot()` to composite iridescent "puddle" wordmark (char-by-char oil-spill gradient), gradient QR (reuses `drawColoredQR` from PresetQR.jsx), param summary, and watermark over the puddle canvas
+- **Detune ring inverse color** (item 230): `OSC_DETUNE_COLORS = ['#ff3300', '#00cc55', '#aa00ff']` passed as `detuneColor` to DualKnob; zone-sep ring, inner notch, and DET label use contrasting color per osc
+- **Mix dial hand** (item 231): small circle dot at arc-fill tip added to DualKnob SVG; acts as a pointer tip for the outer mix ring
+- **Marble idle rock** (item 233): `marble-idle-rock` CSS keyframe animation with per-marble `--roll-speed/delay/a/b` CSS vars for continuous staggered rocking
+- **VCF default-on + routing removed** (item 234+235): default `vcfRouting = [true, true, true]`; routing toggle buttons removed from VCFControl; engine synced on mount
+- **Combined BPM+Speed DualKnob** (item 232): outer zone = BPM (40–900), inner zone = glide speed (0.001–0.3); removed BPM range slider from ActivationMode
+- **OSC 3 border artifact** (item 226): hide `::after` gradient on last osc section
+- **Mobile logo visibility** (item 227): `z-index: 10` on `.app-header` in mobile media query so it renders above fixed puddle canvas
+- **Mobile controls scroll** (item 228): mobile layout improvements to show all controls with scroll
+- **Hold-split boxing** (item 229): fully transparent `.activation__hold-split` in v2 overrides
+
 ## 2026-05-24 — v2 features: marble animations, float shadows, screenshot key, BPM 900, misc fixes
 
 - **Float effect** (item 215): triple-layer drop-shadow (depth + colored + distant reflection) on each osc section; activation + shared controls get a unified depth shadow

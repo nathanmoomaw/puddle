@@ -18,7 +18,7 @@
 ## Up Next
 - [x] Smooth möbius paths in logo (bezier refinement, tighter curves)
 - [ ] Logo rethink: new approach needed — möbius shape still not satisfying; consider redrawing from scratch with a proper bezier editor or using a reference lemniscate
-- [ ] Slim down .controls__osc panels — feedback they read as too wide
+- [x] Slim down .controls__osc panels — replaced waveform grid with single cycling OSC ∿ button; compact header + DualKnob only
 - [ ] Additional scales: Phrygian dominant, Hirajoshi, Whole tone, Prometheus, Hungarian minor, Enigmatic, Lydian dominant
 - [ ] Production domain setup
 - [x] Wire first_sound milestone to Puddle touch events

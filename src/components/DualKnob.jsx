@@ -11,9 +11,11 @@ export const DualKnob = memo(function DualKnob({
   onMixChange,
   onDetuneChange,
   color = 'var(--cyan)',
+  detuneColor = 'rgba(255,255,255,0.4)',
   size = 52,
   minDetune = -1200,
   maxDetune = 1200,
+  roundDetune = true,
   mixLabel,
   detuneLabel,
 }) {
@@ -120,7 +122,7 @@ export const DualKnob = memo(function DualKnob({
       const newDetune = Math.max(minDetune, Math.min(maxDetune,
         startDetune.current + deltaRatio * detuneRange
       ))
-      const stepped = Math.round(newDetune)
+      const stepped = roundDetune ? Math.round(newDetune) : newDetune
       applyDetuneVisuals(stepped)
       onDetuneChange(stepped)
     } else {
@@ -139,10 +141,16 @@ export const DualKnob = memo(function DualKnob({
 
   const innerSize = size * INNER_RATIO * 2
 
+  // Mix pointer tip — small dot at the end of the arc fill
+  const mixTipAngle = MIN_ANGLE + mixValue * ANGLE_RANGE
+  const mixTipRad = ((mixTipAngle - 90) * Math.PI) / 180
+  const mixTipX = (size / 2) + ringRadius * Math.cos(mixTipRad)
+  const mixTipY = (size / 2) + ringRadius * Math.sin(mixTipRad)
+
   return (
     <div
       className="dual-knob"
-      style={{ '--knob-size': `${size}px`, '--knob-color': color, '--inner-size': `${innerSize}px` }}
+      style={{ '--knob-size': `${size}px`, '--knob-color': color, '--detune-color': detuneColor, '--inner-size': `${innerSize}px` }}
     >
       {/* Labels */}
       <div className="dual-knob__labels">
@@ -192,6 +200,14 @@ export const DualKnob = memo(function DualKnob({
             strokeDasharray={`${fillArcLength} ${circumference}`}
             strokeDashoffset={-startOffset}
           />
+          {/* Mix dial pointer — dot at tip of arc fill */}
+          <circle
+            className="dual-knob__mix-pointer"
+            cx={mixTipX}
+            cy={mixTipY}
+            r={strokeWidth * 0.72}
+            fill={color}
+          />
           {/* Outer boundary ring — frames the full knob */}
           <circle
             className="dual-knob__outer-ring"
@@ -200,27 +216,28 @@ export const DualKnob = memo(function DualKnob({
             r={(size / 2) - 1.5}
             fill="none"
           />
-          {/* Zone separator ring — visible boundary between outer (mix) and inner (detune) zones */}
+          {/* Zone separator ring — prominent boundary, uses detune (inverse) color */}
           <circle
             className="dual-knob__zone-sep"
             cx={size / 2}
             cy={size / 2}
             r={(size / 2) * INNER_RATIO}
             fill="none"
+            stroke={detuneColor}
           />
         </svg>
 
         {/* Inner circle — detune notch */}
-        <div className="dual-knob__inner">
+        <div className="dual-knob__inner" style={{ borderColor: detuneColor, boxShadow: `0 0 6px ${detuneColor}44, 0 2px 6px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07)` }}>
           <div
             className="dual-knob__notch-ring"
             ref={innerNotchRef}
             style={{ transform: `rotate(${detuneAngle}deg)` }}
           >
-            <div className="dual-knob__notch" />
+            <div className="dual-knob__notch" style={{ background: detuneColor, boxShadow: `0 0 4px ${detuneColor}, 0 0 8px ${detuneColor}66` }} />
           </div>
           {/* Zone label inside inner circle */}
-          <span className="dual-knob__zone-label dual-knob__zone-label--det">DET</span>
+          <span className="dual-knob__zone-label dual-knob__zone-label--det" style={{ color: detuneColor, opacity: 0.7 }}>DET</span>
         </div>
 
         {/* Mix zone label — top of outer ring */}
