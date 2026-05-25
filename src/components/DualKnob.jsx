@@ -160,7 +160,8 @@ export const DualKnob = memo(function DualKnob({
     applyHoverZone(null)
   }, [applyHoverZone])
 
-  const innerSize = size * INNER_RATIO * 2
+  // Inner circle diameter = 2 × inner_radius = 2 × (size/2 × INNER_RATIO) = size × INNER_RATIO
+  const innerSize = size * INNER_RATIO
 
   // Mix dial line + pointer dot
   const mixTipAngle = MIN_ANGLE + mixValue * ANGLE_RANGE
@@ -227,25 +228,6 @@ export const DualKnob = memo(function DualKnob({
             strokeDasharray={`${fillArcLength} ${circumference}`}
             strokeDashoffset={-startOffset}
           />
-          {/* Mix dial needle — bright white line across outer zone, visible over any arc fill */}
-          <line
-            ref={mixLineRef}
-            className="dual-knob__mix-line"
-            x1={mixLineX1} y1={mixLineY1}
-            x2={mixLineX2} y2={mixLineY2}
-            stroke="rgba(255,255,255,0.92)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-          {/* Mix dial dot — colored cap at arc tip */}
-          <circle
-            ref={mixDotRef}
-            className="dual-knob__mix-pointer"
-            cx={mixTipX}
-            cy={mixTipY}
-            r={strokeWidth * 0.8}
-            fill={color}
-          />
           {/* Outer boundary ring — frames the full knob */}
           <circle
             className="dual-knob__outer-ring"
@@ -277,6 +259,32 @@ export const DualKnob = memo(function DualKnob({
           {/* Zone label inside inner circle */}
           <span className="dual-knob__zone-label dual-knob__zone-label--det" style={{ color: detuneColor, opacity: 0.7 }}>DET</span>
         </div>
+
+        {/* Mix dial needle + dot — separate SVG layer above inner div so it's always visible */}
+        <svg
+          className="dual-knob__needle-svg"
+          viewBox={`0 0 ${size} ${size}`}
+          width={size}
+          height={size}
+        >
+          <line
+            ref={mixLineRef}
+            x1={mixLineX1} y1={mixLineY1}
+            x2={mixLineX2} y2={mixLineY2}
+            stroke="rgba(255,255,255,0.92)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            style={{ filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.9))' }}
+          />
+          <circle
+            ref={mixDotRef}
+            cx={mixTipX}
+            cy={mixTipY}
+            r={strokeWidth * 0.8}
+            fill={color}
+            style={{ filter: `drop-shadow(0 0 4px ${color})` }}
+          />
+        </svg>
 
         {/* Mix zone label — top of outer ring */}
         <span className="dual-knob__zone-label dual-knob__zone-label--mix">MIX</span>
