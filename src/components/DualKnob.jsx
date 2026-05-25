@@ -22,6 +22,8 @@ export const DualKnob = memo(function DualKnob({
   const knobRef = useRef(null)
   const innerNotchRef = useRef(null)
   const arcFillRef = useRef(null)
+  const mixLineRef = useRef(null)
+  const mixDotRef = useRef(null)
   const ghostRef = useRef(null)
   const ghostThumbRef = useRef(null)
 
@@ -63,10 +65,29 @@ export const DualKnob = memo(function DualKnob({
     if (arcFillRef.current) {
       arcFillRef.current.style.strokeDasharray = `${newFillLen} ${circumference}`
     }
+    // Update mix dial line + dot position
+    const tipAngle = MIN_ANGLE + newMix * ANGLE_RANGE
+    const tipRad = ((tipAngle - 90) * Math.PI) / 180
+    const cx = size / 2
+    const zoneSepR = cx * INNER_RATIO
+    if (mixLineRef.current) {
+      const x1 = (cx + (zoneSepR + 2) * Math.cos(tipRad)).toFixed(2)
+      const y1 = (cx + (zoneSepR + 2) * Math.sin(tipRad)).toFixed(2)
+      const x2 = (cx + (cx - 2) * Math.cos(tipRad)).toFixed(2)
+      const y2 = (cx + (cx - 2) * Math.sin(tipRad)).toFixed(2)
+      mixLineRef.current.setAttribute('x1', x1)
+      mixLineRef.current.setAttribute('y1', y1)
+      mixLineRef.current.setAttribute('x2', x2)
+      mixLineRef.current.setAttribute('y2', y2)
+    }
+    if (mixDotRef.current) {
+      mixDotRef.current.setAttribute('cx', (cx + ringRadius * Math.cos(tipRad)).toFixed(2))
+      mixDotRef.current.setAttribute('cy', (cx + ringRadius * Math.sin(tipRad)).toFixed(2))
+    }
     if (ghostThumbRef.current && draggingZone.current === 'outer') {
       ghostThumbRef.current.style.top = `${(1 - newMix) * 100}%`
     }
-  }, [circumference])
+  }, [circumference, size, ringRadius])
 
   const applyDetuneVisuals = useCallback((newDetune) => {
     const ratio = (newDetune - minDetune) / detuneRange
@@ -141,11 +162,17 @@ export const DualKnob = memo(function DualKnob({
 
   const innerSize = size * INNER_RATIO * 2
 
-  // Mix pointer tip — small dot at the end of the arc fill
+  // Mix dial line + pointer dot
   const mixTipAngle = MIN_ANGLE + mixValue * ANGLE_RANGE
   const mixTipRad = ((mixTipAngle - 90) * Math.PI) / 180
-  const mixTipX = (size / 2) + ringRadius * Math.cos(mixTipRad)
-  const mixTipY = (size / 2) + ringRadius * Math.sin(mixTipRad)
+  const mixCx = size / 2
+  const mixZoneSepR = mixCx * INNER_RATIO
+  const mixLineX1 = (mixCx + (mixZoneSepR + 2) * Math.cos(mixTipRad)).toFixed(2)
+  const mixLineY1 = (mixCx + (mixZoneSepR + 2) * Math.sin(mixTipRad)).toFixed(2)
+  const mixLineX2 = (mixCx + (mixCx - 2) * Math.cos(mixTipRad)).toFixed(2)
+  const mixLineY2 = (mixCx + (mixCx - 2) * Math.sin(mixTipRad)).toFixed(2)
+  const mixTipX = mixCx + ringRadius * Math.cos(mixTipRad)
+  const mixTipY = mixCx + ringRadius * Math.sin(mixTipRad)
 
   return (
     <div
@@ -200,8 +227,19 @@ export const DualKnob = memo(function DualKnob({
             strokeDasharray={`${fillArcLength} ${circumference}`}
             strokeDashoffset={-startOffset}
           />
-          {/* Mix dial pointer — dot at tip of arc fill */}
+          {/* Mix dial line — radial needle across outer zone */}
+          <line
+            ref={mixLineRef}
+            className="dual-knob__mix-line"
+            x1={mixLineX1} y1={mixLineY1}
+            x2={mixLineX2} y2={mixLineY2}
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          {/* Mix dial dot — cap at tip of arc */}
           <circle
+            ref={mixDotRef}
             className="dual-knob__mix-pointer"
             cx={mixTipX}
             cy={mixTipY}

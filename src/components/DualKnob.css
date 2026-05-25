@@ -114,7 +114,13 @@
   stroke-dasharray: none;
 }
 
-/* Mix dial pointer — lit dot at arc tip */
+/* Mix dial line — radial needle across outer zone */
+.dual-knob__mix-line {
+  filter: drop-shadow(0 0 3px var(--knob-color, var(--cyan)));
+  pointer-events: none;
+}
+
+/* Mix dial dot — lit cap at arc tip */
 .dual-knob__mix-pointer {
   filter: drop-shadow(0 0 3px var(--knob-color, var(--cyan)));
   pointer-events: none;
@@ -217,16 +223,16 @@
 
 .dual-knob__notch {
   position: absolute;
-  top: 3px;
+  top: 2px;
   left: 50%;
-  width: 2px;
-  height: 28%;
-  margin-left: -1px;
+  width: 2.5px;
+  height: 38%;
+  margin-left: -1.25px;
   border-radius: 2px;
-  background: var(--knob-color, var(--cyan));
+  background: var(--detune-color, var(--knob-color, var(--cyan)));
   box-shadow:
-    0 0 4px var(--knob-color, var(--cyan)),
-    0 0 8px color-mix(in srgb, var(--knob-color, var(--cyan)) 40%, transparent);
+    0 0 5px var(--detune-color, var(--knob-color, var(--cyan))),
+    0 0 10px color-mix(in srgb, var(--detune-color, var(--knob-color, var(--cyan))) 50%, transparent);
 }
 
 /* Ghost slider — fades in during drag to hint interaction */

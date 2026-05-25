@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-05-25 — DualKnob: 2 visible dial lines, outer mix needle + moving dot
+
+- **2 visible dials** (item 239): added `dual-knob__mix-line` — radial SVG needle across outer zone from zone-sep to outer boundary; both needle and dot now update via direct DOM refs during drag (dot was previously static on initial render only); inner notch widened to 2.5px / 38% height using `detuneColor` for stronger contrast
+
 ## 2026-05-25 — v2 polish: OSC cycling button, screenshot gradient QR, detune ring contrast, marble roll, VCF default-on, BPM+Speed DualKnob
 
 - **OSC waveform cycling button** (item 238): replaced per-osc waveform button grid with a single `OSC ∿/⊓/⊿/△` button that cycles through sine→square→sawtooth→triangle on click; label reflects current waveform symbol; osc sections now show only the header button + DualKnob for a compact layout
