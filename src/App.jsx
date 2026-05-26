@@ -179,6 +179,8 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const shakeTimerRef = useRef(null)
   const undulateTimerRef = useRef(null)
   const easterEggTimerRef = useRef(null)
+  const shakeCountRef = useRef(0)
+  const shakeWindowTimerRef = useRef(null)
   const arpStopRef = useRef(null)
   const handleShakeRef = useRef(null)
   const lastSpaceRef = useRef(0)
@@ -514,6 +516,15 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
       easterEggTimerRef.current = setTimeout(() => setEasterEgg(false), 1800)
     }
 
+    // Easter egg — 7 shakes within 5s unlocks octave 7
+    shakeCountRef.current += 1
+    clearTimeout(shakeWindowTimerRef.current)
+    shakeWindowTimerRef.current = setTimeout(() => { shakeCountRef.current = 0 }, 5000)
+    if (shakeCountRef.current === 7) {
+      shakeCountRef.current = 0
+      setOctaves(7)
+    }
+
     // 2. Randomize parameters — chance scales with intensity (20%-50%)
     const nudgeChance = 0.15 + intensity * 0.35
     const shouldNudge = () => Math.random() < nudgeChance
@@ -660,13 +671,13 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
         normalZoneRef.current = { xMin: 0, xMax: 1 }
         return
       }
-      const toggles = document.querySelector('.controls__toggles')
-      const oscs = document.querySelector('.controls__oscillators')
-      if (toggles && oscs) {
+      const bar = document.querySelector('.controls__bar')
+      if (bar) {
         const vw = window.innerWidth
+        const rect = bar.getBoundingClientRect()
         normalZoneRef.current = {
-          xMin: Math.max(0, toggles.getBoundingClientRect().right / vw),
-          xMax: Math.min(1, oscs.getBoundingClientRect().left / vw),
+          xMin: 0,
+          xMax: 1,
         }
       }
     }

@@ -1,5 +1,16 @@
 # Devlog
 
+## 2026-05-26 — Layout overhaul: horizontal bottom bar, DualKnob path-arc fix, OSC inline, octave rotary
+
+- **DualKnob path-arc fix**: switched arc fill and track from `<circle>+strokeDasharray+CSS-rotate` to explicit `<path>` with `buildArcPath()` helper; unambiguously CW from 7:30 (−135°) to current mix value; removed CSS `transform: rotate(-90deg)` from ring-fill/ring-track
+- **DualKnob label props** (item 249): added `outerLabel`/`innerLabel` props (default MIX/DET); tempo DualKnob now shows BPM/SPD
+- **Mode-toggle hover boxing** (item 241): added `.mode-toggle:hover, :active, :focus` overrides in AppShell.css to suppress global `button:hover` box-shadow/transform
+- **Hold/Stop widths** (items 242+243): hold-left `flex: 0 0 auto; max-width: 64px; padding: 0.45em 0.4em`; stop `max-width: 64px; padding: 0.4em 0.5em`
+- **Octave RotaryKnob** (item 244): replaced button grid with `RotaryKnob(min=1 max=6 step=1)`; 7-shake easter egg in `handleShake` unlocks octave 7; OCTAVE_OPTIONS extended to [1,2,3,4,5,6]
+- **OSC inline layout** (item 245): waveform button now 52×52px flex column (symbol + label); placed inline with DualKnob in `controls__osc-inline` flex row
+- **Full horizontal bottom bar** (items 246+247+248): replaced `controls__layout > controls__toggles + controls__main` with `controls__bar > controls__group(--left/--oscs/--fx)`; all controls now in bottom row; desktop uses `grid-column: 1/-1; grid-row: 3`; mobile uses two corner panels (left + right)
+- **Mobile layout** (item 240): controls__bar spans bottom with flex-row; left corner = activation; right corner = fx group with Space/Tone
+
 ## 2026-05-25 — DualKnob: 2 visible dial lines, outer mix needle + moving dot
 
 - **2 visible dials** (item 239): added `dual-knob__mix-line` — radial SVG needle across outer zone from zone-sep to outer boundary; both needle and dot now update via direct DOM refs during drag (dot was previously static on initial render only); inner notch widened to 2.5px / 38% height using `detuneColor` for stronger contrast

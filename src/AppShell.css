@@ -1,5 +1,6 @@
 .mode-toggle {
   flex-shrink: 0;
+  box-shadow: none;
   background: none;
   border: none;
   outline: none;
@@ -24,6 +25,16 @@
 .mode-toggle--inline {
   position: static;
   z-index: auto;
+}
+
+.mode-toggle:hover,
+.mode-toggle:active,
+.mode-toggle:focus {
+  box-shadow: none;
+  border: none;
+  background: none;
+  transform: none;
+  outline: none;
 }
 
 .mode-toggle:hover .mode-toggle__option {

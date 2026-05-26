@@ -1,26 +1,18 @@
-.controls__layout {
+/* Horizontal bottom bar — all groups side by side */
+.controls__bar {
   display: flex;
-  gap: 1rem;
-  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: flex-start;
 }
 
-.controls__toggles {
+/* Individual control group — vertical stack of controls */
+.controls__group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  flex-shrink: 0;
-  padding-right: 0.75rem;
-  border-right: 3px solid rgba(20, 18, 38, 0.5);
-  box-shadow: 1px 0 0 rgba(100, 95, 140, 0.06);
-}
-
-.controls__main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   gap: 0.5rem;
-  min-width: 0;
+  flex-shrink: 0;
 }
 
 /* --- DJ Fader (vertical volume slider) --- */
@@ -491,41 +483,48 @@
 }
 
 /* Osc cycling waveform button header */
-.controls__osc-header {
+/* Inline row: waveform button + DualKnob + shake bolt */
+.controls__osc-inline {
   display: flex;
   align-items: center;
   gap: 0.4rem;
 }
 
 .controls__osc-waveform-btn {
-  flex: 1;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
   background: none;
   border: 1px solid var(--osc-color, var(--cyan));
   color: var(--osc-color, var(--cyan));
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 4px 8px;
   border-radius: 4px;
   cursor: pointer;
-  text-align: left;
   text-shadow: 0 0 6px var(--osc-color, var(--cyan));
   transition: box-shadow 0.15s, background 0.15s;
-  white-space: nowrap;
+  padding: 0;
+}
+
+.controls__osc-waveform-symbol {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.controls__osc-waveform-label {
+  font-size: 0.45rem;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  text-transform: uppercase;
 }
 
 .controls__osc-waveform-btn:hover {
   background: color-mix(in srgb, var(--osc-color, var(--cyan)) 12%, transparent);
   box-shadow: 0 0 10px -2px var(--osc-color, var(--cyan));
-}
-
-/* Osc section knob pair — mix + detune side by side */
-.controls__osc-knobs {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  padding-top: 0.15rem;
 }
 
 /* ── BipolarKnob (Space / Tone macros) ── */
@@ -614,13 +613,13 @@
   line-height: 1;
 }
 
-.controls__toggles .controls__mini-shake {
+.controls__group--left .controls__mini-shake {
   /* bottom: 6px; */
   top: unset;
 }
 
 @media (min-width: 768px) {
-  .controls__toggles .controls__mini-shake {
+  .controls__group--left .controls__mini-shake {
     bottom: 6px;
     /* top: unset; */
   }
@@ -672,50 +671,47 @@
     animation: none;
   }
   .controls::before { display: none; }
-  .controls__layout { display: contents; }
-  .controls__main { display: contents; }
 
-  /* Left panel — transparent overlay, pointer events pass through empty space */
-  .controls__toggles {
-    grid-column: 1;
-    grid-row: 2;
-    flex-direction: column;
-    align-items: stretch;
-    align-self: stretch;
-    justify-content: flex-start;
-    gap: 0.5rem;
-    padding: 0.5rem 0.5rem 0.75rem 0.4rem;
-    border-right: none;
-    box-shadow: none;
+  /* Bar spans entire bottom row of the puddle grid */
+  .controls__bar {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.4rem 0.75rem;
+    padding: 0.35rem 1rem 0.5rem;
     background: transparent;
-    border: none;
-    border-radius: 0;
-    border-bottom: none;
-    margin-right: -23px;
     position: relative;
     z-index: 1;
-    overflow-y: visible;
     pointer-events: none;
   }
 
-  .controls__toggles .controls__fader {
+  .controls__group {
+    pointer-events: none;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+
+  .controls__group--left {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* Fader horizontal in bar layout */
+  .controls__group--left .controls__fader {
     flex-direction: row;
     gap: 0.4rem;
     align-items: center;
-    margin-top: 0.75rem;
   }
 
-  /* Center octaves/scale/speed sections in left panel */
-  .controls__toggles .controls__section {
-    align-items: center;
-  }
-
-  .controls__toggles .controls__fader-track {
+  .controls__group--left .controls__fader-track {
     flex: 1;
     height: 24px;
   }
 
-  .controls__toggles .controls__fader-groove {
+  .controls__group--left .controls__fader-groove {
     top: 50%;
     bottom: auto;
     left: 8px;
@@ -725,7 +721,7 @@
     transform: translateY(-50%);
   }
 
-  .controls__toggles .controls__fader-ghost {
+  .controls__group--left .controls__fader-ghost {
     top: 3px;
     bottom: 3px;
     left: var(--ghost-left, 0);
@@ -734,7 +730,7 @@
     width: 6px;
   }
 
-  .controls__toggles .controls__fader-thumb {
+  .controls__group--left .controls__fader-thumb {
     top: 3px;
     bottom: 3px;
     left: var(--thumb-left, 0);
@@ -743,62 +739,37 @@
     width: 10px;
   }
 
-  /* Flush stacked OSC cards — flat corners, merged borders */
-  .controls__oscillators .controls__osc {
-    padding: 0.5rem 0.75rem;
-    border-radius: 0;
-  }
-  .controls__oscillators .controls__osc-goopable:not(:first-child) .controls__osc {
-    border-top: none;
-  }
-
-  /* Osc 3 — left border fades out smoothly at the bottom */
-  .controls__oscillators .controls__osc-goopable:last-child .controls__osc::after {
-    content: '';
-    position: absolute;
-    left: -2px;
-    top: 40%;
-    bottom: -1px;
-    width: 3px;
-    background: linear-gradient(to bottom, transparent, rgba(14, 11, 28, 0.97));
-    pointer-events: none;
-    z-index: 4;
-  }
-
-  /* Right panel — transparent overlay */
-  .controls__oscillators {
-    grid-column: 3;
-    grid-row: 2;
+  .controls__group--oscs {
     flex-direction: column;
-    align-self: stretch;
-    gap: 0;
-    padding: 0.5rem 0.4rem 0.5rem 0.5rem;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    border-bottom: none;
-    margin-left: -23px;
-    position: relative;
-    z-index: 1;
-    overflow-y: visible;
+  }
+
+  /* OSC cards: horizontal row */
+  .controls__oscillators {
+    flex-direction: row;
+    gap: 0.5rem;
     pointer-events: none;
   }
 
-  /* Bottom panel — transparent overlay */
+  .controls__oscillators .controls__osc {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .controls__group--fx {
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  /* FX section — transparent, flex row of controls */
   .controls__shared {
-    grid-column: 1 / -1;
-    grid-row: 3;
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 0.4rem 0.6rem;
     align-items: center;
-    justify-content: center;
-    padding: 0.25rem 1.25rem 0.5rem;
+    padding: 0.25rem 0.5rem;
     background: transparent;
     border-top: none;
-    position: relative;
-    z-index: 1;
     pointer-events: none;
   }
 
@@ -845,19 +816,21 @@
     pointer-events: none;
   }
 
-  .controls__layout {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: block;
-    flex-direction: unset;
-  }
-
-  /* ── Bottom-left corner: Activation (rockers + hold + stop) ── */
-  .controls__toggles {
+  .controls__bar {
     position: absolute;
     bottom: 0;
     left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+
+  /* ── Bottom-left corner: Activation ── */
+  .controls__group--left {
     pointer-events: auto;
     display: flex;
     flex-direction: column;
@@ -874,16 +847,17 @@
     max-width: 50vw;
   }
 
-  /* Hide secondary controls — octaves, scale, speed, shake bolt in corner */
-  .controls__toggles .controls__mini-shake,
-  .controls__toggles .controls__section,
-  .controls__toggles .controls__fader { display: none; }
+  /* Hide secondary controls in left corner */
+  .controls__group--left .controls__mini-shake,
+  .controls__group--left .controls__section,
+  .controls__group--left .controls__fader { display: none; }
 
-  /* ── Bottom-right corner: OSC knobs + Space/Tone ── */
-  .controls__main {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+  /* ── Bottom-right corner: OSCs + Space/Tone ── */
+  .controls__group--oscs {
+    display: none;
+  }
+
+  .controls__group--fx {
     pointer-events: auto;
     padding: 10px 12px 14px 14px;
     background: rgba(4, 4, 14, 0.72);
@@ -911,7 +885,7 @@
     flex: none;
   }
 
-  /* Each osc card: just the knob + waveform selector, no VCF section, no label text */
+  /* Each osc card: just the knob + waveform selector */
   .controls__osc {
     padding: 0.3rem 0.4rem;
     display: flex;
@@ -985,7 +959,11 @@
 .controls .activation__hold-right,
 .controls .activation__stop,
 .controls .activation__marble-slot,
-.controls .marble-size-btn {
+.controls .marble-size-btn,
+.controls__group,
+.controls__group--left,
+.controls__group--oscs,
+.controls__group--fx {
   pointer-events: auto;
 }
 

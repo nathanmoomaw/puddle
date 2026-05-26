@@ -5,6 +5,21 @@ const MIN_ANGLE = -135
 const MAX_ANGLE = 135
 const ANGLE_RANGE = 270
 
+// "screen clock" convention: 0=top, CW positive
+function clockToSVG(angleDeg, cx, cy, r) {
+  const rad = angleDeg * Math.PI / 180
+  return [cx + r * Math.sin(rad), cy - r * Math.cos(rad)]
+}
+
+function buildArcPath(cx, cy, r, startDeg, endDeg) {
+  const sweep = ((endDeg - startDeg) % 360 + 360) % 360
+  if (sweep < 0.01) return 'M 0 0'
+  const [x0, y0] = clockToSVG(startDeg, cx, cy, r)
+  const [x1, y1] = clockToSVG(endDeg, cx, cy, r)
+  const largeArc = sweep > 180 ? 1 : 0
+  return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${largeArc} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`
+}
+
 export const DualKnob = memo(function DualKnob({
   mixValue,
   detuneValue,
@@ -18,6 +33,8 @@ export const DualKnob = memo(function DualKnob({
   roundDetune = true,
   mixLabel,
   detuneLabel,
+  outerLabel = 'MIX',
+  innerLabel = 'DET',
 }) {
   const knobRef = useRef(null)
   const innerNotchRef = useRef(null)
@@ -46,48 +63,43 @@ export const DualKnob = memo(function DualKnob({
   const detuneRatio = Math.max(0, Math.min(1, (detuneValue - minDetune) / detuneRange))
   const detuneAngle = MIN_ANGLE + detuneRatio * ANGLE_RANGE
 
-  // Mix arc: start at 225° in conic terms, fill mix * 270°
-  const mixAngle = mixValue * ANGLE_RANGE // 0–270
-
-  // SVG arc parameters for the outer ring fill
+  // SVG arc parameters
   const strokeWidth = size * 0.115
   const ringRadius = (size / 2) - strokeWidth / 2 - 1
-  const circumference = 2 * Math.PI * ringRadius
-  const trackArcLength = (ANGLE_RANGE / 360) * circumference
-  const fillArcLength = (mixAngle / 360) * circumference
-  // Offset to start at 7 o'clock (225° from top = 225-90 = 135° from SVG 0°/3-o'clock)
-  const startOffset = (135 / 360) * circumference
+  const cx = size / 2
+
+  // Path-based arc — unambiguous CW from 7:30 to current mix
+  const trackPath = buildArcPath(cx, cx, ringRadius, MIN_ANGLE, MAX_ANGLE)
+  const fillEndDeg = MIN_ANGLE + mixValue * ANGLE_RANGE
+  const fillPath = buildArcPath(cx, cx, ringRadius, MIN_ANGLE, fillEndDeg)
 
   // Direct DOM update — zero-lag response
   const applyMixVisuals = useCallback((newMix) => {
-    const newAngle = newMix * ANGLE_RANGE
-    const newFillLen = (newAngle / 360) * circumference
+    const cx = size / 2
     if (arcFillRef.current) {
-      arcFillRef.current.style.strokeDasharray = `${newFillLen} ${circumference}`
+      const endDeg = MIN_ANGLE + newMix * ANGLE_RANGE
+      arcFillRef.current.setAttribute('d', buildArcPath(cx, cx, ringRadius, MIN_ANGLE, endDeg))
     }
     // Update mix dial line + dot position
     const tipAngle = MIN_ANGLE + newMix * ANGLE_RANGE
-    const tipRad = ((tipAngle - 90) * Math.PI) / 180
-    const cx = size / 2
+    const [dotX, dotY] = clockToSVG(tipAngle, cx, cx, ringRadius)
     const zoneSepR = cx * INNER_RATIO
+    const [lx1, ly1] = clockToSVG(tipAngle, cx, cx, zoneSepR + 2)
+    const [lx2, ly2] = clockToSVG(tipAngle, cx, cx, cx - 2)
     if (mixLineRef.current) {
-      const x1 = (cx + (zoneSepR + 2) * Math.cos(tipRad)).toFixed(2)
-      const y1 = (cx + (zoneSepR + 2) * Math.sin(tipRad)).toFixed(2)
-      const x2 = (cx + (cx - 2) * Math.cos(tipRad)).toFixed(2)
-      const y2 = (cx + (cx - 2) * Math.sin(tipRad)).toFixed(2)
-      mixLineRef.current.setAttribute('x1', x1)
-      mixLineRef.current.setAttribute('y1', y1)
-      mixLineRef.current.setAttribute('x2', x2)
-      mixLineRef.current.setAttribute('y2', y2)
+      mixLineRef.current.setAttribute('x1', lx1.toFixed(2))
+      mixLineRef.current.setAttribute('y1', ly1.toFixed(2))
+      mixLineRef.current.setAttribute('x2', lx2.toFixed(2))
+      mixLineRef.current.setAttribute('y2', ly2.toFixed(2))
     }
     if (mixDotRef.current) {
-      mixDotRef.current.setAttribute('cx', (cx + ringRadius * Math.cos(tipRad)).toFixed(2))
-      mixDotRef.current.setAttribute('cy', (cx + ringRadius * Math.sin(tipRad)).toFixed(2))
+      mixDotRef.current.setAttribute('cx', dotX.toFixed(2))
+      mixDotRef.current.setAttribute('cy', dotY.toFixed(2))
     }
     if (ghostThumbRef.current && draggingZone.current === 'outer') {
       ghostThumbRef.current.style.top = `${(1 - newMix) * 100}%`
     }
-  }, [circumference, size, ringRadius])
+  }, [size, ringRadius])
 
   const applyDetuneVisuals = useCallback((newDetune) => {
     const ratio = (newDetune - minDetune) / detuneRange
@@ -165,15 +177,10 @@ export const DualKnob = memo(function DualKnob({
 
   // Mix dial line + pointer dot
   const mixTipAngle = MIN_ANGLE + mixValue * ANGLE_RANGE
-  const mixTipRad = ((mixTipAngle - 90) * Math.PI) / 180
-  const mixCx = size / 2
-  const mixZoneSepR = mixCx * INNER_RATIO
-  const mixLineX1 = (mixCx + (mixZoneSepR + 2) * Math.cos(mixTipRad)).toFixed(2)
-  const mixLineY1 = (mixCx + (mixZoneSepR + 2) * Math.sin(mixTipRad)).toFixed(2)
-  const mixLineX2 = (mixCx + (mixCx - 2) * Math.cos(mixTipRad)).toFixed(2)
-  const mixLineY2 = (mixCx + (mixCx - 2) * Math.sin(mixTipRad)).toFixed(2)
-  const mixTipX = mixCx + ringRadius * Math.cos(mixTipRad)
-  const mixTipY = mixCx + ringRadius * Math.sin(mixTipRad)
+  const mixZoneSepR = cx * INNER_RATIO
+  const [mixLineX1, mixLineY1] = clockToSVG(mixTipAngle, cx, cx, mixZoneSepR + 2)
+  const [mixLineX2, mixLineY2] = clockToSVG(mixTipAngle, cx, cx, cx - 2)
+  const [mixTipX, mixTipY] = clockToSVG(mixTipAngle, cx, cx, ringRadius)
 
   return (
     <div
@@ -206,27 +213,19 @@ export const DualKnob = memo(function DualKnob({
           height={size}
         >
           {/* Track (full 270° background) */}
-          <circle
+          <path
             className="dual-knob__ring-track"
-            cx={size / 2}
-            cy={size / 2}
-            r={ringRadius}
+            d={trackPath}
             fill="none"
             strokeWidth={strokeWidth}
-            strokeDasharray={`${trackArcLength} ${circumference}`}
-            strokeDashoffset={-startOffset}
           />
           {/* Fill (mix value arc) */}
-          <circle
+          <path
             ref={arcFillRef}
             className="dual-knob__ring-fill"
-            cx={size / 2}
-            cy={size / 2}
-            r={ringRadius}
+            d={fillPath}
             fill="none"
             strokeWidth={strokeWidth}
-            strokeDasharray={`${fillArcLength} ${circumference}`}
-            strokeDashoffset={-startOffset}
           />
           {/* Outer boundary ring — frames the full knob */}
           <circle
@@ -257,7 +256,7 @@ export const DualKnob = memo(function DualKnob({
             <div className="dual-knob__notch" style={{ background: detuneColor, boxShadow: `0 0 4px ${detuneColor}, 0 0 8px ${detuneColor}66` }} />
           </div>
           {/* Zone label inside inner circle */}
-          <span className="dual-knob__zone-label dual-knob__zone-label--det" style={{ color: detuneColor, opacity: 0.7 }}>DET</span>
+          <span className="dual-knob__zone-label dual-knob__zone-label--det" style={{ color: detuneColor, opacity: 0.7 }}>{innerLabel}</span>
         </div>
 
         {/* Mix dial needle + dot — separate SVG layer above inner div so it's always visible */}
@@ -287,7 +286,7 @@ export const DualKnob = memo(function DualKnob({
         </svg>
 
         {/* Mix zone label — top of outer ring */}
-        <span className="dual-knob__zone-label dual-knob__zone-label--mix">MIX</span>
+        <span className="dual-knob__zone-label dual-knob__zone-label--mix">{outerLabel}</span>
 
         {/* Ghost slider overlay — shows during drag */}
         <div className="dual-knob__ghost" ref={ghostRef}>

@@ -68,16 +68,12 @@
 .dual-knob__ring-track {
   stroke: rgba(255, 255, 255, 0.07);
   stroke-linecap: round;
-  transform-origin: center;
-  transform: rotate(-90deg);
 }
 
 /* Arc fill — mix level in osc color */
 .dual-knob__ring-fill {
   stroke: var(--knob-color, var(--cyan));
   stroke-linecap: round;
-  transform-origin: center;
-  transform: rotate(-90deg);
   filter: drop-shadow(0 0 3px color-mix(in srgb, var(--knob-color, var(--cyan)) 60%, transparent));
   transition: none;
 }
