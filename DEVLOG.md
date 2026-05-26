@@ -1,5 +1,15 @@
 # Devlog
 
+## 2026-05-26 — Layout polish: OSCs to right column, no-shift labels, hold light, cleanup
+
+- **No-shift labels** (item 253): DualKnob label row fixed to knob width via `width: var(--knob-size)`; mix label `min-width: 4ch`, det label `min-width: 5.5ch`; bipolar side label `min-width: 8ch; text-align: center` — all value changes are now zero-shift
+- **Stop button** (item 254): replaced `Stop <kbd>Space</kbd>` with `Stop <kbd>⎵</kbd>` — fits without overflow
+- **OSCs right column** (item 255+259): moved `controls__group--oscs` to rightmost slot in bar JSX; desktop `controls__oscillators` now `flex-direction: column` — OSC 1 at top, OSC 3 flush at bottom, BPM knob underneath; no longer wraps to its own bar line
+- **Remove BPM label** (item 256): removed `activation__arp-tempo` from ActivationMode — BPM value already shown in DualKnob `mixLabel`
+- **Hold indicator** (item 257): hold light enlarged to 10×10px; active state gets brighter red glow + neon tint on button background — clearly visible against puddle
+- **Bottom alignment** (item 258): desktop `controls__bar` now `align-items: flex-end; flex-wrap: nowrap` — all groups flush at baseline
+- **Remove mini shake bolts** (item 260): removed per-OSC and FX MiniShakeBolt; main left-group bolt retained
+
 ## 2026-05-26 — Layout overhaul: horizontal bottom bar, DualKnob path-arc fix, OSC inline, octave rotary
 
 - **DualKnob path-arc fix**: switched arc fill and track from `<circle>+strokeDasharray+CSS-rotate` to explicit `<path>` with `buildArcPath()` helper; unambiguously CW from 7:30 (−135°) to current mix value; removed CSS `transform: rotate(-90deg)` from ring-fill/ring-track

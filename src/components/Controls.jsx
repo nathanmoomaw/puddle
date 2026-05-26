@@ -327,7 +327,6 @@ const OscSection = memo(function OscSection({ index, params, getEngine, onUpdate
           mixLabel={`${Math.round(params.mix * 100)}%`}
           detuneLabel={`${params.detune}¢`}
         />
-        <MiniShakeBolt onClick={handleOscShake} title={`Randomize OSC ${index + 1}`} />
       </div>
     </div>
   )
@@ -531,48 +530,6 @@ export const Controls = forwardRef(function Controls({
           </div>
         </div>
 
-        {/* Center group: 3 OSCs side by side + tempo below */}
-        <div className="controls__group controls__group--oscs">
-          <div className="controls__oscillators">
-            {oscParams.map((params, i) => (
-              <GoopableSection
-                key={i}
-                id={`osc-${i}`}
-                registerControl={registerControl}
-                goopLevel={(goopLevels && goopLevels[`osc-${i}`]) || 0}
-                puddleActivity={puddleActivity || 0}
-                className="controls__osc-goopable"
-              >
-                <OscSection
-                  index={i}
-                  params={params}
-                  getEngine={getEngine}
-                  onUpdate={handleOscUpdate}
-                />
-              </GoopableSection>
-            ))}
-          </div>
-
-          <div className="controls__section controls__section--speed">
-            <DualKnob
-              mixValue={(arpBpm - 40) / (900 - 40)}
-              detuneValue={glideSpeed}
-              onMixChange={(v) => setArpBpm(Math.round(40 + v * (900 - 40)))}
-              onDetuneChange={handleGlideSpeed}
-              color="#ffcc00"
-              detuneColor="#39ff14"
-              size={52}
-              minDetune={0.001}
-              maxDetune={0.3}
-              roundDetune={false}
-              mixLabel={`${arpBpm}`}
-              detuneLabel={glideSpeed < 0.01 ? 'fast' : glideSpeed > 0.15 ? 'slow' : 'med'}
-              outerLabel="BPM"
-              innerLabel="SPD"
-            />
-          </div>
-        </div>
-
         {/* Right group: VCF + Filter + Space/Tone + console corner */}
         <div className="controls__group controls__group--fx">
         <GoopableSection
@@ -589,31 +546,6 @@ export const Controls = forwardRef(function Controls({
               onCutoffChange={onVcfCutoffChange}
               onResonanceChange={onVcfResonanceChange}
             />
-            <MiniShakeBolt onClick={() => {
-              const engine = getEngine()
-              const newOctaves = OCTAVE_OPTIONS[Math.floor(Math.random() * OCTAVE_OPTIONS.length)]
-              setOctaves(newOctaves)
-              const randomScale = SCALE_NAMES[Math.floor(Math.random() * SCALE_NAMES.length)]
-              setScale([randomScale])
-              if (randomScale !== 'chromatic') setStepped(true)
-              else setStepped(false)
-              const newCutoff = 20 + Math.random() * 19980
-              const newRes = Math.random() * 25
-              setFilterParams({ cutoff: newCutoff, resonance: newRes })
-              engine.setFilter({ cutoff: newCutoff, resonance: newRes })
-              const newSpeed = 0.001 + Math.random() * 0.299
-              setGlideSpeed(newSpeed)
-              engine.setGlideSpeed(newSpeed)
-              const newDelay = { time: 0.05 + Math.random() * 0.95, feedback: Math.random() * 0.9, mix: Math.random() }
-              setDelayParams(newDelay)
-              engine.setDelay(newDelay)
-              const newReverb = Math.random()
-              setReverbMix(newReverb)
-              engine.setReverb({ mix: newReverb })
-              const newCrunch = Math.random()
-              setCrunch(newCrunch)
-              engine.setCrunch(newCrunch)
-            }} title="Randomize general controls" />
             <div className="controls__section controls__section--filter">
               <label className="controls__label">Filter</label>
               <div className="controls__rotary-row">
@@ -697,6 +629,48 @@ export const Controls = forwardRef(function Controls({
               </div>
             )}
           </GoopableSection>
+        </div>
+
+        {/* Right column: 3 OSCs stacked vertically + BPM/SPD knob at bottom */}
+        <div className="controls__group controls__group--oscs">
+          <div className="controls__oscillators">
+            {oscParams.map((params, i) => (
+              <GoopableSection
+                key={i}
+                id={`osc-${i}`}
+                registerControl={registerControl}
+                goopLevel={(goopLevels && goopLevels[`osc-${i}`]) || 0}
+                puddleActivity={puddleActivity || 0}
+                className="controls__osc-goopable"
+              >
+                <OscSection
+                  index={i}
+                  params={params}
+                  getEngine={getEngine}
+                  onUpdate={handleOscUpdate}
+                />
+              </GoopableSection>
+            ))}
+          </div>
+
+          <div className="controls__section controls__section--speed">
+            <DualKnob
+              mixValue={(arpBpm - 40) / (900 - 40)}
+              detuneValue={glideSpeed}
+              onMixChange={(v) => setArpBpm(Math.round(40 + v * (900 - 40)))}
+              onDetuneChange={handleGlideSpeed}
+              color="#ffcc00"
+              detuneColor="#39ff14"
+              size={52}
+              minDetune={0.001}
+              maxDetune={0.3}
+              roundDetune={false}
+              mixLabel={`${arpBpm}`}
+              detuneLabel={glideSpeed < 0.01 ? 'fast' : glideSpeed > 0.15 ? 'slow' : 'med'}
+              outerLabel="BPM"
+              innerLabel="SPD"
+            />
+          </div>
         </div>
       </div>
     </div>

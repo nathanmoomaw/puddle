@@ -181,14 +181,8 @@ export function ActivationMode({
         className="activation__stop"
         onClick={handleStop}
       >
-        Stop <kbd>Space</kbd>
+        Stop <kbd>⎵</kbd>
       </button>
-      <div className={`activation__arp-tempo ${mode !== 'arp' ? 'activation__arp-tempo--inactive' : ''}`}>
-        <label className="activation__tempo-label">
-          BPM <span className="activation__tempo-value">{arpBpm}</span>
-        </label>
-      </div>
-
       {/* Dragging marble portal — renders at pointer position above everything */}
       {draggingMarble && createPortal(
         <MarbleVisual

@@ -728,6 +728,24 @@
   text-shadow: 0 0 6px rgba(0,0,0,0.9);
 }
 
+/* Hold indicator light — larger and more vivid for visibility against puddle */
+.activation__hold-left .switch-light {
+  width: 10px;
+  height: 10px;
+}
+
+.activation__hold-left .switch-light--on {
+  box-shadow: 0 0 12px #ff5533, 0 0 24px rgba(204, 51, 0, 0.8), 0 0 5px rgba(255, 255, 255, 0.5);
+  background: radial-gradient(circle at 35% 35%, #ff7755, #cc3300);
+}
+
+/* Hold button active state — neon red tint so it's obvious */
+.activation__hold-left.active {
+  background: linear-gradient(180deg, rgba(204, 51, 0, 0.22) 0%, rgba(255, 68, 34, 0.1) 100%) !important;
+  color: #ff7755 !important;
+  box-shadow: inset 0 2px 8px rgba(180, 40, 0, 0.5), 0 0 12px rgba(204, 51, 0, 0.3) !important;
+}
+
 /* Grain overlay — adds film-grain texture to active toggle lobes */
 .rocker__side {
   overflow: hidden;

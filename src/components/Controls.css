@@ -559,6 +559,8 @@
   letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.35);
   min-height: 0.9em;
+  min-width: 8ch;
+  text-align: center;
   text-transform: uppercase;
 }
 
@@ -678,8 +680,8 @@
     grid-row: 3;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
+    flex-wrap: nowrap;
+    align-items: flex-end;
     gap: 0.4rem 0.75rem;
     padding: 0.35rem 1rem 0.5rem;
     background: transparent;
@@ -741,17 +743,19 @@
 
   .controls__group--oscs {
     flex-direction: column;
+    align-self: flex-end;
   }
 
-  /* OSC cards: horizontal row */
+  /* OSC cards: vertical column — OSC 1 at top, OSC 3 flush at bottom */
   .controls__oscillators {
-    flex-direction: row;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.25rem;
     pointer-events: none;
   }
 
   .controls__oscillators .controls__osc {
-    padding: 0.4rem 0.5rem;
+    padding: 0.35rem 0.5rem;
+    flex: 0 0 auto;
   }
 
   .controls__group--fx {

@@ -7,9 +7,12 @@
 
 .dual-knob__labels {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  /* fixed width = knob body — prevents label text changes from shifting layout */
+  width: var(--knob-size, 52px);
+  overflow: hidden;
 }
 
 .dual-knob__label {
@@ -24,10 +27,16 @@
 .dual-knob__label--mix {
   color: var(--knob-color, var(--cyan));
   opacity: 0.7;
+  /* wide enough for "100%" at max */
+  min-width: 4ch;
+  text-align: left;
 }
 
 .dual-knob__label--det {
   color: var(--text-muted);
+  /* wide enough for "-1200¢" at max detune */
+  min-width: 5.5ch;
+  text-align: right;
 }
 
 /* Main interactive body — full knob size */
