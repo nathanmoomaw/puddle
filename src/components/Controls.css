@@ -744,7 +744,7 @@
   .controls__group--oscs {
     flex-direction: column;
     align-self: flex-end;
-    padding-bottom: 0;
+    padding-bottom: 5px;
     gap: 0.2rem;
   }
 
@@ -766,14 +766,14 @@
     flex-direction: column;
   }
 
-  /* FX section — transparent, flex row of controls */
+  /* FX section — transparent, flex row of controls; knobs flush at bottom */
   .controls__shared {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.4rem 0.6rem;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
+    align-items: flex-end;
+    padding: 0.25rem 0.5rem 0;
     background: transparent;
     border-top: none;
     pointer-events: none;
@@ -1067,6 +1067,16 @@
   filter: drop-shadow(0 0 6px rgba(255, 240, 31, 0.22));
 }
 
+/* VCF DualKnob — magenta glow */
+.controls__section--vcf .dual-knob {
+  filter: drop-shadow(0 0 6px rgba(224, 64, 251, 0.22));
+}
+
+/* Mobile: hide VCF dual knob (space/tone only in corner) */
+@media (max-width: 767px) {
+  .controls__section--vcf { display: none; }
+}
+
 /* Controls container: fully transparent — no industrial frame in v2 */
 .controls {
   background: none !important;
@@ -1105,8 +1115,9 @@
 
   .controls__osc-shake-bolt {
     display: block;
-    align-self: center;
-    font-size: 1.6rem;
+    /* Default: left of OSC 3 (flex-end = bottom of the column) */
+    align-self: flex-end;
+    font-size: 2.1rem;
     line-height: 1;
     background: none;
     border: none;
@@ -1117,6 +1128,13 @@
     transition: opacity 0.15s, filter 0.15s, transform 0.15s;
     pointer-events: auto;
     flex-shrink: 0;
+  }
+
+  /* At narrow desktop (~840px), move up to OSC 2 level (center) */
+  @media (min-width: 768px) and (max-width: 840px) {
+    .controls__osc-shake-bolt {
+      align-self: center;
+    }
   }
 
   .controls__osc-shake-bolt:hover {
@@ -1154,24 +1172,10 @@
   }
 }
 
-/* ── Item 270: Narrow desktop — Space/Tone/BPM stack above VCF/Filter ── */
+/* ── Narrow desktop (768–1100px): middle controls wrap, left/right stay fixed ── */
+/* JSX order is already: Filter, VCF, Space, Tone, Speed — flex-wrap handles stacking */
 @media (min-width: 768px) and (max-width: 1100px) {
   .controls__shared {
     flex-wrap: wrap;
-  }
-  .controls__shared .vcf-control {
-    order: 10;
-  }
-  .controls__section--filter {
-    order: 11;
-  }
-  .controls__section--space {
-    order: 1;
-  }
-  .controls__section--tone {
-    order: 2;
-  }
-  .controls__section--speed {
-    order: 3;
   }
 }

@@ -3,7 +3,6 @@ import { SCALES, SCALE_LABELS } from '../utils/scales'
 import { ActivationMode } from './ActivationMode'
 import { RotaryKnob } from './RotaryKnob'
 import { DualKnob } from './DualKnob'
-import { VCFControl } from './VCFControl'
 import './Controls.css'
 
 // ── BipolarKnob — circular SVG knob: 0=left(7-o-clock), 0.5=top(12), 1=right(5-o-clock) ──
@@ -446,6 +445,16 @@ export const Controls = forwardRef(function Controls({
     getEngine().setGlideSpeed(val)
   }, [getEngine, setGlideSpeed])
 
+  const handleVcfCutoff = useCallback((val) => {
+    onVcfCutoffChange(val)
+    getEngine().setVcfCutoff(val)
+  }, [getEngine, onVcfCutoffChange])
+
+  const handleVcfResonance = useCallback((val) => {
+    onVcfResonanceChange(val)
+    getEngine().setVcfResonance(val)
+  }, [getEngine, onVcfResonanceChange])
+
   return (
     <div ref={ref} className={`controls ${shaking ? 'controls--shaking' : ''}`}>
       <div className="controls__bar">
@@ -535,19 +544,46 @@ export const Controls = forwardRef(function Controls({
             puddleActivity={puddleActivity || 0}
             className="controls__shared"
           >
-            <VCFControl
-              vcfCutoff={vcfCutoff}
-              vcfResonance={vcfResonance}
-              getEngine={getEngine}
-              onCutoffChange={onVcfCutoffChange}
-              onResonanceChange={onVcfResonanceChange}
-            />
+            {/* Order: Filter DualKnob, VCF DualKnob, Space, Tone, Speed */}
+
+            {/* Filter: outer=cutoff, inner=resonance */}
             <div className="controls__section controls__section--filter">
-              <label className="controls__label">Filter</label>
-              <div className="controls__rotary-row">
-                <RotaryKnob value={filterParams.cutoff} min={20} max={20000} step={1} onChange={handleCutoff} color="#ff8c42" label="Cutoff" size={40} />
-                <RotaryKnob value={filterParams.resonance} min={0} max={25} step={0.1} onChange={handleResonance} color="#ffd700" label="Res" size={40} />
-              </div>
+              <DualKnob
+                mixValue={(filterParams.cutoff - 20) / (20000 - 20)}
+                detuneValue={filterParams.resonance}
+                onMixChange={(v) => handleCutoff(Math.round(20 + v * (20000 - 20)))}
+                onDetuneChange={handleResonance}
+                color="#ff8c42"
+                detuneColor="#ffd700"
+                size={52}
+                minDetune={0}
+                maxDetune={25}
+                roundDetune={false}
+                mixLabel={filterParams.cutoff >= 1000 ? `${(filterParams.cutoff / 1000).toFixed(1)}k` : `${Math.round(filterParams.cutoff)}`}
+                detuneLabel={filterParams.resonance.toFixed(1)}
+                outerLabel="FILT"
+                innerLabel="RES"
+              />
+            </div>
+
+            {/* VCF: outer=cutoff, inner=resonance */}
+            <div className="controls__section controls__section--vcf">
+              <DualKnob
+                mixValue={(vcfCutoff - 20) / (20000 - 20)}
+                detuneValue={vcfResonance}
+                onMixChange={(v) => handleVcfCutoff(Math.round(20 + v * (20000 - 20)))}
+                onDetuneChange={handleVcfResonance}
+                color="#e040fb"
+                detuneColor="#c030cb"
+                size={52}
+                minDetune={0}
+                maxDetune={25}
+                roundDetune={false}
+                mixLabel={vcfCutoff >= 1000 ? `${(vcfCutoff / 1000).toFixed(1)}k` : `${Math.round(vcfCutoff)}`}
+                detuneLabel={vcfResonance.toFixed(1)}
+                outerLabel="VCF"
+                innerLabel="RES"
+              />
             </div>
 
             {/* Space macro: 0=cathedral(reverb+delay), 0.5=dry, 1=orbit(rhythmic delay) */}

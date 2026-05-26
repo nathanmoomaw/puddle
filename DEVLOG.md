@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-05-26 — Layout round 4: Filter/VCF DualKnobs, bottom alignment, shake to OSC 3
+
+- **Bottom alignment** (items 271+272): `controls__shared` `align-items: flex-end` + `padding-bottom: 0`; `controls__group--oscs` `padding-bottom: 5px` — all knobs now sit flush at bar bottom with consistent 5px breathing room
+- **Filter DualKnob** (items 273+276): replaced VCFControl + two Filter RotaryKnobs with two DualKnobs — Filter (orange/gold, outer=cutoff 20–20k, inner=rez 0–25) and VCF (magenta, same ranges) — removed VCFControl import; added `handleVcfCutoff`/`handleVcfResonance` handlers
+- **Middle controls order** (item 276): JSX order is now Filter → VCF → Space → Tone → Speed; removed CSS order overrides from narrow-desktop breakpoint (no longer needed)
+- **Shake bolt to OSC 3** (item 274): `align-self: flex-end` (bottom = OSC 3 level), font-size 2.1rem (+33%); at 768–840px narrows back to `align-self: center` (OSC 2 level) before other controls stack
+- **Left/right group stability** (items 275+277): confirmed no intermediate breakpoints touch `controls__group--left` or `controls__group--oscs`; only `controls__shared` wraps at narrow widths
+
 ## 2026-05-26 — Layout round 3: shake in OSC row, vol/oct side by side, responsive stacking
 
 - **Shake bolt to OSC 2** (item 267): removed `app__shake-nook` grid button from App; added `onShake` prop to Controls; shake bolt rendered inside `controls__group--oscs` as flex-row sibling to oscillators column — vertically centered (aligns with OSC 2 on 3-item stack)
