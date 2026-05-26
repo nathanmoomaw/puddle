@@ -451,19 +451,6 @@ export const Controls = forwardRef(function Controls({
 
         {/* Left group: activation + volume + octave + scale */}
         <div className="controls__group controls__group--left">
-          <MiniShakeBolt onClick={() => {
-            const newOctaves = OCTAVE_OPTIONS[Math.floor(Math.random() * OCTAVE_OPTIONS.length)]
-            setOctaves(newOctaves)
-            const randomScale = SCALE_NAMES[Math.floor(Math.random() * SCALE_NAMES.length)]
-            setScale([randomScale])
-            if (randomScale !== 'chromatic') setStepped(true)
-            else setStepped(false)
-            const newSpeed = 0.001 + Math.random() * 0.299
-            setGlideSpeed(newSpeed)
-            getEngine().setGlideSpeed(newSpeed)
-            if (Math.random() < 0.3) setMode(m => m === 'play' ? 'arp' : 'play')
-            if (Math.random() < 0.3) setPoly(p => !p)
-          }} title="Randomize left controls" />
           <ActivationMode
             mode={mode}
             setMode={setMode}
@@ -480,7 +467,16 @@ export const Controls = forwardRef(function Controls({
             onMarblePickUp={onMarblePickUp}
             nextSlotId={nextSlotId}
           />
-          <DJFader value={volume} onChange={handleVolume} />
+          <RotaryKnob
+            value={volume}
+            min={0}
+            max={1}
+            step={0.01}
+            onChange={handleVolume}
+            color="var(--cyan)"
+            label="Vol"
+            size={40}
+          />
 
           <div className="controls__section">
             <RotaryKnob
@@ -490,7 +486,7 @@ export const Controls = forwardRef(function Controls({
               step={1}
               onChange={setOctaves}
               color="var(--cyan)"
-              label={octaves === 7 ? '7★' : 'Oct'}
+              label={octaves === 7 ? '★ 7' : `Oct ${octaves}`}
               size={40}
             />
           </div>
@@ -598,6 +594,27 @@ export const Controls = forwardRef(function Controls({
                 />
               </div>
             ) : null}
+
+            {/* BPM/SPD — directly right of Space/Tone macros */}
+            <div className="controls__section controls__section--speed">
+              <DualKnob
+                mixValue={(arpBpm - 40) / (900 - 40)}
+                detuneValue={glideSpeed}
+                onMixChange={(v) => setArpBpm(Math.round(40 + v * (900 - 40)))}
+                onDetuneChange={handleGlideSpeed}
+                color="#ffcc00"
+                detuneColor="#39ff14"
+                size={52}
+                minDetune={0.001}
+                maxDetune={0.3}
+                roundDetune={false}
+                mixLabel={`${arpBpm}`}
+                detuneLabel={glideSpeed < 0.01 ? 'fast' : glideSpeed > 0.15 ? 'slow' : 'med'}
+                outerLabel="BPM"
+                innerLabel="SPD"
+              />
+            </div>
+
             {/* MIDI + wallet + QR — absolute lower-right of console */}
             {(onQRCreate || onConnectMIDI || utilitySlot) && (
               <div className="controls__console-corner">
@@ -631,7 +648,7 @@ export const Controls = forwardRef(function Controls({
           </GoopableSection>
         </div>
 
-        {/* Right column: 3 OSCs stacked vertically + BPM/SPD knob at bottom */}
+        {/* Right column: 3 OSCs stacked vertically, OSC3 flush at bottom */}
         <div className="controls__group controls__group--oscs">
           <div className="controls__oscillators">
             {oscParams.map((params, i) => (
@@ -651,25 +668,6 @@ export const Controls = forwardRef(function Controls({
                 />
               </GoopableSection>
             ))}
-          </div>
-
-          <div className="controls__section controls__section--speed">
-            <DualKnob
-              mixValue={(arpBpm - 40) / (900 - 40)}
-              detuneValue={glideSpeed}
-              onMixChange={(v) => setArpBpm(Math.round(40 + v * (900 - 40)))}
-              onDetuneChange={handleGlideSpeed}
-              color="#ffcc00"
-              detuneColor="#39ff14"
-              size={52}
-              minDetune={0.001}
-              maxDetune={0.3}
-              roundDetune={false}
-              mixLabel={`${arpBpm}`}
-              detuneLabel={glideSpeed < 0.01 ? 'fast' : glideSpeed > 0.15 ? 'slow' : 'med'}
-              outerLabel="BPM"
-              innerLabel="SPD"
-            />
           </div>
         </div>
       </div>

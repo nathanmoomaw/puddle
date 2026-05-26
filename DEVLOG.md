@@ -1,5 +1,14 @@
 # Devlog
 
+## 2026-05-26 — Layout round 2: BPM inline with Space/Tone, volume knob, shake nook
+
+- **BPM/SPD knob** (item 261): moved from OSC column to FX group, placed after Tone macro — now inline with Space/Tone in the bottom bar
+- **Remove small shake bolt** (item 262): removed MiniShakeBolt from `controls__group--left` — it was `position: absolute; bottom: 6px; right: 6px` and floating into the lower-right of the bar
+- **OSC3 flush at bottom** (item 263): bar bottom padding set to 0; oscs group `padding-bottom: 0` with tighter gap — OSC3 is now the last element flush at the screen bottom edge
+- **Volume rotary knob** (item 264): replaced DJFader with `RotaryKnob(min=0 max=1 color=cyan label=Vol size=40)` — same `handleVolume` callback (engine-direct + rAF debounce)
+- **Oct label with count** (item 265): octave RotaryKnob label changed from `'Oct'` to `` `Oct ${octaves}` `` — shows e.g. "Oct 4"; easter egg shows "★ 7"
+- **Shake nook** (item 266): `app__shake-nook` moved from `grid-column: 2` (center) to `grid-column: 3; grid-row: 2/4` — now sits in the lower-right nook above the OSC column
+
 ## 2026-05-26 — Layout polish: OSCs to right column, no-shift labels, hold light, cleanup
 
 - **No-shift labels** (item 253): DualKnob label row fixed to knob width via `width: var(--knob-size)`; mix label `min-width: 4ch`, det label `min-width: 5.5ch`; bipolar side label `min-width: 8ch; text-align: center` — all value changes are now zero-shift

@@ -122,16 +122,16 @@
     cursor: pointer;
   }
 
-  /* Shake nook — lower-right corner of puddle cell (grid-column 2, grid-row 2) */
+  /* Shake nook — bottom of right column, above the OSC controls */
   .app__shake-nook {
     display: block;
-    grid-column: 2;
-    grid-row: 2;
+    grid-column: 3;
+    grid-row: 2 / 4;
     align-self: end;
     justify-self: end;
     z-index: 10;
-    /* margin-bottom: 2rem; */
-    margin-right: 1.5rem;
+    margin-right: 1rem;
+    margin-bottom: 0.75rem;
     font-size: 2.6rem;
     line-height: 1;
     background: none;
