@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-05-26 — Layout round 3: shake in OSC row, vol/oct side by side, responsive stacking
+
+- **Shake bolt to OSC 2** (item 267): removed `app__shake-nook` grid button from App; added `onShake` prop to Controls; shake bolt rendered inside `controls__group--oscs` as flex-row sibling to oscillators column — vertically centered (aligns with OSC 2 on 3-item stack)
+- **Vol + Oct side by side** (item 268): wrapped Vol and Oct RotaryKnobs in `.controls__vol-oct-row` flex-row — hidden on mobile per same rule as before
+- **Scale buttons up 5px** (item 269): added `padding-bottom: 5px` to `.controls__group--left` at desktop breakpoint
+- **Narrow responsive stacking** (item 270): added `@media (min-width:768px) and (max-width:1100px)` CSS `order` rules — Space/Tone/BPM get `order: 1/2/3`, VCF/Filter get `order: 10/11` so they stack below at narrow widths
+
 ## 2026-05-26 — Layout round 2: BPM inline with Space/Tone, volume knob, shake nook
 
 - **BPM/SPD knob** (item 261): moved from OSC column to FX group, placed after Tone macro — now inline with Space/Tone in the bottom bar

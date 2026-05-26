@@ -1076,15 +1076,6 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
           colorStateRef={colorStateRef}
         />
 
-        {/* Shake nook — bottom-right corner of puddle on desktop */}
-        <button
-          className="app__shake-nook"
-          onClick={() => { requestMotionPermission(); handleShake(0.5) }}
-          aria-label="Shake / Randomize"
-        >
-          ⚡
-        </button>
-
         <Controls
           ref={controlsRef}
           getEngine={getEngine}
@@ -1112,6 +1103,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
           onSpaceChange={handleSpace}
           tone={tone}
           onToneChange={handleTone}
+          onShake={() => { requestMotionPermission(); handleShake(0.5) }}
           shaking={shaking}
           mode={mode}
           setMode={setMode}

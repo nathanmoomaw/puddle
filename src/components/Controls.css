@@ -1084,3 +1084,94 @@
 .controls__oscillators .controls__osc-goopable:last-child .controls__osc::after {
   display: none !important;
 }
+
+/* ── Item 267: OSC group row — shake bolt to the left of oscillators ── */
+.controls__oscs-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.controls__osc-shake-bolt {
+  display: none; /* hidden on mobile */
+}
+
+@media (min-width: 768px) {
+  .controls__oscs-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .controls__osc-shake-bolt {
+    display: block;
+    align-self: center;
+    font-size: 1.6rem;
+    line-height: 1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    opacity: 0.3;
+    filter: grayscale(0.4);
+    transition: opacity 0.15s, filter 0.15s, transform 0.15s;
+    pointer-events: auto;
+    flex-shrink: 0;
+  }
+
+  .controls__osc-shake-bolt:hover {
+    opacity: 0.85;
+    filter: grayscale(0) drop-shadow(0 0 8px rgba(255, 220, 60, 0.5));
+    animation: bolt-dance 3s ease-in-out infinite;
+  }
+
+  .controls__osc-shake-bolt:active {
+    opacity: 1;
+    transform: scale(1.25);
+    filter: grayscale(0) drop-shadow(0 0 12px rgba(255, 220, 60, 0.75));
+  }
+}
+
+/* ── Item 268: Vol and Oct knobs side by side ── */
+.controls__vol-oct-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+/* Hide on mobile (same as previous controls__section treatment) */
+@media (max-width: 767px) {
+  .controls__vol-oct-row {
+    display: none;
+  }
+}
+
+/* ── Item 269: Scale buttons — 5px breathing room from bar bottom ── */
+@media (min-width: 768px) {
+  .controls__group--left {
+    padding-bottom: 5px;
+  }
+}
+
+/* ── Item 270: Narrow desktop — Space/Tone/BPM stack above VCF/Filter ── */
+@media (min-width: 768px) and (max-width: 1100px) {
+  .controls__shared {
+    flex-wrap: wrap;
+  }
+  .controls__shared .vcf-control {
+    order: 10;
+  }
+  .controls__section--filter {
+    order: 11;
+  }
+  .controls__section--space {
+    order: 1;
+  }
+  .controls__section--tone {
+    order: 2;
+  }
+  .controls__section--speed {
+    order: 3;
+  }
+}

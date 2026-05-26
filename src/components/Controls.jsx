@@ -359,6 +359,7 @@ export const Controls = forwardRef(function Controls({
   onSpaceChange,
   tone,
   onToneChange,
+  onShake,
   shaking,
   mode,
   setMode,
@@ -467,18 +468,17 @@ export const Controls = forwardRef(function Controls({
             onMarblePickUp={onMarblePickUp}
             nextSlotId={nextSlotId}
           />
-          <RotaryKnob
-            value={volume}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={handleVolume}
-            color="var(--cyan)"
-            label="Vol"
-            size={40}
-          />
-
-          <div className="controls__section">
+          <div className="controls__vol-oct-row">
+            <RotaryKnob
+              value={volume}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={handleVolume}
+              color="var(--cyan)"
+              label="Vol"
+              size={40}
+            />
             <RotaryKnob
               value={octaves}
               min={1}
@@ -648,26 +648,31 @@ export const Controls = forwardRef(function Controls({
           </GoopableSection>
         </div>
 
-        {/* Right column: 3 OSCs stacked vertically, OSC3 flush at bottom */}
+        {/* Right column: shake bolt + 3 OSCs stacked vertically, OSC3 flush at bottom */}
         <div className="controls__group controls__group--oscs">
-          <div className="controls__oscillators">
-            {oscParams.map((params, i) => (
-              <GoopableSection
-                key={i}
-                id={`osc-${i}`}
-                registerControl={registerControl}
-                goopLevel={(goopLevels && goopLevels[`osc-${i}`]) || 0}
-                puddleActivity={puddleActivity || 0}
-                className="controls__osc-goopable"
-              >
-                <OscSection
-                  index={i}
-                  params={params}
-                  getEngine={getEngine}
-                  onUpdate={handleOscUpdate}
-                />
-              </GoopableSection>
-            ))}
+          <div className="controls__oscs-row">
+            {onShake && (
+              <button className="controls__osc-shake-bolt" onClick={onShake} aria-label="Shake / Randomize">⚡</button>
+            )}
+            <div className="controls__oscillators">
+              {oscParams.map((params, i) => (
+                <GoopableSection
+                  key={i}
+                  id={`osc-${i}`}
+                  registerControl={registerControl}
+                  goopLevel={(goopLevels && goopLevels[`osc-${i}`]) || 0}
+                  puddleActivity={puddleActivity || 0}
+                  className="controls__osc-goopable"
+                >
+                  <OscSection
+                    index={i}
+                    params={params}
+                    getEngine={getEngine}
+                    onUpdate={handleOscUpdate}
+                  />
+                </GoopableSection>
+              ))}
+            </div>
           </div>
         </div>
       </div>
