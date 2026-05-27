@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-05-26 — Layout round 5: knob spacing fix, mobile three-group bar
+
+- **Knob spacing** (item 280): reverted `controls__shared` to `align-items: center`; added `padding-bottom: 0.35rem` to `controls__bar` — controls no longer flush against screen bottom, restored natural vertical centering within FX section
+- **Mobile three-group layout** (item 281): rewrote mobile CSS — OSC column is now visible at all widths (removed `display: none`); left group shows full activation + vol/oct + scale; center (FX) shows Space/Tone/Speed, Filter/VCF hidden; left corner gets backdrop, right (OSC) corner gets matching backdrop; shake bolt hidden on mobile for space
+
 ## 2026-05-26 — Layout round 4: Filter/VCF DualKnobs, bottom alignment, shake to OSC 3
 
 - **Bottom alignment** (items 271+272): `controls__shared` `align-items: flex-end` + `padding-bottom: 0`; `controls__group--oscs` `padding-bottom: 5px` — all knobs now sit flush at bar bottom with consistent 5px breathing room
