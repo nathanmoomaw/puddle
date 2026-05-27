@@ -293,4 +293,11 @@
     width: 100% !important;
     height: 100% !important;
   }
+  /* 291: compact label min-widths so they don't overflow the smaller container */
+  .dual-knob__label--mix {
+    min-width: 3ch;
+  }
+  .dual-knob__label--det {
+    min-width: 4ch;
+  }
 }

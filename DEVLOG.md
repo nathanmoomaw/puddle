@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-05-27 — Mobile polish: hold kbd, overflow fix, shake bolt, desktop centering
+
+- **Hold "4" hidden on mobile** (item 290): `activation__hold-left kbd` was not covered by the mobile hide rule — added `display: none !important` in Controls.css compact hold overrides
+- **Values/labels overflow fix** (item 291): scaled OSC waveform btn to 44px on mobile (matches DualKnob 85%); removed `bipolar-knob__side` min-width on mobile; added `overflow: hidden` to `.controls__bar` as catch-all; tightened `dual-knob__label` min-widths to 3/4ch on mobile
+- **Shake bolt on mobile** (item 292): was hidden by both base style and mobile hide list; used `display: block !important` in mobile section — appears compact (1.2rem) above OSC column
+- **Center controls centered on desktop** (item 294): added `justify-content: center` to `.controls__shared` in desktop media query so controls cluster is centered between left/right groups on wide screens
+
 ## 2026-05-27 — Mobile center controls: filter/vcf visible, row-stacking via macros-row
 
 - **Filter+VCF visible on mobile** (item 289): removed `display: none` from filter and vcf sections at ≤767px — they now show alongside macros row

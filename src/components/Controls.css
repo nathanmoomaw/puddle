@@ -773,6 +773,7 @@
     flex-wrap: wrap;
     gap: 0.4rem 0.6rem;
     align-items: center;
+    justify-content: center; /* 294: center controls in available space */
     padding: 0.25rem 0.5rem;
     background: transparent;
     border-top: none;
@@ -881,10 +882,36 @@
   .controls__section--filter,
   .controls__section--vcf { display: flex; }
 
-  /* Hide fader, shake bolt, MIDI/QR corner */
+  /* Hide fader and MIDI/QR corner — shake bolt shown on mobile now */
   .controls__group--left .controls__fader,
-  .controls__osc-shake-bolt,
   .controls__console-corner { display: none; }
+
+  /* 290: hold "4" kbd falls out of compact button on mobile */
+  .controls__group--left .activation__hold-left kbd { display: none !important; }
+
+  /* 291: prevent labels/values from overflowing viewport */
+  .controls__bar { overflow: hidden; }
+  /* BipolarKnob side label — remove fixed min-width so it doesn't force overflow */
+  .bipolar-knob__side { min-width: 0; }
+  /* Scale OSC waveform button to match DualKnob 85% */
+  .controls__osc-waveform-btn {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* 292: Shake bolt — visible but compact on mobile */
+  .controls__osc-shake-bolt {
+    display: block !important;
+    font-size: 1.2rem !important;
+    line-height: 1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.15rem;
+    opacity: 0.45;
+    pointer-events: auto;
+    align-self: center;
+  }
 
   /* 286: activation stays as vertical column (same as desktop), no 2-row grid */
   .controls__group--left .activation {
