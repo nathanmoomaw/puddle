@@ -283,4 +283,14 @@
     width: calc(var(--knob-size, 52px) * 0.85);
     height: calc(var(--knob-size, 52px) * 0.85);
   }
+  /* Labels must match the scaled body width */
+  .dual-knob__labels {
+    width: calc(var(--knob-size, 52px) * 0.85);
+  }
+  /* SVGs fill the smaller body (inset:0 + explicit 100% overrides HTML attrs) */
+  .dual-knob__ring-svg,
+  .dual-knob__needle-svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }

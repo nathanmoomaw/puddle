@@ -809,7 +809,7 @@
   }
 }
 
-/* ── Mobile (≤767px): overlay bar, left/right fixed, center wraps ── */
+/* ── Mobile (≤767px): overlay bar, left/right fixed, center nowrap ── */
 @media (max-width: 767px) {
   /* Transparent overlay so puddle shows through; clicks pass through gaps */
   .controls {
@@ -837,21 +837,27 @@
   .controls__group--fx,
   .controls__group--oscs { pointer-events: auto; }
 
-  /* Center group takes all remaining space; its contents wrap naturally */
+  /* Center group takes all remaining space */
   .controls__group--fx { flex: 1; min-width: 0; }
 
-  /* Shared FX row: wrappable, centered */
+  /* 287: Space/Tone/Speed stay on one row, bottoms aligned */
   .controls__shared {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.4rem;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0.25rem;
   }
 
-  /* OSC column stays vertical (same as desktop) */
+  /* Scale BipolarKnob SVG to match DualKnob 85% scaling */
+  .bipolar-knob__svg {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* OSC column stays vertical */
   .controls__oscillators { flex-direction: column; gap: 0.15rem; }
 
   /* Vol/Oct row visible */
@@ -861,7 +867,7 @@
   .controls__waveforms { flex-wrap: wrap; gap: 2px; }
   .controls__waveforms button { font-size: 0.55rem; padding: 0.2em 0.4em; }
 
-  /* Hide Filter/VCF dual knobs on narrow (too wide for center) */
+  /* Hide Filter/VCF dual knobs (too wide for center) */
   .controls__section--filter,
   .controls__section--vcf { display: none; }
 
@@ -869,6 +875,31 @@
   .controls__group--left .controls__fader,
   .controls__osc-shake-bolt,
   .controls__console-corner { display: none; }
+
+  /* 286: activation stays as vertical column (same as desktop), no 2-row grid */
+  .controls__group--left .activation {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: auto !important;
+    gap: 0.4rem !important;
+  }
+  /* Compact rocker sides on mobile so left group stays narrow */
+  .controls__group--left .rocker__side {
+    width: 40px !important;
+    height: 42px !important;
+    flex: 0 0 40px !important;
+    padding: 0 2px !important;
+  }
+  /* Compact hold section on mobile */
+  .controls__group--left .activation__hold-left {
+    max-width: 48px !important;
+    padding: 0.3em 0.3em !important;
+  }
+  .controls__group--left .activation__hold-right {
+    width: 38px !important;
+    min-width: 38px !important;
+  }
 }
 
 /* ── v2 Neon / Angular overrides ──────────────────────────────────────────────

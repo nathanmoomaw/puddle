@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-27 — Mobile layout fixes: activation column, speed alignment, DualKnob SVG scale
+
+- **DualKnob SVG scaling** (item 285): at mobile the body was scaled to 85% but `labels` and `ring-svg`/`needle-svg` kept original 52px dimensions; added mobile CSS to match labels width and force SVGs to `100%` so they fill the scaled body properly
+- **Activation column on mobile** (item 286): ActivationMode.css switches activation to a 2-row grid on mobile making it wide and cramped; overrode in Controls.css to force `display: flex; flex-direction: column` (same as desktop); also scaled rocker sides to 40px and hold section to compact widths to keep left group narrow
+- **Speed knob bottom alignment** (item 287): `controls__shared` had `flex-wrap: wrap` on mobile causing Speed to drop to a second row; changed to `flex-wrap: nowrap; align-items: flex-end` so Space/Tone/Speed stay on one row with bottoms aligned; also scaled BipolarKnob SVG to 44px to match DualKnob 85% scale
+
 ## 2026-05-26 — Layout round 5: knob spacing fix, mobile three-group bar
 
 - **Knob spacing** (item 280): reverted `controls__shared` to `align-items: center`; added `padding-bottom: 0.35rem` to `controls__bar` — controls no longer flush against screen bottom, restored natural vertical centering within FX section
