@@ -809,9 +809,9 @@
   }
 }
 
-/* Mobile: three-group bar — left/right stay in place, center wraps */
+/* ── Mobile (≤767px): overlay bar, left/right fixed, center wraps ── */
 @media (max-width: 767px) {
-  /* Full-screen overlay; puddle clickable through gaps */
+  /* Transparent overlay so puddle shows through; clicks pass through gaps */
   .controls {
     position: fixed;
     inset: 0;
@@ -821,143 +821,54 @@
     pointer-events: none;
   }
 
+  /* Full-width bar pinned to bottom; groups side-by-side, no wrapping */
   .controls__bar {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: flex-end;
-    gap: 0;
     flex-wrap: nowrap;
+    padding: 0 0 8px;
   }
 
-  /* ── Bottom-left: full left group (activation + vol/oct + scale) ── */
-  .controls__group--left {
-    pointer-events: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.35rem;
-    padding: 8px 12px 12px 10px;
-    background: rgba(4, 4, 14, 0.78);
-    border-radius: 0 18px 0 0;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-right: 1px solid rgba(0, 240, 255, 0.12);
-    border-top: 1px solid rgba(0, 240, 255, 0.12);
-    box-shadow: 4px -4px 20px rgba(0, 0, 0, 0.5);
-    max-width: 42vw;
-  }
+  /* Re-enable pointer events on the three groups */
+  .controls__group--left,
+  .controls__group--fx,
+  .controls__group--oscs { pointer-events: auto; }
 
-  /* Hide fader only (replaced by rotary vol knob) */
-  .controls__group--left .controls__mini-shake,
-  .controls__group--left .controls__fader { display: none; }
+  /* Center group takes all remaining space; its contents wrap naturally */
+  .controls__group--fx { flex: 1; min-width: 0; }
 
-  /* Vol/Oct and Scale visible on mobile */
-  .controls__vol-oct-row {
-    display: flex;
-  }
-
-  /* Scale buttons compact */
-  .controls__waveforms {
-    flex-wrap: wrap;
-    gap: 2px;
-  }
-
-  .controls__waveforms button {
-    font-size: 0.55rem;
-    padding: 0.2em 0.4em;
-  }
-
-  /* ── Bottom-center: FX group (Space + Tone + Speed; Filter/VCF hidden) ── */
-  .controls__group--fx {
-    pointer-events: auto;
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 6px 4px 12px;
-    background: transparent;
-  }
-
+  /* Shared FX row: wrappable, centered */
   .controls__shared {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.4rem;
-    justify-content: center;
-    align-items: flex-end;
-  }
-
-  .controls__shared .controls__mini-shake { display: none; }
-
-  /* Center section: show Space, Tone, Speed; hide Filter/VCF */
-  .controls__section--space { display: flex; }
-  .controls__section--tone  { display: flex; }
-  .controls__section--speed { display: flex; }
-  .controls__section--filter  { display: none; }
-  .controls__section--vcf     { display: none; }
-  .controls__section--crunch  { display: none; }
-  .controls__section--delay   { display: none; }
-  .controls__section--reverb  { display: none; }
-  .controls__shared .vcf-control { display: none; }
-  .controls__console-corner { display: none; }
-
-  /* ── Bottom-right: OSC column (same as desktop, compact) ── */
-  .controls__group--oscs {
-    pointer-events: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding: 8px 10px 12px 4px;
-    background: rgba(4, 4, 14, 0.78);
-    border-radius: 18px 0 0 0;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-left: 1px solid rgba(0, 240, 255, 0.12);
-    border-top: 1px solid rgba(0, 240, 255, 0.12);
-    box-shadow: -4px -4px 20px rgba(0, 0, 0, 0.5);
-    max-width: 42vw;
-    padding-bottom: 12px;
-  }
-
-  .controls__oscs-row {
-    flex-direction: row;
-    align-items: flex-end;
-    gap: 0.25rem;
-  }
-
-  /* Hide shake bolt on mobile (too cramped) */
-  .controls__osc-shake-bolt { display: none; }
-
-  .controls__oscillators {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-
-  .controls__osc-goopable { flex: none; }
-
-  .controls__osc {
-    padding: 0.2rem 0.3rem;
-    display: flex;
-    flex-direction: row;
     align-items: center;
-    gap: 0.25rem;
-    background: transparent;
-    border: none;
+    justify-content: center;
+    padding: 0.25rem 0.5rem;
   }
 
-  .controls__osc-label { display: none; }
-  .controls__osc .controls__section { display: none; }
+  /* OSC column stays vertical (same as desktop) */
+  .controls__oscillators { flex-direction: column; gap: 0.15rem; }
 
-  /* Hide circle shake button */
-  .controls__shake-btn { display: none; }
+  /* Vol/Oct row visible */
+  .controls__vol-oct-row { display: flex; }
+
+  /* Compact scale buttons */
+  .controls__waveforms { flex-wrap: wrap; gap: 2px; }
+  .controls__waveforms button { font-size: 0.55rem; padding: 0.2em 0.4em; }
+
+  /* Hide Filter/VCF dual knobs on narrow (too wide for center) */
+  .controls__section--filter,
+  .controls__section--vcf { display: none; }
+
+  /* Hide fader, shake bolt, MIDI/QR corner */
+  .controls__group--left .controls__fader,
+  .controls__osc-shake-bolt,
+  .controls__console-corner { display: none; }
 }
 
 /* ── v2 Neon / Angular overrides ──────────────────────────────────────────────
