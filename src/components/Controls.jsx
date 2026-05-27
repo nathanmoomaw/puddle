@@ -586,69 +586,72 @@ export const Controls = forwardRef(function Controls({
               />
             </div>
 
-            {/* Space macro: 0=cathedral(reverb+delay), 0.5=dry, 1=orbit(rhythmic delay) */}
-            {onSpaceChange ? (
-              <div className="controls__section controls__section--space">
-                <BipolarKnob
-                  label="SPACE"
-                  subLabel={{ left: 'CATHEDRAL', right: 'ORBIT' }}
-                  value={space ?? 0.5}
-                  onChange={onSpaceChange}
-                  color="#00e5cc"
-                />
-              </div>
-            ) : (
-              <>
-                <div className="controls__section controls__section--reverb">
-                  <label className="controls__label">Reverb <span className="controls__value">{Math.round(reverbMix * 100)}%</span></label>
-                  <RotaryKnob value={reverbMix} min={0} max={1} step={0.01} onChange={handleReverbMix} color="#00e5cc" size={40} />
+            {/* Macros row: Space + Tone + Speed — locked together as a single flex unit */}
+            <div className="controls__macros-row">
+              {/* Space macro: 0=cathedral(reverb+delay), 0.5=dry, 1=orbit(rhythmic delay) */}
+              {onSpaceChange ? (
+                <div className="controls__section controls__section--space">
+                  <BipolarKnob
+                    label="SPACE"
+                    subLabel={{ left: 'CATHEDRAL', right: 'ORBIT' }}
+                    value={space ?? 0.5}
+                    onChange={onSpaceChange}
+                    color="#00e5cc"
+                  />
                 </div>
-                <div className="controls__section controls__section--crunch">
-                  <label className="controls__label">Crunch <span className="controls__value">{Math.round(crunch * 100)}%</span></label>
-                  <RotaryKnob value={crunch} min={0} max={1} step={0.01} onChange={handleCrunch} color="#ff3366" size={40} />
-                </div>
-                <div className="controls__section controls__section--full controls__section--delay">
-                  <label className="controls__label">Delay</label>
-                  <div className="controls__rotary-row">
-                    <RotaryKnob value={delayParams.time} min={0.05} max={1} step={0.01} onChange={handleDelayTime} color="#4d8bff" label="Time" size={40} />
-                    <RotaryKnob value={delayParams.feedback} min={0} max={0.9} step={0.01} onChange={handleDelayFeedback} color="#9b8bff" label="Fdbk" size={40} />
-                    <RotaryKnob value={delayParams.mix} min={0} max={1} step={0.01} onChange={handleDelayMix} color="#c8d0e0" label="Mix" size={40} />
+              ) : (
+                <>
+                  <div className="controls__section controls__section--reverb">
+                    <label className="controls__label">Reverb <span className="controls__value">{Math.round(reverbMix * 100)}%</span></label>
+                    <RotaryKnob value={reverbMix} min={0} max={1} step={0.01} onChange={handleReverbMix} color="#00e5cc" size={40} />
                   </div>
-                </div>
-              </>
-            )}
+                  <div className="controls__section controls__section--crunch">
+                    <label className="controls__label">Crunch <span className="controls__value">{Math.round(crunch * 100)}%</span></label>
+                    <RotaryKnob value={crunch} min={0} max={1} step={0.01} onChange={handleCrunch} color="#ff3366" size={40} />
+                  </div>
+                  <div className="controls__section controls__section--full controls__section--delay">
+                    <label className="controls__label">Delay</label>
+                    <div className="controls__rotary-row">
+                      <RotaryKnob value={delayParams.time} min={0.05} max={1} step={0.01} onChange={handleDelayTime} color="#4d8bff" label="Time" size={40} />
+                      <RotaryKnob value={delayParams.feedback} min={0} max={0.9} step={0.01} onChange={handleDelayFeedback} color="#9b8bff" label="Fdbk" size={40} />
+                      <RotaryKnob value={delayParams.mix} min={0} max={1} step={0.01} onChange={handleDelayMix} color="#c8d0e0" label="Mix" size={40} />
+                    </div>
+                  </div>
+                </>
+              )}
 
-            {/* Tone macro: 0=grit(crunch+low filter), 0.5=clean, 1=glitter(sparkle resonance) */}
-            {onToneChange ? (
-              <div className="controls__section controls__section--tone">
-                <BipolarKnob
-                  label="TONE"
-                  subLabel={{ left: 'GRIT', right: 'GLITTER' }}
-                  value={tone ?? 0.5}
-                  onChange={onToneChange}
-                  color="#ff8c42"
+              {/* Tone macro: 0=grit(crunch+low filter), 0.5=clean, 1=glitter(sparkle resonance) */}
+              {onToneChange ? (
+                <div className="controls__section controls__section--tone">
+                  <BipolarKnob
+                    label="TONE"
+                    subLabel={{ left: 'GRIT', right: 'GLITTER' }}
+                    value={tone ?? 0.5}
+                    onChange={onToneChange}
+                    color="#ff8c42"
+                  />
+                </div>
+              ) : null}
+
+              {/* BPM/SPD — directly right of Space/Tone macros */}
+              <div className="controls__section controls__section--speed">
+                <DualKnob
+                  mixValue={(arpBpm - 40) / (900 - 40)}
+                  detuneValue={glideSpeed}
+                  onMixChange={(v) => setArpBpm(Math.round(40 + v * (900 - 40)))}
+                  onDetuneChange={handleGlideSpeed}
+                  color="#ffcc00"
+                  detuneColor="#39ff14"
+                  size={52}
+                  minDetune={0.001}
+                  maxDetune={0.3}
+                  roundDetune={false}
+                  mixLabel={`${arpBpm}`}
+                  detuneLabel={glideSpeed < 0.01 ? 'fast' : glideSpeed > 0.15 ? 'slow' : 'med'}
+                  outerLabel="BPM"
+                  innerLabel="SPD"
                 />
               </div>
-            ) : null}
-
-            {/* BPM/SPD — directly right of Space/Tone macros */}
-            <div className="controls__section controls__section--speed">
-              <DualKnob
-                mixValue={(arpBpm - 40) / (900 - 40)}
-                detuneValue={glideSpeed}
-                onMixChange={(v) => setArpBpm(Math.round(40 + v * (900 - 40)))}
-                onDetuneChange={handleGlideSpeed}
-                color="#ffcc00"
-                detuneColor="#39ff14"
-                size={52}
-                minDetune={0.001}
-                maxDetune={0.3}
-                roundDetune={false}
-                mixLabel={`${arpBpm}`}
-                detuneLabel={glideSpeed < 0.01 ? 'fast' : glideSpeed > 0.15 ? 'slow' : 'med'}
-                outerLabel="BPM"
-                innerLabel="SPD"
-              />
             </div>
 
             {/* MIDI + wallet + QR — absolute lower-right of console */}

@@ -809,7 +809,17 @@
   }
 }
 
-/* ── Mobile (≤767px): overlay bar, left/right fixed, center nowrap ── */
+/* Macros row: Space + Tone + Speed locked together — always one flex line */
+.controls__macros-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+/* ── Mobile (≤767px): overlay bar, left/right fixed, center wraps into rows ── */
 @media (max-width: 767px) {
   /* Transparent overlay so puddle shows through; clicks pass through gaps */
   .controls {
@@ -840,12 +850,12 @@
   /* Center group takes all remaining space */
   .controls__group--fx { flex: 1; min-width: 0; }
 
-  /* 287: Space/Tone/Speed stay on one row, bottoms aligned */
+  /* 288/289: center controls wrap into rows — filter+vcf on row1, macros on row2 */
   .controls__shared {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 0.4rem;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
     align-items: flex-end;
     justify-content: center;
     padding: 0.25rem 0.25rem;
@@ -867,9 +877,9 @@
   .controls__waveforms { flex-wrap: wrap; gap: 2px; }
   .controls__waveforms button { font-size: 0.55rem; padding: 0.2em 0.4em; }
 
-  /* Hide Filter/VCF dual knobs (too wide for center) */
+  /* 289: show Filter/VCF on mobile — they share row 1, macros-row gets row 2 */
   .controls__section--filter,
-  .controls__section--vcf { display: none; }
+  .controls__section--vcf { display: flex; }
 
   /* Hide fader, shake bolt, MIDI/QR corner */
   .controls__group--left .controls__fader,
@@ -1028,10 +1038,6 @@
   filter: drop-shadow(0 0 6px rgba(224, 64, 251, 0.22));
 }
 
-/* Mobile: hide VCF dual knob (space/tone only in corner) */
-@media (max-width: 767px) {
-  .controls__section--vcf { display: none; }
-}
 
 /* Controls container: fully transparent — no industrial frame in v2 */
 .controls {

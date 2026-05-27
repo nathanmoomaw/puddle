@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-05-27 — Mobile center controls: filter/vcf visible, row-stacking via macros-row
+
+- **Filter+VCF visible on mobile** (item 289): removed `display: none` from filter and vcf sections at ≤767px — they now show alongside macros row
+- **Center controls stack into rows** (item 288): wrapped Space+Tone+Speed in `.controls__macros-row` flex container (nowrap, align-items: flex-end) so they're a single flex unit; `controls__shared` changed to `flex-wrap: wrap` on mobile — filter+vcf land on row 1, macros-row lands on row 2 (both centered); removed stale `display: none` on vcf from v2 neon override block
+
 ## 2026-05-27 — Mobile layout fixes: activation column, speed alignment, DualKnob SVG scale
 
 - **DualKnob SVG scaling** (item 285): at mobile the body was scaled to 85% but `labels` and `ring-svg`/`needle-svg` kept original 52px dimensions; added mobile CSS to match labels width and force SVGs to `100%` so they fill the scaled body properly
