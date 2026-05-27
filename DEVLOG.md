@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-27 — Logo centering, scale buttons, left group edge fix
+
+- **Logo always centered** (item 295): changed `app-header` grid from `1fr auto 1fr` to `minmax(0,1fr) auto minmax(0,1fr)` — left column no longer grows past its share and pushes logo off-center; also changed `app-header__left` from fixed `height: 44px` to `min-height: 44px; flex-wrap: wrap` so VersionSelector drops to next line if the top row is crowded
+- **Scale buttons larger on mobile** (item 296): bumped from `0.55rem / 0.2em 0.4em` to `0.65rem / 0.35em 0.6em / min-height: 26px` — easier to tap
+- **Left controls off screen edge** (item 297): added `padding: 0 4px 8px 6px` to mobile `controls__bar` (was no side padding); also removed `overflow: hidden` from bar that was aggressively clipping glow/drop-shadow effects
+
 ## 2026-05-27 — Mobile polish: hold kbd, overflow fix, shake bolt, desktop centering
 
 - **Hold "4" hidden on mobile** (item 290): `activation__hold-left kbd` was not covered by the mobile hide rule — added `display: none !important` in Controls.css compact hold overrides

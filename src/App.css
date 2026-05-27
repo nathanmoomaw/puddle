@@ -126,7 +126,9 @@
 
 .app-header {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  /* 295: minmax(0,1fr) prevents the left column from growing wider than its share,
+     keeping the logo dead-center even when the left cluster has more content */
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 0.25rem;
   width: 100%;
@@ -154,11 +156,13 @@
 .app-header__left {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;        /* 295: allow VersionSelector to drop to next line if crowded */
+  align-content: flex-start;
   gap: 8px;
   justify-content: flex-start;
   padding: 10px 0 4px 12px;
   align-self: start;
-  height: 44px;
+  min-height: 44px;       /* 295: was fixed 44px — allow taller if version nav wraps */
   box-sizing: border-box;
 }
 

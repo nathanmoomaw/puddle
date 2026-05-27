@@ -840,7 +840,8 @@
     flex-direction: row;
     align-items: flex-end;
     flex-wrap: nowrap;
-    padding: 0 0 8px;
+    /* 297: side padding so left/right groups don't touch screen edge */
+    padding: 0 4px 8px 6px;
   }
 
   /* Re-enable pointer events on the three groups */
@@ -874,9 +875,9 @@
   /* Vol/Oct row visible */
   .controls__vol-oct-row { display: flex; }
 
-  /* Compact scale buttons */
-  .controls__waveforms { flex-wrap: wrap; gap: 2px; }
-  .controls__waveforms button { font-size: 0.55rem; padding: 0.2em 0.4em; }
+  /* 296: scale buttons — larger touch targets on mobile */
+  .controls__waveforms { flex-wrap: wrap; gap: 3px; }
+  .controls__waveforms button { font-size: 0.65rem; padding: 0.35em 0.6em; min-height: 26px; }
 
   /* 289: show Filter/VCF on mobile — they share row 1, macros-row gets row 2 */
   .controls__section--filter,
@@ -890,7 +891,6 @@
   .controls__group--left .activation__hold-left kbd { display: none !important; }
 
   /* 291: prevent labels/values from overflowing viewport */
-  .controls__bar { overflow: hidden; }
   /* BipolarKnob side label — remove fixed min-width so it doesn't force overflow */
   .bipolar-knob__side { min-width: 0; }
   /* Scale OSC waveform button to match DualKnob 85% */
