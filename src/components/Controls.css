@@ -772,7 +772,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.4rem 0.6rem;
-    align-items: center;
+    /* 299: flex-end so Space/Tone bottoms align with Filter/VCF knob bottoms */
+    align-items: flex-end;
     justify-content: center; /* 294: center controls in available space */
     padding: 0.25rem 0.5rem;
     background: transparent;
@@ -897,20 +898,6 @@
   .controls__osc-waveform-btn {
     width: 44px !important;
     height: 44px !important;
-  }
-
-  /* 292: Shake bolt — visible but compact on mobile */
-  .controls__osc-shake-bolt {
-    display: block !important;
-    font-size: 1.2rem !important;
-    line-height: 1;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.15rem;
-    opacity: 0.45;
-    pointer-events: auto;
-    align-self: center;
   }
 
   /* 286: activation stays as vertical column (same as desktop), no 2-row grid */
@@ -1084,59 +1071,52 @@
   display: none !important;
 }
 
-/* ── Item 267: OSC group row — shake bolt to the left of oscillators ── */
+/* ── Item 300: Shake bolt — always above all 3 OSCs at all sizes ── */
+@keyframes bolt-shimmer {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(255, 220, 60, 0.25));
+    opacity: 0.35;
+  }
+  50% {
+    filter: drop-shadow(0 0 14px rgba(255, 220, 60, 0.7)) drop-shadow(0 0 28px rgba(255, 200, 0, 0.3));
+    opacity: 0.7;
+  }
+}
+
 .controls__oscs-row {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 .controls__osc-shake-bolt {
-  display: none; /* hidden on mobile */
+  display: block;
+  font-size: 3.5rem;
+  line-height: 1;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0.1rem 0.5rem;
+  opacity: 0.35;
+  pointer-events: auto;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  animation: bolt-shimmer 3.5s ease-in-out infinite;
+  transition: opacity 0.15s, transform 0.15s;
 }
 
-@media (min-width: 768px) {
-  .controls__oscs-row {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.35rem;
-  }
+.controls__osc-shake-bolt:hover {
+  opacity: 0.9;
+  filter: drop-shadow(0 0 12px rgba(255, 220, 60, 0.7)) drop-shadow(0 0 24px rgba(255, 200, 0, 0.35));
+  animation: bolt-dance 3s ease-in-out infinite;
+}
 
-  .controls__osc-shake-bolt {
-    display: block;
-    /* Default: left of OSC 3 (flex-end = bottom of the column) */
-    align-self: flex-end;
-    font-size: 2.1rem;
-    line-height: 1;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.25rem;
-    opacity: 0.3;
-    filter: grayscale(0.4);
-    transition: opacity 0.15s, filter 0.15s, transform 0.15s;
-    pointer-events: auto;
-    flex-shrink: 0;
-  }
-
-  /* At narrow desktop (~840px), move up to OSC 2 level (center) */
-  @media (min-width: 768px) and (max-width: 840px) {
-    .controls__osc-shake-bolt {
-      align-self: center;
-    }
-  }
-
-  .controls__osc-shake-bolt:hover {
-    opacity: 0.85;
-    filter: grayscale(0) drop-shadow(0 0 8px rgba(255, 220, 60, 0.5));
-    animation: bolt-dance 3s ease-in-out infinite;
-  }
-
-  .controls__osc-shake-bolt:active {
-    opacity: 1;
-    transform: scale(1.25);
-    filter: grayscale(0) drop-shadow(0 0 12px rgba(255, 220, 60, 0.75));
-  }
+.controls__osc-shake-bolt:active {
+  opacity: 1;
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 16px rgba(255, 220, 60, 0.85));
 }
 
 /* ── Item 268: Vol and Oct knobs side by side ── */

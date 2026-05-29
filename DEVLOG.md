@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-05-29 — Version selector wrap, Space/Tone alignment, shake bolt rework
+
+- **Version selector wraps** (item 298): added `flex-basis: 100%; width: 100%` to `.version-selector` so it always sits on its own line below the qr/party/lo buttons in the header left cluster — logo stays dead-centered at all widths
+- **Space/Tone bottom-aligned** (item 299): changed `align-items: center` → `align-items: flex-end` on desktop `.controls__shared` so Space/Tone BipolarKnobs share the same visual bottom as the Filter/VCF DualKnobs
+- **Shake bolt unified** (item 300): removed conditional row/column layout — `controls__oscs-row` is now always `flex-direction: column` with the bolt above all 3 OSCs at every breakpoint; font-size raised to 3.5rem (≈3×); added `bolt-shimmer` keyframe (opacity + drop-shadow pulse every 3.5s); removed all border/background/grayscale; dropped the mobile `display: block !important` override since bolt is always visible
+
 ## 2026-05-27 — Logo centering, scale buttons, left group edge fix
 
 - **Logo always centered** (item 295): changed `app-header` grid from `1fr auto 1fr` to `minmax(0,1fr) auto minmax(0,1fr)` — left column no longer grows past its share and pushes logo off-center; also changed `app-header__left` from fixed `height: 44px` to `min-height: 44px; flex-wrap: wrap` so VersionSelector drops to next line if the top row is crowded

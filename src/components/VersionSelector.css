@@ -5,6 +5,9 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.06em;
+  /* 298: always wrap to its own row below qr/party/lo in app-header__left */
+  flex-basis: 100%;
+  width: 100%;
 }
 
 .version-selector__entry {
