@@ -553,16 +553,6 @@
   overflow: visible;
 }
 
-.bipolar-knob__side {
-  font-family: var(--font-mono);
-  font-size: 0.42rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.35);
-  min-height: 0.9em;
-  min-width: 8ch;
-  text-align: center;
-  text-transform: uppercase;
-}
 
 /* Space + Tone sections in shared panel */
 .controls__section--space,
@@ -892,8 +882,6 @@
   .controls__group--left .activation__hold-left kbd { display: none !important; }
 
   /* 291: prevent labels/values from overflowing viewport */
-  /* BipolarKnob side label — remove fixed min-width so it doesn't force overflow */
-  .bipolar-knob__side { min-width: 0; }
   /* Scale OSC waveform button to match DualKnob 85% */
   .controls__osc-waveform-btn {
     width: 44px !important;
@@ -960,7 +948,6 @@
 .controls__fader-label,
 .controls__fader-value,
 .bipolar-knob__label,
-.bipolar-knob__side,
 .controls__osc-label {
   text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,0.9);
 }

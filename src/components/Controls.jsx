@@ -48,8 +48,6 @@ function BipolarKnob({ label, subLabel, value, onChange, color = '#00e5cc' }) {
 
   const onUp = useCallback(() => { dragging.current = false }, [])
 
-  const sideLabel = value < 0.45 ? (subLabel?.left ?? 'L') : value > 0.55 ? (subLabel?.right ?? 'R') : '·'
-
   return (
     <div
       className="bipolar-knob"
@@ -58,7 +56,7 @@ function BipolarKnob({ label, subLabel, value, onChange, color = '#00e5cc' }) {
       onPointerMove={onMove}
       onPointerUp={onUp}
       onPointerCancel={onUp}
-      title={`${label}: drag up/down. Center=neutral, left=${subLabel?.left}, right=${subLabel?.right}`}
+      title={`${label}: drag up/down`}
     >
       <div className="bipolar-knob__label">{label}</div>
       <svg className="bipolar-knob__svg" viewBox="0 0 28 28" width="52" height="52">
@@ -69,7 +67,6 @@ function BipolarKnob({ label, subLabel, value, onChange, color = '#00e5cc' }) {
           style={{ filter: `drop-shadow(0 0 4px ${color})` }} />
         <line x1={cx} y1={cy} x2={tipX} y2={tipY} stroke={color} strokeWidth="1" opacity="0.3" />
       </svg>
-      <div className="bipolar-knob__side">{sideLabel}</div>
     </div>
   )
 }
