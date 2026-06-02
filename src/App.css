@@ -17,6 +17,8 @@
 /* v3 Puddle layout — grid background, puddle center stage */
 .app--puddle {
   overflow-x: hidden; /* horizontal only — vertical must stay open for logo glow filters */
+  /* v2: full-spectrum hue shift to visually distinguish from v1's cool blue/purple palette */
+  filter: hue-rotate(90deg);
 }
 
 /* Shake nook — desktop nook */
@@ -110,6 +112,21 @@
     gap: 0;
     height: 100dvh;
     overflow: hidden;
+  }
+
+  /* Very short viewports: let controls scroll into view (puddle stays fixed) */
+  @media (max-height: 540px) {
+    .app {
+      height: auto;
+      min-height: 100dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .app__stage {
+      flex: none;
+      height: auto;
+      min-height: 0;
+    }
   }
 
   /* Header must paint above the stage panels (which use negative margin-top to overlap) */
