@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-06-09 — Vivid hue-rotate filter
+
+- **v2 filter vibrancy** (item 311): `hue-rotate(90deg)` was desaturating perceived colors because the source neons (cyan, purple) rotated to warmer hues (yellow-green, orange) with lower apparent saturation. Added `saturate(1.5) brightness(1.08)` after the rotation to restore pop.
+
 ## 2026-05-29 — Version selector wrap, Space/Tone alignment, shake bolt rework
 
 - **Version selector wraps** (item 298): added `flex-basis: 100%; width: 100%` to `.version-selector` so it always sits on its own line below the qr/party/lo buttons in the header left cluster — logo stays dead-centered at all widths
