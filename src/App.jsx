@@ -131,6 +131,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const ribbonInteraction = useRef({ position: null, velocity: 0, active: false })
   const controlsRef = useRef(null)
   const ribbonRef = useRef(null)
+  const appRef = useRef(null)
   // Color state for puddle shader — opdShift drives the iridescent spectrum hue
   const colorStateRef = useRef({ opdShift: 0 })
   // Mouse position relative to puddle (normalized 0–1), updated on mousemove
@@ -214,6 +215,14 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const vcfResonanceRef = useRef(vcfResonance)
   vcfCutoffRef.current = vcfCutoff
   vcfResonanceRef.current = vcfResonance
+  const spaceRef = useRef(space)
+  const toneRef = useRef(tone)
+  const volumeRef = useRef(volume)
+  spaceRef.current = space
+  toneRef.current = tone
+  volumeRef.current = volume
+  // Live CSS filter state — mutated by rAF loop, never triggers re-renders
+  const liveFilterRef = useRef({ hue: 90, sat: 1.5, bright: 1.08, cont: 1.0, lastActive: 0 })
 
   // Update shader color tint whenever oscillator params change
   const WAVEFORM_OPD = { sine: 0.22, triangle: 0.0, sawtooth: -0.18, square: -0.3 }
@@ -226,6 +235,78 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   useEffect(() => {
     const engine = getEngine()
     vcfRouting.forEach((enabled, i) => engine.setVcfRouting(i, enabled))
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Live CSS filter — hue tracks last played frequency; sat/bright/contrast track x/y/velocity + knobs
+  useEffect(() => {
+    const el = appRef.current
+    if (!el) return
+    const fs = liveFilterRef.current
+    let rafId
+    let frame = 0
+
+    const tick = () => {
+      frame++
+      // Mobile: skip every other frame for perf
+      if (window.innerWidth < 768 && frame % 2 !== 0) {
+        rafId = requestAnimationFrame(tick)
+        return
+      }
+
+      const interact = ribbonInteraction.current
+      const isActive = interact.active
+      const now = performance.now()
+      if (isActive) fs.lastActive = now
+      const msSince = now - fs.lastActive
+      const recentlyActive = msSince < 3000
+
+      const sp  = spaceRef.current   // 0-1 (space macro)
+      const tn  = toneRef.current    // 0-1 (tone macro)
+      const vol = volumeRef.current  // 0-1
+
+      // Cutoff → brightness influence (log-scale 20Hz-20kHz → 0-1)
+      const rawCutoff = filterParamsRef.current?.cutoff ?? 20000
+      const cutoffNorm = Math.min(1, Math.log(Math.max(20, rawCutoff) / 20) / Math.log(1000))
+
+      let targetHue, targetSat, targetBright, targetCont
+
+      if (isActive) {
+        const pos = interact.position ?? 0.5
+        const vel = interact.velocity ?? 0.5
+        // X position (pitch) drives hue across ±50deg around base
+        targetHue   = 90 + (pos - 0.5) * 100
+        // Velocity / y drives saturation (hit harder → more vivid)
+        targetSat   = 1.4 + vel * 0.8
+        targetBright = 1.05 + vel * 0.12 + cutoffNorm * 0.06
+        targetCont  = 1.0 + tn * 0.2
+      } else if (recentlyActive) {
+        const pos = interact.position ?? 0.5
+        targetHue   = 90 + (pos - 0.5) * 60 + sp * 20 - 10
+        targetSat   = 1.35 + tn * 0.35 + sp * 0.15
+        targetBright = 0.97 + vol * 0.2 + cutoffNorm * 0.08
+        targetCont  = 1.0 + tn * 0.12
+      } else {
+        // Idle drift — slow sine gives life when nothing is playing
+        const phase = (now / 5000) * Math.PI * 2
+        targetHue   = 90 + sp * 25 - 12 + Math.sin(phase) * 12
+        targetSat   = 1.3 + tn * 0.3 + sp * 0.12
+        targetBright = 0.95 + vol * 0.2 + cutoffNorm * 0.08
+        targetCont  = 1.0 + tn * 0.07
+      }
+
+      const speed = isActive ? 0.07 : recentlyActive ? 0.03 : 0.015
+      fs.hue    += (targetHue   - fs.hue)   * speed
+      fs.sat    += (targetSat   - fs.sat)   * speed
+      fs.bright += (targetBright - fs.bright) * speed
+      fs.cont   += (targetCont  - fs.cont)  * speed
+
+      el.style.filter = `hue-rotate(${fs.hue.toFixed(1)}deg) saturate(${fs.sat.toFixed(3)}) brightness(${fs.bright.toFixed(3)}) contrast(${fs.cont.toFixed(3)})`
+
+      rafId = requestAnimationFrame(tick)
+    }
+
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Apply URL preset to audio engine on first mount
@@ -968,7 +1049,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
       onSynthStateChange]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className={`app app--puddle ${visualMode === 'lo' ? 'lo-mode' : ''}`}>
+    <div ref={appRef} className={`app app--puddle ${visualMode === 'lo' ? 'lo-mode' : ''}`}>
       {!presetSplashDone
         ? <PresetSplash presetUrl={_urlPresetHref} onEnter={handlePresetEnter} />
         : <MobileSplash onEnter={() => getEngine()} />

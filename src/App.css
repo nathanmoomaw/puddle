@@ -17,8 +17,8 @@
 /* v3 Puddle layout — grid background, puddle center stage */
 .app--puddle {
   overflow-x: hidden; /* horizontal only — vertical must stay open for logo glow filters */
-  /* v2: hue shift + saturate/brighten to keep neons vivid after rotation */
-  filter: hue-rotate(90deg) saturate(1.5) brightness(1.08);
+  /* filter driven dynamically by JS rAF loop in App.jsx (live-filter effect) */
+  will-change: filter;
 }
 
 /* Shake nook — desktop nook */

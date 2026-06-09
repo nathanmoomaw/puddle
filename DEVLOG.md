@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-06-09 — Live dynamic CSS filter: hue tracks pitch, sat/bright/contrast track interaction
+
+- **Dynamic filter via rAF loop** (items 312–313): replaced static `hue-rotate(90deg) saturate(1.5) brightness(1.08)` with a `requestAnimationFrame` loop in `App.jsx` that drives `filter` on `.app--puddle` in real time. When playing: X position (pitch) shifts hue ±50deg around 90, velocity boosts saturation (1.4–2.2) and brightness. When idle: gentle sine drift + knob influence (space macro shifts hue, tone macro boosts contrast, volume tweaks brightness, filter cutoff lifts brightness when open). Mobile throttled to 30fps. `will-change: filter` on the element for GPU compositing.
+
 ## 2026-06-09 — Vivid hue-rotate filter
 
 - **v2 filter vibrancy** (item 311): `hue-rotate(90deg)` was desaturating perceived colors because the source neons (cyan, purple) rotated to warmer hues (yellow-green, orange) with lower apparent saturation. Added `saturate(1.5) brightness(1.08)` after the rotation to restore pop.
