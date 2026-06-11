@@ -20,6 +20,7 @@ export const Puddle = forwardRef(function Puddle({
   normalZone,   // ref: { xMin, xMax } fraction of viewport — normal play area
   onWildTouch,  // called when touch lands outside normalZone
   colorStateRef, // ref: { opdShift } — drives iridescent hue shift
+  shakeOrigin,  // { x, y, ts } — triggers splash+ripple at current playing position on shake
 }, ref) {
   const [positions, setPositions] = useState(new Map())
   const [activePointers, setActivePointers] = useState(new Set())
@@ -193,10 +194,19 @@ export const Puddle = forwardRef(function Puddle({
     }
   }, [activePointers, onPuddleActivity])
 
-  const { puddleRef, ripples, handlers } = usePuddle(onPositionChange, onDown, onUp, handleDragEscape)
+  const { puddleRef, ripples, addRipple, handlers } = usePuddle(onPositionChange, onDown, onUp, handleDragEscape)
 
   // Three.js renderer
   usePuddleRenderer(threeContainerRef, ripples, getEngine, marbleDepressions, colorStateRef, ribbonInteraction)
+
+  // Shake origin — trigger splash+ripple at the playing position when shake fires
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!shakeOrigin) return
+    addSplash(shakeOrigin.x, shakeOrigin.y)
+    spawnConfetti(shakeOrigin.x, shakeOrigin.y)
+    addRipple(shakeOrigin.x, shakeOrigin.y, 1.2)
+  }, [shakeOrigin?.ts]) // ts changes each shake
 
   // --- Water splash rings ---
   function addSplash(nx, ny) {

@@ -112,6 +112,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   // v2 macro knobs: Space (reverb+delay) and Tone (crunch+vcf)
   const [space, setSpace] = useState(0.5)
   const [tone, setTone] = useState(0.5)
+  const [shakeOrigin, setShakeOrigin] = useState(null)
 
   // iOS silent mode hint — show once on iOS if not yet dismissed
   const [showIosHint, setShowIosHint] = useState(() => {
@@ -696,10 +697,26 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     const shakeMilestone = incrementMilestone('shake_master', 100)
     if (shakeMilestone) showMilestone(shakeMilestone)
 
-    // 4. Trigger a random ribbon press — velocity scales with intensity
-    const shakePosition = Math.random()
+    // 4. Trigger a ribbon press — visual + note origin follows what's currently playing
+    // Priority: active touch > marble positions > last known position > random
+    let shakePosition
+    const interact = ribbonInteraction.current
+    if (interact?.active && interact.position != null) {
+      shakePosition = interact.position
+    } else if (puddleMarblesRef.current.length > 0) {
+      const marbs = puddleMarblesRef.current
+      shakePosition = marbs.reduce((sum, m) => sum + m.x, 0) / marbs.length
+    } else if (interact?.position != null) {
+      shakePosition = interact.position
+    } else {
+      shakePosition = Math.random()
+    }
+
     const shakeVelocity = Math.random() * 0.3 + intensity * 0.5
     const shakeHz = positionToFrequency(shakePosition, { octaves: octavesRef.current, stepped: steppedRef.current, scale: scaleRef.current })
+
+    // Trigger visual splash at the playing position
+    setShakeOrigin({ x: shakePosition, y: shakeVelocity, ts: Date.now() })
 
     // Update ribbon interaction ref for visualizer
     if (ribbonInteraction.current) {
@@ -726,7 +743,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
         }
       }, noteDuration)
     }
-  }, [getEngine, handleArpNoteToggle, shakeClean, showMilestone, handleSpace, handleTone])
+  }, [getEngine, handleArpNoteToggle, shakeClean, showMilestone, handleSpace, handleTone, setShakeOrigin])
 
   handleShakeRef.current = handleShake
   useShake(handleShake, controlsRef, ribbonRef)
@@ -1155,6 +1172,7 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
           normalZone={normalZoneRef}
           onWildTouch={handleWildTouch}
           colorStateRef={colorStateRef}
+          shakeOrigin={shakeOrigin}
         />
 
         <Controls

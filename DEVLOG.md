@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-06-11 — Shake visual anchored to current playing position
+
+- **Shake origin from playing area** (item 314): shake no longer uses a random x position for its visual and note. Priority: active touch position → average marble x → last known position → random. A `shakeOrigin { x, y, ts }` prop is passed from App.jsx to Puddle.jsx; Puddle fires `addSplash` + `spawnConfetti` + `addRipple` at that position on each shake. Exposed `addRipple` from `usePuddle` return value.
+
 ## 2026-06-09 — Live dynamic CSS filter: hue tracks pitch, sat/bright/contrast track interaction
 
 - **Dynamic filter via rAF loop** (items 312–313): replaced static `hue-rotate(90deg) saturate(1.5) brightness(1.08)` with a `requestAnimationFrame` loop in `App.jsx` that drives `filter` on `.app--puddle` in real time. When playing: X position (pitch) shifts hue ±50deg around 90, velocity boosts saturation (1.4–2.2) and brightness. When idle: gentle sine drift + knob influence (space macro shifts hue, tone macro boosts contrast, volume tweaks brightness, filter cutoff lifts brightness when open). Mobile throttled to 30fps. `will-change: filter` on the element for GPU compositing.

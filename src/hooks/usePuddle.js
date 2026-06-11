@@ -111,6 +111,7 @@ export function usePuddle(onPositionChange, onDown, onUp, onDragEscape) {
   return {
     puddleRef,
     ripples,
+    addRipple,
     handlers: {
       onPointerDown: handlePointerDown,
       onPointerMove: handlePointerMove,
