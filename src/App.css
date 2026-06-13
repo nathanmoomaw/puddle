@@ -477,6 +477,27 @@
   }
 }
 
+/* Mobile landscape: compact header and hide app shake nook (controls bolt takes over) */
+@media (max-width: 767px) and (orientation: landscape) {
+  .app-header__left {
+    padding: 3px 0 2px 8px !important;
+    min-height: 26px !important;
+  }
+
+  .app-header .ribbon-logo {
+    width: 70px !important;
+  }
+
+  .app-header__right {
+    gap: 0.1rem !important;
+  }
+
+  /* Shake nook overlaps controls in landscape — bolt in controls bar is sufficient */
+  .app__shake-nook {
+    display: none !important;
+  }
+}
+
 /* Lo mode — logo animations handled in RibbonLogo.css */
 
 /* Easter egg glitch overlay */

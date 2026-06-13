@@ -914,6 +914,109 @@
   }
 }
 
+/* ── Mobile Landscape (≤767px wide, orientation:landscape) ────────────────
+   Short-height landscape phones (~320-430px tall): flip OSCs to horizontal
+   and compress controls so the puddle stays playable.
+   ──────────────────────────────────────────────────────────────────────── */
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Biggest win: flip OSC column into a row — saves ~200px of height */
+  .controls__oscillators {
+    flex-direction: row !important;
+    gap: 0.2rem;
+  }
+
+  /* Shake bolt sits above the horizontal OSC row, smaller */
+  .controls__oscs-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.05rem;
+  }
+
+  .controls__osc-shake-bolt {
+    font-size: 1.5rem !important;
+    padding: 0 0.15rem !important;
+  }
+
+  /* Compact each OSC card */
+  .controls__osc {
+    padding: 0.2rem 0.3rem !important;
+  }
+
+  .controls__osc-inline {
+    gap: 0.25rem;
+  }
+
+  /* Scale dual knobs down — SVG viewBox scales correctly with the container */
+  .dual-knob {
+    transform: scale(0.72);
+    transform-origin: bottom center;
+    margin-inline: -7px; /* compensate layout gap from scale */
+  }
+
+  /* Waveform button smaller */
+  .controls__osc-waveform-btn {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .controls__osc-waveform-symbol {
+    font-size: 1rem !important;
+  }
+
+  /* Scale bipolar (Space/Tone) knobs similarly */
+  .bipolar-knob {
+    transform: scale(0.78);
+    transform-origin: bottom center;
+    margin-inline: -5px;
+  }
+
+  /* Center controls: tighter padding and gaps */
+  .controls__shared {
+    gap: 0.1rem 0.2rem !important;
+    padding: 0.1rem !important;
+  }
+
+  /* Macros row: allow wrap so Space/Tone/Speed stack if needed */
+  .controls__macros-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Left group: smaller rockers */
+  .controls__group--left .rocker__side {
+    width: 32px !important;
+    height: 32px !important;
+    flex: 0 0 32px !important;
+    padding: 0 1px !important;
+  }
+
+  /* Activation hold buttons */
+  .controls__group--left .activation__hold-left {
+    max-width: 38px !important;
+    padding: 0.15em 0.15em !important;
+  }
+
+  /* Scale buttons more compact */
+  .controls__waveforms {
+    gap: 2px !important;
+  }
+  .controls__waveforms button {
+    font-size: 0.5rem !important;
+    padding: 0.18em 0.3em !important;
+    min-height: 18px !important;
+  }
+
+  /* Controls bar: minimal bottom padding */
+  .controls__bar {
+    padding-bottom: 4px !important;
+  }
+
+  /* Vol/Oct row tighter gap */
+  .controls__vol-oct-row {
+    gap: 0.2rem !important;
+  }
+}
+
 /* ── v2 Neon / Angular overrides ──────────────────────────────────────────────
    Transparent panels: all interactive elements restore pointer events.
    Empty space between controls falls through to the puddle.

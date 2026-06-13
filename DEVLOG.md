@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-06-12 — Mobile landscape layout fix
+
+- **Landscape controls fit** (DUMP item 318): added `@media (max-width: 767px) and (orientation: landscape)` to Controls.css and App.css. Key change: OSC column flipped to horizontal row (3 OSCs side by side), which reclaims ~200px of vertical height. DualKnobs scaled 72% via `transform: scale`, BipolarKnobs 78%. Shake nook hidden in landscape (bolt in controls bar takes over). Header logo reduced to 70px. Macros row wraps if needed. Left group rockers compacted to 32px.
+
 ## 2026-06-11 — Shake visual anchored to current playing position
 
 - **Shake origin from playing area** (item 314): shake no longer uses a random x position for its visual and note. Priority: active touch position → average marble x → last known position → random. A `shakeOrigin { x, y, ts }` prop is passed from App.jsx to Puddle.jsx; Puddle fires `addSplash` + `spawnConfetti` + `addRipple` at that position on each shake. Exposed `addRipple` from `usePuddle` return value.
