@@ -1,4 +1,11 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit'
+import {
+  injectedWallet,
+  metaMaskWallet,
+  rainbowWallet,
+  walletConnectWallet,
+  coinbaseWallet,
+} from '@rainbow-me/rainbowkit/wallets'
 import { base, baseSepolia } from 'wagmi/chains'
 
 // WalletConnect project ID from cloud.walletconnect.com
@@ -21,9 +28,26 @@ const chains = import.meta.env.VITE_USE_TESTNET === 'true'
   ? [baseSepolia, base]
   : [base]
 
+// Explicit wallet list — excludes baseAccount (Coinbase Smart Wallet) which initializes
+// its own SDK and shows an auto-connect popup on every page load.
+// Users can still connect via MetaMask, injected wallet, WalletConnect, or Coinbase extension.
+const wallets = [
+  {
+    groupName: 'Popular',
+    wallets: [
+      metaMaskWallet,
+      injectedWallet,
+      coinbaseWallet,
+      walletConnectWallet,
+      rainbowWallet,
+    ],
+  },
+]
+
 export const wagmiConfig = getDefaultConfig({
   appName: 'Puddle',
   projectId: WALLETCONNECT_PROJECT_ID,
+  wallets,
   chains,
   ssr: false,
   reconnectOnMount: false,

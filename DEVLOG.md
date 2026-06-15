@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-06-15 — Remove Base Account auto-connect popup
+
+- **Base Account popup suppressed**: `baseAccount` (Coinbase Smart Wallet) is included in RainbowKit's default wallet list and its SDK initializes on every page load, showing an auto-connect popup. Fixed by passing an explicit `wallets` list to `getDefaultConfig` that excludes `baseAccount`. Users can still connect via MetaMask, injected wallet, Coinbase extension, WalletConnect, or Rainbow.
+
 ## 2026-06-15 — Forget wallet fix + v2.0.0 version bump
 
 - **Forget wallet**: added `useDisconnect` from wagmi to `handleForgetWallet` so the connector (Coinbase Smart Wallet etc.) properly tears down its session instead of just wiping localStorage. Broadened localStorage clearing to also nuke `rk-*` (RainbowKit) and `-walletlink*` (Coinbase legacy) keys in both `handleForgetWallet` and `main.jsx` pre-mount clear.
