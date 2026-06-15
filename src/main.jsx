@@ -8,11 +8,11 @@ import '@rainbow-me/rainbowkit/styles.css'
 import './index.css'
 import AppShell from './AppShell.jsx'
 
-// Clear wagmi's persisted connector state before the provider mounts.
+// Clear wagmi + RainbowKit + Coinbase Wallet persisted state before the provider mounts.
 // Prevents auto-reconnect prompts (e.g. Coinbase Base Account modal) on page load.
 // Users reconnect explicitly via the wallet button.
 Object.keys(localStorage)
-  .filter(k => k.startsWith('wagmi'))
+  .filter(k => k.startsWith('wagmi') || k.startsWith('rk-') || k.startsWith('-walletlink'))
   .forEach(k => localStorage.removeItem(k))
 
 const queryClient = new QueryClient()

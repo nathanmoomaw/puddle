@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-06-15 — Forget wallet fix + v2.0.0 version bump
+
+- **Forget wallet**: added `useDisconnect` from wagmi to `handleForgetWallet` so the connector (Coinbase Smart Wallet etc.) properly tears down its session instead of just wiping localStorage. Broadened localStorage clearing to also nuke `rk-*` (RainbowKit) and `-walletlink*` (Coinbase legacy) keys in both `handleForgetWallet` and `main.jsx` pre-mount clear.
+- **Version 2.0.0**: bumped `package.json` version from `1.1.0` → `2.0.0`. Info modal reads from `package.json` and will now display v2.0.0.
+
 ## 2026-06-12 — Mobile landscape layout fix
 
 - **Landscape controls fit** (DUMP item 318): added `@media (max-width: 767px) and (orientation: landscape)` to Controls.css and App.css. Key change: OSC column flipped to horizontal row (3 OSCs side by side), which reclaims ~200px of vertical height. DualKnobs scaled 72% via `transform: scale`, BipolarKnobs 78%. Shake nook hidden in landscape (bolt in controls bar takes over). Header logo reduced to 70px. Macros row wraps if needed. Left group rockers compacted to 32px.
