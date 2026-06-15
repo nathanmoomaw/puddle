@@ -4,7 +4,6 @@ import {
   metaMaskWallet,
   rainbowWallet,
   walletConnectWallet,
-  coinbaseWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import { base, baseSepolia } from 'wagmi/chains'
 
@@ -28,16 +27,15 @@ const chains = import.meta.env.VITE_USE_TESTNET === 'true'
   ? [baseSepolia, base]
   : [base]
 
-// Explicit wallet list — excludes baseAccount (Coinbase Smart Wallet) which initializes
-// its own SDK and shows an auto-connect popup on every page load.
-// Users can still connect via MetaMask, injected wallet, WalletConnect, or Coinbase extension.
+// Explicit wallet list — excludes both baseAccount and coinbaseWallet because both load the
+// Coinbase SDK which detects a stored Smart Wallet session and auto-pops a "continue in Base
+// Account" window on every page load. Coinbase extension users are covered by injectedWallet.
 const wallets = [
   {
     groupName: 'Popular',
     wallets: [
       metaMaskWallet,
       injectedWallet,
-      coinbaseWallet,
       walletConnectWallet,
       rainbowWallet,
     ],

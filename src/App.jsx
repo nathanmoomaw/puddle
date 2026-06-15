@@ -68,13 +68,17 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const [walletFlagSet, setWalletFlagSet] = useState(!!localStorage.getItem(WALLET_FLAG_KEY))
 
   const handleForgetWallet = useCallback(() => {
-    // Disconnect via wagmi so connectors (Coinbase Smart Wallet etc.) clean up their own sessions
     disconnect()
-    // Clear our flag and all wagmi/RainbowKit persisted state
     localStorage.removeItem(WALLET_FLAG_KEY)
     Object.keys(localStorage)
-      .filter(k => k.startsWith('wagmi') || k.startsWith('rk-') || k.startsWith('-walletlink'))
+      .filter(k =>
+        k.startsWith('wagmi') ||
+        k.startsWith('rk-') ||
+        k.startsWith('-walletlink') ||
+        k.startsWith('-CBWSDK')
+      )
       .forEach(k => localStorage.removeItem(k))
+    try { indexedDB.deleteDatabase('cbwsdk') } catch (_) {}
     setWalletFlagSet(false)
   }, [disconnect])
 

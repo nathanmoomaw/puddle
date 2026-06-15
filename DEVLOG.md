@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-06-15 — Fully suppress Coinbase SDK auto-connect popup
+
+- **Root cause confirmed**: `coinbaseWallet` (not just `baseAccount`) also loads the Coinbase SDK, which stores session keys in IndexedDB (`cbwsdk` db, `keys` store) and localStorage (`-CBWSDK:*` prefix). On page load the SDK detects the session and opens a "continue in Base Account" popup window — caught by the browser's popup blocker as the dialog shown in the screenshot.
+- **Fix**: (1) Removed both `coinbaseWallet` and `baseAccount` from the wallet list — Coinbase extension users still work via `injectedWallet`. (2) Added `-CBWSDK` to localStorage filter in `main.jsx` + `handleForgetWallet`. (3) Added `indexedDB.deleteDatabase('cbwsdk')` in both places to wipe the SDK's IDB key storage.
+
 ## 2026-06-15 — Remove Base Account auto-connect popup
 
 - **Base Account popup suppressed**: `baseAccount` (Coinbase Smart Wallet) is included in RainbowKit's default wallet list and its SDK initializes on every page load, showing an auto-connect popup. Fixed by passing an explicit `wallets` list to `getDefaultConfig` that excludes `baseAccount`. Users can still connect via MetaMask, injected wallet, Coinbase extension, WalletConnect, or Rainbow.
