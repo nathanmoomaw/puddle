@@ -790,6 +790,34 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
     return () => { clearTimeout(t); window.removeEventListener('resize', measure) }
   }, [])
 
+  // Mobile fullscreen: request on first gesture + re-request on orientation change.
+  // iOS Safari doesn't support arbitrary fullscreen, but android chrome + PWA home-screen do.
+  useEffect(() => {
+    const requestFS = () => {
+      const el = document.documentElement
+      const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen
+      if (fn && !document.fullscreenElement && !document.webkitFullscreenElement) {
+        fn.call(el).catch(() => {})
+      }
+    }
+    const onFirstGesture = () => {
+      if ('ontouchstart' in window) requestFS()
+      window.removeEventListener('touchstart', onFirstGesture, { capture: true })
+      window.removeEventListener('pointerdown', onFirstGesture, { capture: true })
+    }
+    const onOrientationChange = () => {
+      if ('ontouchstart' in window) setTimeout(requestFS, 300)
+    }
+    window.addEventListener('touchstart', onFirstGesture, { capture: true, passive: true })
+    window.addEventListener('pointerdown', onFirstGesture, { capture: true, passive: true })
+    window.addEventListener('orientationchange', onOrientationChange)
+    return () => {
+      window.removeEventListener('touchstart', onFirstGesture, { capture: true })
+      window.removeEventListener('pointerdown', onFirstGesture, { capture: true })
+      window.removeEventListener('orientationchange', onOrientationChange)
+    }
+  }, [])
+
   // Wild touch handler — fires when user touches outside normal play zone.
   // Triggers extreme parameter shifts + note burst for an "out of this world" effect.
   const handleWildTouch = useCallback((x, y) => {

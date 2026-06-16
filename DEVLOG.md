@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-06-16 — Mobile UX: info icon width, landscape controls, fullscreen
+
+- **Info icon width**: removed `flex-basis: 100%` from portrait portrait `.app-header__info-btn` — that was stretching the ⓘ button full row width. Now `flex-basis: auto; width: auto; align-self: flex-start` keeps it at natural size while `order: 1` still stacks it below the version selector.
+- **Landscape controls**: reverted OSC horizontal flip (`flex-direction: row`) — controls stay in their original vertical column orientation. Removed the 70px logo override so logo uses the mobile default (140px). Added `max-height: calc(100dvh - 30px); overflow-y: auto` to the landscape controls bar so if OSC columns are tall, the bar scrolls rather than clipping bottom buttons.
+- **Fullscreen enforcement**: on first mobile touch and on `orientationchange`, requests fullscreen via `requestFullscreen` / `webkitRequestFullscreen`. Added PWA meta tags (`apple-mobile-web-app-capable`, `mobile-web-app-capable`, `viewport-fit=cover`) to `index.html` so the app can run fullscreen when added to home screen on iOS.
+
 ## 2026-06-16 — Fix landscape mobile overflow (height-based breakpoint) + info icon stacking
 
 - **Root cause of landscape overflow**: the existing `(max-width: 767px) and (orientation: landscape)` query never fires on real phones, since landscape phone viewports are commonly wider than 767px (e.g. iPhone 14 landscape is 844×390). Those devices fell into the `>=768px` desktop grid layout, sized for tall viewports, and controls ran off the bottom of the screen.

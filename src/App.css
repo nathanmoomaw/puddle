@@ -486,10 +486,6 @@
     min-height: 26px !important;
   }
 
-  .app-header .ribbon-logo {
-    width: 70px !important;
-  }
-
   .app-header__right {
     gap: 0.1rem !important;
   }
