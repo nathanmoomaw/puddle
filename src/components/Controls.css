@@ -811,10 +811,19 @@
   flex-shrink: 0;
 }
 
-/* ── Mobile (≤767px): overlay bar, left/right fixed, center wraps into rows ── */
-@media (max-width: 767px) {
+/* ── Mobile (≤767px), OR any short-height landscape viewport (≤500px tall) ──
+   regardless of width: real phones in landscape (eg iPhone 14 @ 844x390)
+   exceed 767px wide, so they'd otherwise fall into the >=768px desktop grid
+   layout, which assumes a tall viewport and overflows off the bottom of
+   the screen. The height-based clause forces the compact overlay bar here
+   on those devices too.
+   overlay bar, left/right fixed, center wraps into rows ── */
+@media (max-width: 767px), (orientation: landscape) and (max-height: 500px) {
   /* Transparent overlay so puddle shows through; clicks pass through gaps */
   .controls {
+    /* explicit display overrides the >=768px block's `display:contents`,
+       which would otherwise make `position: fixed` below a no-op */
+    display: flex;
     position: fixed;
     inset: 0;
     z-index: 5;
@@ -914,11 +923,13 @@
   }
 }
 
-/* ── Mobile Landscape (≤767px wide, orientation:landscape) ────────────────
+/* ── Mobile Landscape ──────────────────────────────────────────────────────
    Short-height landscape phones (~320-430px tall): flip OSCs to horizontal
-   and compress controls so the puddle stays playable.
+   and compress controls so the puddle stays playable. Matched by height
+   (max-height: 500px) rather than width alone, since real phones in
+   landscape (eg iPhone 14 @ 844x390) are wider than 767px.
    ──────────────────────────────────────────────────────────────────────── */
-@media (max-width: 767px) and (orientation: landscape) {
+@media (max-width: 767px) and (orientation: landscape), (orientation: landscape) and (max-height: 500px) {
   /* Biggest win: flip OSC column into a row — saves ~200px of height */
   .controls__oscillators {
     flex-direction: row !important;

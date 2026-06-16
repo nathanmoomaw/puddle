@@ -477,8 +477,10 @@
   }
 }
 
-/* Mobile landscape: compact header and hide app shake nook (controls bolt takes over) */
-@media (max-width: 767px) and (orientation: landscape) {
+/* Mobile landscape: compact header and hide app shake nook (controls bolt takes over).
+   Matched by height (max-height: 500px) too — real phones in landscape (eg
+   iPhone 14 @ 844x390) exceed 767px wide. */
+@media (max-width: 767px) and (orientation: landscape), (orientation: landscape) and (max-height: 500px) {
   .app-header__left {
     padding: 3px 0 2px 8px !important;
     min-height: 26px !important;

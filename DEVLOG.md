@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-06-16 — Fix landscape mobile overflow (height-based breakpoint) + info icon stacking
+
+- **Root cause of landscape overflow**: the existing `(max-width: 767px) and (orientation: landscape)` query never fires on real phones, since landscape phone viewports are commonly wider than 767px (e.g. iPhone 14 landscape is 844×390). Those devices fell into the `>=768px` desktop grid layout, sized for tall viewports, and controls ran off the bottom of the screen.
+- **Fix**: changed the mobile-overlay breakpoint (`Controls.css`) and the landscape header-compaction breakpoint (`App.css`) to also match `(orientation: landscape) and (max-height: 500px)`, independent of width. Added an explicit `display: flex` override on `.controls` so the short-landscape case correctly cancels the desktop block's `display: contents` (which would otherwise make `position: fixed` a no-op).
+- **Info icon stacking**: on mobile portrait, the info ("i") button now has `order: 1; flex-basis: 100%` so it lands on its own row below the version selector (which already forces its own row via `flex-basis: 100%`), instead of crowding the QR/party-lo row above it.
+
 ## 2026-06-15 — Fully suppress Coinbase SDK auto-connect popup
 
 - **Root cause confirmed**: `coinbaseWallet` (not just `baseAccount`) also loads the Coinbase SDK, which stores session keys in IndexedDB (`cbwsdk` db, `keys` store) and localStorage (`-CBWSDK:*` prefix). On page load the SDK detects the session and opens a "continue in Base Account" popup window — caught by the browser's popup blocker as the dialog shown in the screenshot.

@@ -71,3 +71,14 @@
 .app-header__info-btn--active {
   opacity: 0.85;
 }
+
+/* Mobile portrait: info icon stacks on its own row below the version
+   selector. VersionSelector forces itself onto its own row via
+   flex-basis:100% (default order:0); giving the info button a higher
+   order pushes it after that row regardless of DOM position. */
+@media (max-width: 767px) and (orientation: portrait) {
+  .app-header__info-btn {
+    order: 1;
+    flex-basis: 100%;
+  }
+}
