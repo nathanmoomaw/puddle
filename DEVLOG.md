@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-06-17 — v2 "Liquid Sky" released
+
+- **v2 tagged and deployed**: merged `dev/v2` → `v2` branch (deploys to `puddle.obfusco.us/v2`) and → `main` (deploys to `puddle.obfusco.us`). Production is now on v2.
+- **CHANGELOG.md finalized**: complete v2 feature list written — full-screen puddle, dual-tier knobs, Space/Tone macros, wild zone, dynamic CSS filter, neon aesthetic, marble animations, mobile landscape layout, fullscreen enforcement, wallet fixes.
+
 ## 2026-06-16 — Mobile UX: info icon width, landscape controls, fullscreen
 
 - **Info icon width**: removed `flex-basis: 100%` from portrait portrait `.app-header__info-btn` — that was stretching the ⓘ button full row width. Now `flex-basis: auto; width: auto; align-self: flex-start` keeps it at natural size while `order: 1` still stacks it below the version selector.

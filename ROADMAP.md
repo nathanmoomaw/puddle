@@ -4,7 +4,7 @@
 - [x] Liquid sky layout — puddle full-screen behind controls
 - [x] Dual-tier osc knob — mix (outer arc) + detune (inner notch) in one component
 - [x] Version selector — inline v1|v2 nav in header; merge to v1/main after confirmation
-- [ ] Version selector: confirm placement, merge to v1 branch and main
+- [x] Version selector: confirm placement, merge to v1 branch and main
 - [x] Simplify effect controls — Space/Tone BipolarKnob macros replace reverb/delay/crunch
 - [x] Full-bleed puddle — position:fixed covers entire viewport on both desktop and mobile
 - [x] Normal zone remapping + wild touches outside center panel

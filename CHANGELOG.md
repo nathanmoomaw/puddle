@@ -1,12 +1,48 @@
 # Changelog
 
-## v2 — "Liquid Sky" (dev/v2, in progress)
+## v2 — "Liquid Sky" (2026-06-17)
 
 ### New Features
 
-- **Full-screen puddle** — puddle extends behind all controls (desktop); controls float as overlay panels above the oil-spill surface
-- **Dual-tier osc knob** — per-oscillator mix and detune combined into a single concentric-ring knob; outer arc = mix level, inner notch = detune position
-- **Version selector** — inline `v1 | v2` navigation in both party and lo mode headers; links to stable version subpaths
+- **Full-screen puddle** — puddle extends edge-to-edge behind all controls; controls float as transparent neon glass panels above the oil-spill surface; click-through for empty space
+- **Dual-tier osc knob** — per-oscillator mix and detune combined into a single concentric-ring knob; outer arc = mix level, inner notch = detune position; two visible dial hands
+- **Version selector** — inline `v1 | v2` navigation in both party and lo mode headers; links to stable version subpaths (`/v1`, `/v2`)
+- **Waveform cycling** — OSC ∿ button replaces waveform grid; cycles sine → square → triangle → sawtooth with a single click; waveform glyph updates inline
+- **Space & Tone macros** — two BipolarKnob controls replace reverb/delay/crunch; Space = wet/spatial feel, Tone = timbral brightness
+- **Combined VCF dual knobs** — Filter cutoff + resonance and VCF cutoff + resonance each condensed into a single DualKnob component
+- **Wild zone** — clicks outside the center puddle rectangle randomize all 3 osc waveforms + VCF parameters for unpredictable texture
+- **Dynamic CSS filter** — real-time `hue-rotate` tracks pitch (X position), saturation tracks velocity; idle drift uses a sine wave with knob influence (space → hue, tone → contrast, volume → brightness)
+- **Neon floating aesthetic** — no control panel borders or backgrounds; all buttons and knobs glow with per-section neon halos; rockers are angular möbius-peanut shaped; controls appear to float in the puddle
+- **Marble animations** — placed marbles appear to roll and shimmer; slot marbles slowly drift while held
+- **Shake anchored to playing position** — shake visual and note origin tracks active touch → average marble position → last known position → random
+- **Key command: drop marble** — `M` key drops a marble at the current mouse position
+- **Key command: screenshot with QR** — saves a visual snapshot of the puddle including logo, controls, and the current gradient QR preset code
+- **Mobile fullscreen** — requests fullscreen on first touch and on orientation change; PWA meta tags for home-screen installation
+- **Mobile landscape layout** — compact horizontal OSC row, scaled knobs, scrollable controls bar
+
+### UX Changes
+
+- `Return` key wired to shake (looper removed; event-based looper planned for v3)
+- Hold indicator light brightened
+- `STOP` button width halved; word "Space" removed from button label to avoid overflow
+- Rocker switches use figure-8 / peanut shape with animated 3D neon glow; active side glows its accent color
+- Octaves selector converted to a notched rotary (1–6 octaves; 7th is an easter egg)
+- BPM and Speed controls combined into a single knob with expanded range (3× BPM scale)
+- Volume converted to a radial knob (matching all other controls)
+- All OSC section borders and backgrounds removed
+- Party/Lo toggle, QR, ⓘ and version selector aligned consistently in both modes
+
+### Crypto / Wallet
+
+- Coinbase Base Account and Coinbase SDK auto-connect popup suppressed; users still connect via MetaMask, injected wallet, WalletConnect, or Rainbow
+- `handleForgetWallet` uses `useDisconnect` (wagmi) + clears all RainbowKit, WalletLink, and CBWSDK storage (localStorage + IndexedDB)
+
+### Deployment
+
+- `puddle.obfusco.us` — production (main branch, this release)
+- `puddle.obfusco.us/v2` — living stable v2 track (v2 branch)
+- `puddle-dev.obfusco.us/v2` — dev preview (dev/v2 branch)
+- CI/CD: GitHub Actions → S3 + CloudFront
 
 ---
 
