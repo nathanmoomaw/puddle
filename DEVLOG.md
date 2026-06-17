@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-06-17 — Fix v1 rendering at puddle.obfusco.us/v1/
+
+- **Root cause**: `v1` branch was missing `base: process.env.VITE_BASE_PATH` in `vite.config.js` — assets loaded from `/` instead of `/v1/`, blank page.
+- **Fix**: fast-forward merged `dev/v1` → `v1` (3 commits: CI update, vite base path, VersionSelector in v1 header). Pushed `v1` to trigger CI deploy.
+
 ## 2026-06-17 — v2 "Liquid Sky" released
 
 - **v2 tagged and deployed**: merged `dev/v2` → `v2` branch (deploys to `puddle.obfusco.us/v2`) and → `main` (deploys to `puddle.obfusco.us`). Production is now on v2.
