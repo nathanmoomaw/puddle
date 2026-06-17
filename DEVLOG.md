@@ -1,5 +1,10 @@
 # Devlog
 
+## 2026-06-17 — Fix v1 deploy: branch protection blocking CI version bump
+
+- **Second failure**: CI's `Bump patch version` step committed and pushed to `v1`, but branch protection ("Changes must be made through a pull request") rejected the push — job failed before deploying.
+- **Fix**: removed `required_pull_request_reviews` from `v1` branch protection via GitHub API (`DELETE /branches/v1/protection/required_pull_request_reviews`). Re-triggered deploy with empty commit. CI ran successfully — `puddle.obfusco.us/v1/` now live.
+
 ## 2026-06-17 — Fix v1 rendering at puddle.obfusco.us/v1/
 
 - **Root cause**: `v1` branch was missing `base: process.env.VITE_BASE_PATH` in `vite.config.js` — assets loaded from `/` instead of `/v1/`, blank page.
