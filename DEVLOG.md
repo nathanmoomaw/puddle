@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-06-22 — Wallet forget fix + version switch visual mode reset
+
+- `handleForgetWallet` in App.jsx and TextRibbonApp.jsx now calls `disconnect()` and clears all wallet storage keys: wagmi, rk-, -walletlink, -CBWSDK, wc@2: (WalletConnect v2), IndexedDB cbwsdk.
+- `main.jsx` startup clearing extended to match.
+- `VersionSelector` now clears `puddle_visual_mode` on version switch so the destination always loads in party mode.
+
 ## 2026-05-21 — v1.1 tagged and merged to v1 + main
 
 - Tagged current state as v1.1 "Lo Mode"

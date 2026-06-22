@@ -26,7 +26,7 @@ import { VersionSelector } from './components/VersionSelector'
 import { MobileSplash } from './components/MobileSplash'
 import { PresetSplash } from './components/PresetSplash'
 import { useMarbles } from './hooks/useMarbles'
-import { useAccount } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
 import './App.css'
 
 const WALLET_FLAG_KEY = 'puddle_wallet_ever_connected'
@@ -51,6 +51,7 @@ const _urlPresetHref = _urlPreset ? window.location.href : null
 function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const getEngine = useAudioEngine()
   const { address: walletAddress, isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
 
   // Don't auto-reconnect on load — that triggers a modal prompt.
   // Instead show subtle reconnect/forget options in the header (see WalletButton).
@@ -66,15 +67,20 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const [walletFlagSet, setWalletFlagSet] = useState(!!localStorage.getItem(WALLET_FLAG_KEY))
 
   const handleForgetWallet = useCallback(() => {
-    // Clear our flag
+    disconnect()
     localStorage.removeItem(WALLET_FLAG_KEY)
-    // Clear wagmi's persisted connection state so the Base Account connector
-    // stops auto-prompting on next load (wagmi stores session under wagmi.store)
     Object.keys(localStorage)
-      .filter(k => k.startsWith('wagmi'))
+      .filter(k =>
+        k.startsWith('wagmi') ||
+        k.startsWith('rk-') ||
+        k.startsWith('-walletlink') ||
+        k.startsWith('-CBWSDK') ||
+        k.startsWith('wc@2:')
+      )
       .forEach(k => localStorage.removeItem(k))
+    try { indexedDB.deleteDatabase('cbwsdk') } catch (_) {}
     setWalletFlagSet(false)
-  }, [])
+  }, [disconnect])
 
   const [mode, setMode] = useState(_urlPreset?.mode ?? initialSynthState?.mode ?? 'play')
   const [inputMode, setInputMode] = useState('touch')

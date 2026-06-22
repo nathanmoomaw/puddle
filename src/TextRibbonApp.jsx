@@ -3,7 +3,7 @@
  * Same audio engine as puddle party mode. Visual layer: ASCII ribbon canvas.
  */
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
 import { useAudioEngine } from './hooks/useAudioEngine'
 import { useKeyboard } from './hooks/useKeyboard'
 import { useArpeggiator } from './hooks/useArpeggiator'
@@ -39,6 +39,7 @@ const _urlPreset = _urlPresetData?.settings ?? null
 export default function TextRibbonApp({ onToggleMode, initialSynthState, onSynthStateChange }) {
   const getEngine = useAudioEngine()
   const { address: walletAddress, isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
 
   const [walletFlagSet, setWalletFlagSet] = useState(!!localStorage.getItem(WALLET_FLAG_KEY))
   useEffect(() => {
@@ -49,12 +50,20 @@ export default function TextRibbonApp({ onToggleMode, initialSynthState, onSynth
   }, [isConnected])
 
   const handleForgetWallet = useCallback(() => {
+    disconnect()
     localStorage.removeItem(WALLET_FLAG_KEY)
     Object.keys(localStorage)
-      .filter(k => k.startsWith('wagmi'))
+      .filter(k =>
+        k.startsWith('wagmi') ||
+        k.startsWith('rk-') ||
+        k.startsWith('-walletlink') ||
+        k.startsWith('-CBWSDK') ||
+        k.startsWith('wc@2:')
+      )
       .forEach(k => localStorage.removeItem(k))
+    try { indexedDB.deleteDatabase('cbwsdk') } catch (_) {}
     setWalletFlagSet(false)
-  }, [])
+  }, [disconnect])
 
   // Core synth state
   const [mode, setMode] = useState(_urlPreset?.mode ?? initialSynthState?.mode ?? 'play')
