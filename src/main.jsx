@@ -17,7 +17,8 @@ Object.keys(localStorage)
     k.startsWith('wagmi') ||
     k.startsWith('rk-') ||
     k.startsWith('-walletlink') ||
-    k.startsWith('-CBWSDK')
+    k.startsWith('-CBWSDK') ||
+    k.startsWith('wc@2:')
   )
   .forEach(k => localStorage.removeItem(k))
 try { indexedDB.deleteDatabase('cbwsdk') } catch (_) {}

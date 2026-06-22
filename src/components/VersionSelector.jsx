@@ -12,6 +12,13 @@ function getCurrentVersion() {
   return null
 }
 
+function handleVersionClick(e, href) {
+  // Reset visual mode to party so every version loads in its default state
+  localStorage.removeItem('puddle_visual_mode')
+  window.location.href = href
+  e.preventDefault()
+}
+
 export function VersionSelector() {
   const current = getCurrentVersion()
 
@@ -22,6 +29,7 @@ export function VersionSelector() {
           {i > 0 && <span className="version-selector__sep">|</span>}
           <a
             href={v.href}
+            onClick={(e) => handleVersionClick(e, v.href)}
             className={`version-selector__item${current === v.key ? ' version-selector__item--active' : ''}`}
             aria-current={current === v.key ? 'page' : undefined}
           >
