@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-06-22 — Version switch resets visual mode; lo mode wallet forget fix
+
+- **Version switcher**: clicking v1/v2 now clears `puddle_visual_mode` before navigating so the destination always loads in party mode, preventing lo mode from bleeding across versions.
+- **Lo mode wallet forget**: `TextRibbonApp.handleForgetWallet` was missing `disconnect()` and only cleared `wagmi` keys (not `rk-`, `-walletlink`, `-CBWSDK`, IndexedDB). Now matches the party mode implementation in full.
+- **wc@2: keys**: added WalletConnect v2 localStorage prefix to all three clearing sites (`main.jsx`, `App.jsx`, `TextRibbonApp.jsx`) to prevent WC sessions from surviving a forget.
+
 ## 2026-06-17 — Fix v1 deploy: branch protection blocking CI version bump
 
 - **Second failure**: CI's `Bump patch version` step committed and pushed to `v1`, but branch protection ("Changes must be made through a pull request") rejected the push — job failed before deploying.
