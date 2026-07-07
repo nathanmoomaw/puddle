@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-07-07 — Video capture of puddle animation (KeyR)
+
+- **New feature**: `src/utils/videoCapture.js` — `captureVideo()` grabs `.puddle__three canvas` via `canvas.captureStream(30)`, records with `MediaRecorder` (vp9/vp8/webm fallback chain) for a fixed 30s window, downloads as `puddle-<timestamp>.webm`. Puddle canvas only — no controls/logo overlay, no audio (audness doesn't expose the master output, only an analyser tap).
+- Bound to `KeyR` in `src/App.jsx` alongside the existing `KeyP` screenshot capture. Relies on `preserveDrawingBuffer: true` already set on the Three.js renderer (`usePuddleRenderer.js`).
+- Verified end-to-end with a headless Playwright run against the dev server: pressed `KeyR`, waited out the 30s recording, confirmed a valid non-empty `.webm` download.
+
 ## 2026-06-22 — Version switch resets visual mode; lo mode wallet forget fix
 
 - **Version switcher**: clicking v1/v2 now clears `puddle_visual_mode` before navigating so the destination always loads in party mode, preventing lo mode from bleeding across versions.
