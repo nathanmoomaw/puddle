@@ -1,5 +1,14 @@
 # Devlog
 
+## 2026-07-07 — Puddle capture tool: seamless loop, fixed First Sound bug
+
+- **Root cause of "choppy" video + stray "First Sound" toast**: `scripts/capture-puddle-video.mjs` was clicking the canvas center to dismiss a splash screen that never actually renders at this desktop-sized viewport (`MobileSplash` only shows under 768px width; `PresetSplash` only shows with a URL preset hash). The click landed on the puddle itself, playing a real note and firing the `first_sound` milestone toast — which isn't nested under `.app-header`/`.controls`, so it wasn't hidden and showed up in the recording. Removed the click entirely.
+- **Seamless 30s loop**: added an ffmpeg `xfade` pass (`scripts/lib/puddlePage.mjs` setup + `capture-puddle-video.mjs` processing) that dissolves the last ~2s of the clip into the first ~2s, so looped playback doesn't hard-cut. `xfade` needs an explicit CFR input (`fps=25` filter) — `split`/`trim` alone drop that metadata and the filter fails with "constant frame rate... invalid".
+- **Encode speed**: switched from vp9/webm (minutes to encode a single clip) to h264/mp4 `veryfast` preset (seconds). 30s square clip at 1280×1280 lands around 15MB, well under the 90MB budget.
+- **New**: `npm run capture:image` (`scripts/capture-puddle-image.mjs`) — HQ square PNG still of just the canvas, same hidden-chrome setup, shared via `scripts/lib/puddlePage.mjs`.
+- Also hid `.puddle__label` (the "touch puddle to play" hint text) and `ds-overlay` (the domscribe dev-mode badge), both previously leaking into captures.
+- Personal dev tooling only — `playwright` stays a devDependency, nothing imported from `src/`, never ships in the app bundle.
+
 ## 2026-06-22 — Version switch resets visual mode; lo mode wallet forget fix
 
 - **Version switcher**: clicking v1/v2 now clears `puddle_visual_mode` before navigating so the destination always loads in party mode, preventing lo mode from bleeding across versions.
