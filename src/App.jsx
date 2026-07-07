@@ -20,7 +20,6 @@ import { positionToFrequency } from './utils/pitchMap'
 import { HIDDEN_SCALES } from './utils/scales'
 import { readPresetFromUrl } from './utils/presets'
 import { captureScreenshot } from './utils/screenshot'
-import { captureVideo } from './utils/videoCapture'
 import { WalletButton } from './components/WalletButton'
 import { MilestoneBadge } from './components/MilestoneBadge'
 import { InfoModal } from './components/InfoModal'
@@ -388,7 +387,6 @@ function App({ onToggleMode, initialSynthState, onSynthStateChange }) {
         stepped, scale, poly, hold, arpBpm, visualMode, arpNotes,
       })
     },
-    KeyR: () => captureVideo(),
   }), [mode, hold, oscParams, volume, octaves, delayParams, reverbMix, crunch,
        filterParams, vcfCutoff, vcfResonance, vcfRouting, glideSpeed, stepped,
        scale, poly, arpBpm, visualMode, arpNotes, getEngine, clearAllMarbles, dropMarbleAtPosition])
