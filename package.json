@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node tests/smoke.mjs",
+    "capture:video": "node scripts/capture-puddle-video.mjs",
     "deploy:testnet": "hardhat run scripts/deploy.js --network base-sepolia",
     "deploy:base": "hardhat run scripts/deploy.js --network base"
   },
@@ -38,6 +39,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "hardhat": "^2.28.6",
+    "playwright": "^1.61.1",
     "vite": "^7.3.1"
   }
 }
