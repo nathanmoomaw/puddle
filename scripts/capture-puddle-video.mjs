@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 // Personal capture tool — records a smoothly looping square video of just
-// the puddle animation (no logo/controls). Not part of the shipped app.
+// the puddle animation (no logo/controls/text). Not part of the shipped app.
+//
+// Headless Chromium on macOS cannot hardware-accelerate WebGL — it always
+// falls back to software (SwiftShader) rendering, which throttles the
+// puddle's requestAnimationFrame-driven shader to single-digit fps at
+// capture resolution (~1.5fps at 1280x1280, ~11fps at 640x640). Recording
+// straight at the target resolution produces a duplicate-frame, choppy
+// result. Fix: render small (fast enough to get real, distinct frames),
+// motion-interpolate up to a smooth 30fps, then scale up to the final size.
+//
 // Usage:
 //   npm run dev                       # in one terminal
 //   npm run capture:video             # in another (defaults to https://localhost:5173)
@@ -13,14 +22,15 @@ import { openPuddlePage } from './lib/puddlePage.mjs'
 const url = process.env.PUDDLE_URL || 'https://localhost:5173'
 const durationMs = Number(process.env.DURATION_MS || 30000)
 const crossfadeMs = Number(process.env.CROSSFADE_MS || 2000)
-const dim = Number(process.env.SIZE || 1280)
-const size = { width: dim, height: dim }
+const captureDim = Number(process.env.CAPTURE_SIZE || 640) // render resolution — kept small so headless software WebGL can keep up
+const outDim = Number(process.env.SIZE || 1080) // final output resolution
+const captureSize = { width: captureDim, height: captureDim }
 const outDir = path.resolve('captures')
 fs.mkdirSync(outDir, { recursive: true })
 
-const { browser, context, page } = await openPuddlePage({ url, size, recordVideoDir: outDir })
+const { browser, context, page } = await openPuddlePage({ url, size: captureSize, recordVideoDir: outDir })
 
-console.log(`Recording ${durationMs / 1000}s of ${url} ...`)
+console.log(`Recording ${durationMs / 1000}s of ${url} at ${captureDim}x${captureDim} (upscaling to ${outDim}x${outDim}) ...`)
 await page.waitForTimeout(durationMs)
 
 await context.close()
@@ -30,6 +40,7 @@ const [recorded] = fs.readdirSync(outDir).filter(f => f.endsWith('.webm'))
 if (!recorded) process.exit(1)
 const raw = path.join(outDir, recorded)
 const trimmed = path.join(outDir, `_trimmed-${Date.now()}.mp4`)
+const interpolated = path.join(outDir, `_interp-${Date.now()}.mp4`)
 const dest = path.join(outDir, `puddle-${Date.now()}.mp4`)
 
 const T = durationMs / 1000
@@ -47,22 +58,31 @@ try {
 
   execFileSync('ffmpeg', [
     '-y', '-ss', String(startSec), '-i', raw, '-t', String(T),
-    '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20',
+    '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18',
     '-pix_fmt', 'yuv420p', trimmed,
   ], { stdio: 'ignore' })
 
-  // Seamless loop: dissolve the tail into the head so playback wraps
-  // cleanly on repeat instead of hard-cutting. xfade requires an explicit
-  // constant frame rate on its inputs, which split/trim alone don't carry.
+  // Motion-compensated interpolation: real frames are ~5-12fps at this
+  // resolution, synthesize the rest so playback reads as fluid 30fps.
   execFileSync('ffmpeg', [
     '-y', '-i', trimmed,
+    '-vf', 'minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:vsbmc=1',
+    '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18',
+    '-pix_fmt', 'yuv420p', interpolated,
+  ], { stdio: 'ignore' })
+
+  // Seamless loop (dissolve tail into head so playback wraps cleanly) +
+  // upscale to the final output size in one pass.
+  execFileSync('ffmpeg', [
+    '-y', '-i', interpolated,
     '-filter_complex',
     `[0:v]split=3[body][tail][headsrc];` +
     `[body]trim=start=0:end=${T - X},setpts=PTS-STARTPTS[main];` +
-    `[tail]trim=start=${T - X}:end=${T},setpts=PTS-STARTPTS,fps=25[tailclip];` +
-    `[headsrc]trim=start=0:end=${X},setpts=PTS-STARTPTS,fps=25[headclip];` +
+    `[tail]trim=start=${T - X}:end=${T},setpts=PTS-STARTPTS,fps=30[tailclip];` +
+    `[headsrc]trim=start=0:end=${X},setpts=PTS-STARTPTS,fps=30[headclip];` +
     `[tailclip][headclip]xfade=transition=fade:duration=${X}:offset=0[crossfaded];` +
-    `[main][crossfaded]concat=n=2:v=1:a=0[out]`,
+    `[main][crossfaded]concat=n=2:v=1:a=0[looped];` +
+    `[looped]scale=${outDim}:${outDim}:flags=lanczos[out]`,
     '-map', '[out]',
     '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20',
     '-pix_fmt', 'yuv420p', dest,
@@ -70,9 +90,11 @@ try {
 
   fs.unlinkSync(raw)
   fs.unlinkSync(trimmed)
+  fs.unlinkSync(interpolated)
 } catch (err) {
   console.error('ffmpeg processing failed, keeping untrimmed recording:', err.message)
   fs.rmSync(trimmed, { force: true })
+  fs.rmSync(interpolated, { force: true })
   fs.renameSync(raw, dest.replace(/\.mp4$/, '.webm'))
 }
 
