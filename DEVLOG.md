@@ -1,5 +1,13 @@
 # Devlog
 
+## 2026-07-08 — Puddle capture tool: virtual clock replaces real-time recording + interpolation
+
+- **Why it kept stuttering**: every prior fix (preroll, ping-pong, blend vs. mci) treated the symptom, not the cause. The pipeline always recorded real wall-clock video from headless Chromium's slow software-WebGL render, then tried to interpolate smoothness back in afterward — but interpolation can only blend across a timing gap, it can't invent motion that was never captured. Any interval where real frames were sparse would still read as a freeze no matter how the blend was tuned.
+- **Fix**: decoupled the shader's clock from wall time entirely. `scripts/lib/puddlePage.mjs` now optionally patches `performance.now`/`requestAnimationFrame` (`installVirtualClockScript`) so the puddle's `uTime` uniform and the idle hue-rotate CSS filter only advance when explicitly stepped via `window.__tick(dtMs)` from Node. `capture-puddle-video.mjs` now steps one virtual frame at a time and takes a real `page.screenshot()` after each tick, instead of using Playwright's built-in video recorder. Every captured frame is now a genuine, distinct, evenly-spaced render — no duplicates, so no interpolation step is needed at all (removed `minterpolate` entirely).
+- Ping-pong looping logic is unchanged (still mathematically seamless), just fed by a plain PNG-sequence `ffmpeg` encode instead of a `trim`+`minterpolate` chain.
+- Verified: `mpdecimate` at aggressive thresholds kept 119/120 frames on a test clip (the one "duplicate" is the expected ping-pong seam), and manually inspected extracted frames at t=0s and t=2s to confirm real, distinct motion.
+- Not an LLM/model problem (the user asked whether trying a different model, e.g. Fable, would help) — this was purely a browser-rendering/timing architecture issue, unrelated to any model choice.
+
 ## 2026-07-08 — Puddle capture tool: ping-pong loop replaces crossfade, blend replaces mci
 
 - **Crossfade dissolve looked bad**: alpha-blending the tail into the head produced a visible muddy double-exposure flash at the loop seam — this content (soft but high-contrast, detailed color fields) doesn't dissolve cleanly. Replaced with a ping-pong loop: capture half the requested duration, then play forward + reversed (`ffmpeg reverse` + `concat`). The reversed half ends on the exact frame the forward half started on, so the seam is pixel-identical — verified by diffing first/last extracted frames, zero difference. No blending, mathematically guaranteed seamless regardless of content.
