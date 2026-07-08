@@ -22,6 +22,7 @@ import { openPuddlePage } from './lib/puddlePage.mjs'
 const url = process.env.PUDDLE_URL || 'https://localhost:5173'
 const durationMs = Number(process.env.DURATION_MS || 30000)
 const crossfadeMs = Number(process.env.CROSSFADE_MS || 2000)
+const prerollMs = Number(process.env.PREROLL_MS || 3000)
 const captureDim = Number(process.env.CAPTURE_SIZE || 640) // render resolution — kept small so headless software WebGL can keep up
 const outDim = Number(process.env.SIZE || 1080) // final output resolution
 const captureSize = { width: captureDim, height: captureDim }
@@ -31,7 +32,7 @@ fs.mkdirSync(outDir, { recursive: true })
 const { browser, context, page } = await openPuddlePage({ url, size: captureSize, recordVideoDir: outDir })
 
 console.log(`Recording ${durationMs / 1000}s of ${url} at ${captureDim}x${captureDim} (upscaling to ${outDim}x${outDim}) ...`)
-await page.waitForTimeout(durationMs)
+await page.waitForTimeout(durationMs + prerollMs)
 
 await context.close()
 await browser.close()
@@ -44,26 +45,32 @@ const interpolated = path.join(outDir, `_interp-${Date.now()}.mp4`)
 const dest = path.join(outDir, `puddle-${Date.now()}.mp4`)
 
 const T = durationMs / 1000
+const P = prerollMs / 1000
 const X = Math.min(crossfadeMs / 1000, T / 2 - 0.1)
 
 try {
   // The recording spans context-creation -> close, so it includes page-load
   // overhead (Vite dev compile, wallet SDK init) before the puddle settles.
-  // Trim to just the last T seconds — clean animation, no load stutter.
+  // Trim to the last (T + P) seconds — still discards load overhead, but
+  // keeps P extra seconds of preroll ahead of the content we actually want.
   const totalSec = Number(execFileSync('ffprobe', [
     '-v', 'error', '-show_entries', 'format=duration',
     '-of', 'default=noprint_wrappers=1:nokey=1', raw,
   ]).toString().trim())
-  const startSec = Math.max(0, totalSec - T)
+  const startSec = Math.max(0, totalSec - (T + P))
 
   execFileSync('ffmpeg', [
-    '-y', '-ss', String(startSec), '-i', raw, '-t', String(T),
+    '-y', '-ss', String(startSec), '-i', raw, '-t', String(T + P),
     '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18',
     '-pix_fmt', 'yuv420p', trimmed,
   ], { stdio: 'ignore' })
 
   // Motion-compensated interpolation: real frames are ~5-12fps at this
   // resolution, synthesize the rest so playback reads as fluid 30fps.
+  // minterpolate needs a few frames of motion-vector history to warm up,
+  // and the chrome-hiding stylesheet takes a frame or two to visually
+  // land — both artifacts land in this preroll window, which gets cut
+  // below, rather than at the start of the kept output.
   execFileSync('ffmpeg', [
     '-y', '-i', trimmed,
     '-vf', 'minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:vsbmc=1',
@@ -71,15 +78,15 @@ try {
     '-pix_fmt', 'yuv420p', interpolated,
   ], { stdio: 'ignore' })
 
-  // Seamless loop (dissolve tail into head so playback wraps cleanly) +
-  // upscale to the final output size in one pass.
+  // Drop the preroll, dissolve tail into head for a seamless loop, and
+  // upscale to the final output size, all in one pass.
   execFileSync('ffmpeg', [
     '-y', '-i', interpolated,
     '-filter_complex',
     `[0:v]split=3[body][tail][headsrc];` +
-    `[body]trim=start=0:end=${T - X},setpts=PTS-STARTPTS[main];` +
-    `[tail]trim=start=${T - X}:end=${T},setpts=PTS-STARTPTS,fps=30[tailclip];` +
-    `[headsrc]trim=start=0:end=${X},setpts=PTS-STARTPTS,fps=30[headclip];` +
+    `[body]trim=start=${P}:end=${P + T - X},setpts=PTS-STARTPTS[main];` +
+    `[tail]trim=start=${P + T - X}:end=${P + T},setpts=PTS-STARTPTS,fps=30[tailclip];` +
+    `[headsrc]trim=start=${P}:end=${P + X},setpts=PTS-STARTPTS,fps=30[headclip];` +
     `[tailclip][headclip]xfade=transition=fade:duration=${X}:offset=0[crossfaded];` +
     `[main][crossfaded]concat=n=2:v=1:a=0[looped];` +
     `[looped]scale=${outDim}:${outDim}:flags=lanczos[out]`,

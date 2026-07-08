@@ -1,5 +1,11 @@
 # Devlog
 
+## 2026-07-07 — Puddle capture tool: preroll buffer fixes glitchy first few seconds
+
+- **Root cause**: the trim boundary that separates "page load" from "kept content" landed *exactly* at the moment the chrome-hiding stylesheet was injected — any lag before that DOM change visually lands, plus `minterpolate`'s motion-vector warm-up period (it needs a few frames of history before interpolation stabilizes), both fell right at the start of the output.
+- **Fix**: `capture-puddle-video.mjs` now records `PREROLL_MS` (default 3s) of extra footage, runs it through the full trim → interpolate pipeline, then discards exactly that preroll window in the final crossfade/scale pass rather than starting the kept content at frame zero. Verified via `mpdecimate` unique-frame ratio: first 5s went from 93/150 (62%) to 145/150 (97%) unique frames — now smoother than the back half of the clip, not less.
+- Captures aren't persisted anywhere — `captures/` is gitignored scratch output, cleared after each verification pass. Nothing from earlier test runs was kept.
+
 ## 2026-07-07 — Puddle capture tool: fixed real choppiness (headless GPU limitation)
 
 - **Root cause of remaining "choppy" 30s video**: headless Chromium on macOS cannot hardware-accelerate WebGL — it always falls back to software (SwiftShader) rendering. Measured actual `requestAnimationFrame` rate in the page: ~1.5fps at 1280×1280, ~5.5fps at 854×854, ~11.5fps at 640×640. Playwright's video recorder still emits a uniform 25fps container, so most "frames" were duplicates of the same stale render — verified via `mpdecimate` (only 543/873 frames were unique on a 1280px 30s capture). This was resolution-dependent, which is why an earlier 8s test at a smaller effective load looked fine but the full 30s/1280px run didn't. Tried ANGLE/Metal GPU flags first — no effect; Chromium headless on macOS has no surfaceless GPU path at all, software rendering is unconditional.
