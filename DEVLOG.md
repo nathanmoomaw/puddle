@@ -1,5 +1,12 @@
 # Devlog
 
+## 2026-07-08 — Puddle capture tool: ping-pong loop replaces crossfade, blend replaces mci
+
+- **Crossfade dissolve looked bad**: alpha-blending the tail into the head produced a visible muddy double-exposure flash at the loop seam — this content (soft but high-contrast, detailed color fields) doesn't dissolve cleanly. Replaced with a ping-pong loop: capture half the requested duration, then play forward + reversed (`ffmpeg reverse` + `concat`). The reversed half ends on the exact frame the forward half started on, so the seam is pixel-identical — verified by diffing first/last extracted frames, zero difference. No blending, mathematically guaranteed seamless regardless of content.
+- **Dropped `mi_mode=mci` for `mi_mode=blend`**: this content is smooth, low-frequency color gradients with nothing distinct to track, so motion-compensated interpolation (which searches for matching features between frames) had nothing reliable to lock onto — plausible source of the residual "still glitchy" reports even after the preroll fix. Compared both modes frame-by-frame on an identical source clip: visually indistinguishable for this content, but `blend` encodes ~18x faster (0.6s vs 11s for a 10s clip) with no motion-search failure mode to produce artifacts in the first place.
+- Combined effect: full 30s production capture dropped from ~3.5 minutes to ~36 seconds (half the unique content needed since ping-pong doubles it, plus the much faster interpolation mode).
+- `DURATION_MS` now means the *final* (ping-ponged) output length — half of that is what actually gets captured/interpolated. `CROSSFADE_MS` is gone (no longer applicable).
+
 ## 2026-07-07 — Puddle capture tool: preroll buffer fixes glitchy first few seconds
 
 - **Root cause**: the trim boundary that separates "page load" from "kept content" landed *exactly* at the moment the chrome-hiding stylesheet was injected — any lag before that DOM change visually lands, plus `minterpolate`'s motion-vector warm-up period (it needs a few frames of history before interpolation stabilizes), both fell right at the start of the output.
