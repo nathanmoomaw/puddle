@@ -10,6 +10,7 @@ uniform float uRippleTimes[24];
 uniform int uRippleCount;
 uniform vec3 uDepressions[9];
 uniform int uDepressionCount;
+uniform float uAmbF1, uAmbF2, uAmbF3, uAmbF4;
 
 varying vec2 vUv;
 varying vec3 vNormal;
@@ -44,9 +45,9 @@ void main() {
   }
 
   // Ambient undulation — slow organic surface movement
-  totalDisp += sin(uv.x * 6.0 + uTime * 0.8) * cos(uv.y * 5.0 + uTime * 0.6) * 0.018;
-  totalDisp += sin(uv.x * 3.0 + uv.y * 4.0 + uTime * 0.3) * 0.008;
-  totalDisp += cos(uv.x * 5.0 - uv.y * 2.0 + uTime * 0.2) * 0.006;
+  totalDisp += sin(uv.x * 6.0 + uTime * uAmbF1) * cos(uv.y * 5.0 + uTime * uAmbF2) * 0.018;
+  totalDisp += sin(uv.x * 3.0 + uv.y * 4.0 + uTime * uAmbF3) * 0.008;
+  totalDisp += cos(uv.x * 5.0 - uv.y * 2.0 + uTime * uAmbF4) * 0.006;
 
   pos.z += totalDisp;
   vDisplacement = totalDisp;
@@ -61,6 +62,9 @@ void main() {
 const fragmentShader = `
 uniform float uTime;
 uniform float uOpdShift;
+uniform float uThickF1, uThickF2, uThickF3, uThickF4, uThickF5, uThickF6, uThickF7, uThickF8;
+uniform float uThick2F;
+uniform float uPatchF;
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vPosition;
@@ -93,17 +97,17 @@ void main() {
   // Multi-layer oil film thickness — realistic swirl patterns
   // Thickness varies spatially to produce different interference colors
   float thickness = 1.0
-    + sin(vUv.x * 8.0 + uTime * 0.3) * 0.3
-    + cos(vUv.y * 7.0 - uTime * 0.4) * 0.25
+    + sin(vUv.x * 8.0 + uTime * uThickF1) * 0.3
+    + cos(vUv.y * 7.0 - uTime * uThickF2) * 0.25
     // Slow-moving large swirls (characteristic oil spill bands)
-    + sin(vUv.x * 3.0 + vUv.y * 4.0 + uTime * 0.15) * 0.4
-    + cos(vUv.x * 5.0 - vUv.y * 3.0 + uTime * 0.2) * 0.35
+    + sin(vUv.x * 3.0 + vUv.y * 4.0 + uTime * uThickF3) * 0.4
+    + cos(vUv.x * 5.0 - vUv.y * 3.0 + uTime * uThickF4) * 0.35
     // Fine detail streaks
-    + sin((vUv.x + vUv.y) * 12.0 + uTime * 0.1) * 0.15
-    + cos((vUv.x - vUv.y) * 10.0 - uTime * 0.12) * 0.12
+    + sin((vUv.x + vUv.y) * 12.0 + uTime * uThickF5) * 0.15
+    + cos((vUv.x - vUv.y) * 10.0 - uTime * uThickF6) * 0.12
     // Second set of swirls at different scale for richer variation
-    + sin(vUv.x * 6.0 - vUv.y * 8.0 + uTime * 0.25) * 0.2
-    + cos(vUv.x * 2.0 + vUv.y * 2.5 + uTime * 0.1) * 0.3
+    + sin(vUv.x * 6.0 - vUv.y * 8.0 + uTime * uThickF7) * 0.2
+    + cos(vUv.x * 2.0 + vUv.y * 2.5 + uTime * uThickF8) * 0.3
     + vDisplacement * 8.0;
 
   // Primary iridescent color from thin-film physics
@@ -111,7 +115,7 @@ void main() {
 
   // Second thickness layer for depth (real oil has multiple thin layers)
   float thickness2 = thickness * 0.7 + 0.5
-    + sin(vUv.x * 4.5 - vUv.y * 6.0 + uTime * 0.18) * 0.25;
+    + sin(vUv.x * 4.5 - vUv.y * 6.0 + uTime * uThick2F) * 0.25;
   vec3 iriColor2 = thinFilmColor(thickness2, cosAngle);
 
   // Blend the two interference layers
@@ -124,7 +128,7 @@ void main() {
   float iriStrength = 0.6 + fresnel * 0.3 + abs(vDisplacement) * 4.0;
 
   // Position-dependent color patches — some areas more colorful (like real oil films)
-  float colorPatch = 0.5 + 0.5 * sin(vUv.x * 4.0 + vUv.y * 3.0 + uTime * 0.08);
+  float colorPatch = 0.5 + 0.5 * sin(vUv.x * 4.0 + vUv.y * 3.0 + uTime * uPatchF);
   iriStrength *= 0.75 + colorPatch * 0.35;
 
   vec3 color = mix(baseColor, blendedIri, clamp(iriStrength, 0.0, 1.0));
@@ -197,11 +201,36 @@ export function usePuddleRenderer(containerRef, ripples, getEngine, marbleDepres
         uDepressions: { value: new Array(9).fill(null).map(() => new THREE.Vector3(0, 0, 0)) },
         uDepressionCount: { value: 0 },
         uOpdShift: { value: 0 },
+        // Ambient/thickness sine-term frequencies — kept as uniforms (rather
+        // than GLSL literals) so a capture harness can retune them to exact
+        // integer multiples of 2π/loopDuration for a true zero-blend forward
+        // loop. Defaults below match the live app's original hand-tuned feel.
+        uAmbF1: { value: 0.8 },
+        uAmbF2: { value: 0.6 },
+        uAmbF3: { value: 0.3 },
+        uAmbF4: { value: 0.2 },
+        uThickF1: { value: 0.3 },
+        uThickF2: { value: 0.4 },
+        uThickF3: { value: 0.15 },
+        uThickF4: { value: 0.2 },
+        uThickF5: { value: 0.1 },
+        uThickF6: { value: 0.12 },
+        uThickF7: { value: 0.25 },
+        uThickF8: { value: 0.1 },
+        uThick2F: { value: 0.18 },
+        uPatchF: { value: 0.08 },
       },
       transparent: true,
       side: THREE.DoubleSide,
     })
     materialRef.current = material
+
+    // Capture-mode hook: only the frame-stepped capture harness (which
+    // patches window.__tick) needs live access to these uniforms, so this
+    // never touches the normal interactive app's global scope.
+    if (typeof window !== 'undefined' && window.__tick) {
+      window.__puddleMaterial = material
+    }
 
     const mesh = new THREE.Mesh(geometry, material)
     scene.add(mesh)

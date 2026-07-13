@@ -49,7 +49,15 @@ export async function openPuddlePage({ url, size, deviceScaleFactor, virtualCloc
   await page.waitForSelector(CANVAS_SELECTOR, { timeout: 20000 })
   await page.waitForTimeout(500) // let the shader settle
   await page.addStyleTag({
-    content: '.app-header, .controls, .puddle__label, .mobile-splash, ds-overlay { display: none !important; }',
+    content: `
+      .app-header, .controls, .puddle__label, .mobile-splash, ds-overlay { display: none !important; }
+      /* Freeze all CSS @keyframes (e.g. puddle-grid-drift) at whatever phase they're
+         in right now. These run on the browser's real compositor clock, not
+         performance.now()/rAF, so the virtual-clock patch above can't make them
+         deterministic — frozen-but-static is the only way to keep them from
+         breaking a virtual-time-driven loop's seam. */
+      *, *::before, *::after { animation-play-state: paused !important; }
+    `,
   })
   return { browser, context, page }
 }
