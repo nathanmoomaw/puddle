@@ -84,6 +84,7 @@ Puddle v1 is **frozen** — self-contained, no external engine dependency, perma
 - Includes VCF settings, wallet address (`&wa=`), loop data (`&l=`), marble positions
 - Multi-colored gradient QR codes generated client-side with `qrcode` library
 - Serialization in `src/utils/presets.js`
+- Preset registry: DynamoDB + Lambda Function URL (`lambda/preset-store/`) best-effort records generated presets (name, URL, content hash, app version). No-ops if `VITE_PRESET_API_URL` unset. Not required for presets to work — they're still fully self-contained in the URL.
 
 ### Audio / Mobile Quirks
 - iOS silent mode: `unlockIOSAudio()` in `AudioEngine.js` plays a silent `<audio>` element on first gesture to force AVAudioSession to "playback" category (bypasses hardware silent switch)

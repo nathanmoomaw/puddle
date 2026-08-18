@@ -1,5 +1,14 @@
 # Devlog
 
+## 2026-08-18 — Preset registry: DynamoDB + Lambda Function URL
+
+- **Why**: presets were entirely client-side (encoded into the URL hash) with no record of what users generate — wanted a "very small simple db" of name/URL/code, and v2's planned hand-set reward presets need a live write path rather than a redeploy-to-update JSON file, so went straight to a real (if minimal) backend instead of a static file.
+- **Architecture**: DynamoDB table `puddle-presets` (on-demand billing) + Lambda `puddle-preset-store` (`lambda/preset-store/index.mjs`, Node 20, uses the SDK v3 bundled with the runtime — no deps to package) behind a public Function URL. Execution role scoped to just PutItem/Query/Scan on that one table, not the root credentials used to provision it.
+- **Public Function URL gotcha**: AWS now requires *two* separate resource-policy grants for a public (`AuthType: NONE`) Function URL — `lambda:InvokeFunctionUrl` (condition-scoped) and, as of Oct 2025, an additional unconditioned `lambda:InvokeFunction` grant to `principal: *`. Missing the second one produces a 403 with a generic troubleshooting-doc message that looks like a permissions/propagation bug but isn't. Saved to global memory (`reference_lambda_function_url_public_access.md`) since it'll bite any future Lambda Function URL work.
+- **Safeguards** (the second grant is broader than a simple "make it public" ask, flagged to user before applying): 8KB request body cap, an Origin-header allowlist check inside the Lambda itself (CORS alone only restricts browser callers, not direct `curl`/script access), and reserved concurrency capped at 5 to bound worst-case cost/blast-radius.
+- **Frontend wiring**: `savePresetRecord()` in `src/utils/presets.js`, fired best-effort (fire-and-forget, silently no-ops without `VITE_PRESET_API_URL`) from `PresetQR.jsx`'s Copy Link and Save handlers — same pattern as the existing Pinata/IPFS integration. Version (`package.json` + git SHA) is stored per record.
+- **Version-in-URL note**: confirmed the existing "QR should reference the specific app version it came from" rule is already structurally satisfied — `buildPresetUrl()` builds from `window.location.origin + pathname`, and the per-version deploy paths (`/v1/`, `/v2/`, ...) mean the version is baked into the share URL automatically. No new code needed for that part.
+
 ## 2026-07-13 — Puddle capture tool: exact-period forward loop replaces ping-pong
 
 - **Why ping-pong felt jarring**: playing forward-then-reversed is still, structurally, watching motion run backward once per loop — no amount of tuning removes that "rewind" read, since it's not a rendering artifact but the technique itself.

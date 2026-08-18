@@ -189,3 +189,4 @@
 - [x] Project renamed/cleaned from ribbon: localStorage keys, README, aria-labels
 - [x] CI/CD wired to puddle.obfusco.us + puddle-dev.obfusco.us — main→prod, nmj/*→dev, vN tags→/vN snapshots
 - [x] Bottom controls fixed to viewport bottom on desktop — puddle row now fills remaining height via grid-template-rows: auto 1fr
+- [x] Preset registry — DynamoDB + Lambda Function URL records generated presets (name, URL, content hash, app version); best-effort POST on Copy Link/Save, no-op without VITE_PRESET_API_URL
