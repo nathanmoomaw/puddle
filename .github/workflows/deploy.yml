@@ -29,6 +29,7 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_PRESET_API_URL: https://pbadlbuodmmkqz2pf2zwdzxuam0xnkay.lambda-url.us-east-1.on.aws/
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -85,6 +86,7 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_PRESET_API_URL: https://pbadlbuodmmkqz2pf2zwdzxuam0xnkay.lambda-url.us-east-1.on.aws/
           VITE_BASE_PATH: /
 
       - name: Deploy to dev S3 (root)
@@ -98,6 +100,7 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_PRESET_API_URL: https://pbadlbuodmmkqz2pf2zwdzxuam0xnkay.lambda-url.us-east-1.on.aws/
           VITE_BASE_PATH: /${{ steps.devpath.outputs.VERSION }}/
 
       - name: Deploy to dev S3 (versioned)
@@ -151,6 +154,7 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_PRESET_API_URL: https://pbadlbuodmmkqz2pf2zwdzxuam0xnkay.lambda-url.us-east-1.on.aws/
           VITE_BASE_PATH: /${{ steps.branch.outputs.VERSION }}/
 
       - uses: aws-actions/configure-aws-credentials@v4
@@ -191,6 +195,7 @@ jobs:
         env:
           VITE_GIT_SHA: ${{ github.sha }}
           VITE_PUDDLE_CONTRACT_ADDRESS: ${{ secrets.VITE_PUDDLE_CONTRACT_ADDRESS }}
+          VITE_PRESET_API_URL: https://pbadlbuodmmkqz2pf2zwdzxuam0xnkay.lambda-url.us-east-1.on.aws/
           VITE_BASE_PATH: /${{ steps.tag.outputs.VERSION }}/
 
       - uses: aws-actions/configure-aws-credentials@v4

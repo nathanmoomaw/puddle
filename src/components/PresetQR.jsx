@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import QRCode from 'qrcode'
 import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { buildPresetUrl, computePresetHash } from '../utils/presets'
+import { buildPresetUrl, computePresetHash, savePresetRecord } from '../utils/presets'
 import { useMintPuddle, usePuddleOwner, PUDDLE_CONTRACT_ADDRESS } from '../crypto/contract'
 import { pinPuddleMetadata, autoName } from '../crypto/ipfs'
 import { checkMilestone } from '../crypto/milestones'
@@ -389,14 +389,17 @@ export function PresetQR({ settings, initialName, onClose, onMilestone }) {
     link.download = `puddle${name ? '-' + name.trim().replace(/\s+/g, '-').toLowerCase() : '-preset'}.png`
     link.href = dlCanvas.toDataURL('image/png')
     link.click()
-  }, [name])
+
+    savePresetRecord({ url, name, contentHash, settings })
+  }, [name, url, contentHash, settings])
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     })
-  }, [url])
+    savePresetRecord({ url, name, contentHash, settings })
+  }, [url, name, contentHash, settings])
 
   const handleMint = useCallback(async () => {
     if (!isConnected || !PUDDLE_CONTRACT_ADDRESS) return

@@ -4,8 +4,10 @@
  */
 
 import { keccak256, stringToHex } from 'viem'
+import packageJson from '../../package.json'
 
 const PRESET_VERSION = 1
+const PRESET_API_URL = import.meta.env.VITE_PRESET_API_URL
 
 const WAVEFORMS = ['sine', 'square', 'sawtooth', 'triangle']
 
@@ -209,4 +211,30 @@ export function readPresetFromUrl() {
   }
 
   return { settings, name, loopData }
+}
+
+/**
+ * Record a generated preset in the small preset registry (best-effort,
+ * fire-and-forget — no-ops if VITE_PRESET_API_URL isn't set, same pattern
+ * as the Pinata IPFS integration). Captures the app version so every
+ * stored preset ties back to the version it was created from.
+ */
+export function savePresetRecord({ url, name, contentHash, settings }) {
+  if (!PRESET_API_URL) return
+
+  const body = {
+    url,
+    name: name || '',
+    contentHash,
+    version: packageJson.version,
+    gitSha: import.meta.env.VITE_GIT_SHA || '',
+    visualMode: settings.visualMode || '',
+    walletAddress: settings.walletAddress || '',
+  }
+
+  fetch(PRESET_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  }).catch(() => { /* best-effort, ignore failures */ })
 }
