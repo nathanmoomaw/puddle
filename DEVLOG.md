@@ -1,5 +1,9 @@
 # Devlog
 
+## 2026-09-22 — Google Tag Manager (GTM-M5GKBML2)
+
+- Added the standard GTM head script + body `<noscript>` fallback to `index.html`. Since `index.html` is identical between `dev/v2` and `main`, applied on `dev/v2` then cherry-picked the same commit onto `main` via a throwaway worktree (avoids disturbing the checked-out branch) and pushed directly — covers both `puddle-dev.obfusco.us` and `puddle.obfusco.us`.
+
 ## 2026-08-18 — Preset registry: DynamoDB + Lambda Function URL
 
 - **Why**: presets were entirely client-side (encoded into the URL hash) with no record of what users generate — wanted a "very small simple db" of name/URL/code, and v2's planned hand-set reward presets need a live write path rather than a redeploy-to-update JSON file, so went straight to a real (if minimal) backend instead of a static file.
